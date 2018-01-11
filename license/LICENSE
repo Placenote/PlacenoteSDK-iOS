@@ -1,0 +1,23 @@
+Copyright 2017 Perceptiv Labs Inc.
+
+Uncless specified otherwise in the list below, this software is
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+libPlacenote.a is under a proprietary license with details to be found in the file
+License.libPlacenote
+  libPlacenote uses some third party libraries, their respective licenses are listed below
+  libOpencv is covered under BSD3 with details in License.OpenCV
+  gtsam is covered under the BSD license with details in License.BSD
+  curly is covered under the MIT license
+  g2o is covered under the BSD license
+
