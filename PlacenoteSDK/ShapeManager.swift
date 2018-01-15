@@ -47,12 +47,15 @@ func generateRandomColor() -> UIColor {
 //Class to manage a list of shapes to be view in Augmented Reality including spawning, managing a list and saving/retrieving from persistent memory using JSON
 class ShapeManager {
   
-  var scnScene: SCNScene!
-  var scnView: SCNView!
+  private var scnScene: SCNScene!
+  private var scnView: SCNView!
   
-  var shapePositions: [SCNVector3] = []
-  var shapeTypes: [ShapeType] = []
-  var shapeNodes: [SCNNode] = []
+  private var shapePositions: [SCNVector3] = []
+  private var shapeTypes: [ShapeType] = []
+  private var shapeNodes: [SCNNode] = []
+  
+  public var shapesDrawn: Bool! = false
+
   
   init(scene: SCNScene, view: SCNView) {
     scnScene = scene
@@ -74,9 +77,7 @@ class ShapeManager {
     
     var shapeArray: [[String: [String: String]]] = []
     if (shapePositions.count > 0) {
-      shapeArray = [["shape": ["style": "\(shapeTypes[0].rawValue)", "x": "\(shapePositions[0].x)",  "y": "\(shapePositions[0].y)",  "z": "\(shapePositions[0].z)" ]]]
-      
-      for i in 1...(shapePositions.count-1) {
+      for i in 0...(shapePositions.count-1) {
         shapeArray.append(["shape": ["style": "\(shapeTypes[i].rawValue)", "x": "\(shapePositions[i].x)",  "y": "\(shapePositions[i].y)",  "z": "\(shapePositions[i].z)" ]])
       }
     }
@@ -143,12 +144,15 @@ class ShapeManager {
     for shape in shapeNodes {
       shape.removeFromParentNode()
     }
+    shapesDrawn = false
   }
   
   func drawView(parent: SCNNode) {
+    guard !shapesDrawn else {return}
     for shape in shapeNodes {
       parent.addChildNode(shape)
     }
+    shapesDrawn = true
   }
   
   func clearShapes() { //delete all nodes and record of all shapes
@@ -179,6 +183,7 @@ class ShapeManager {
     shapeNodes.append(geometryNode)
     
     scnScene.rootNode.addChildNode(geometryNode)
+    shapesDrawn = true
   }
   
   func createShape (position: SCNVector3, type: ShapeType) -> SCNNode {
