@@ -503,36 +503,41 @@ class LibPlacenote {
       let libPtr = cbReturnedCtx.libPtr
       let callbackId = cbReturnedCtx.callbackId
       
-      DispatchQueue.main.async(execute: {() -> Void in
-        if (success != nil && success! > 0) {
-          let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-          print(String(format: "Added map to the database! Response: %@", newMapList!))
-          
-          var placeArray: [String: NSArray]
-          var placeIdArray:[String] = []
-          if let data = newMapList?.data(using: .utf8) {
-            do {
-              placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
-              let placeIds = placeArray["places"]!
-              for i in 0...(placeIds.count-1) {
-                let placeid = placeIds[i] as! [String:String]
-                placeIdArray.append(placeid["placeId"]!)
-              }
-            } catch {
-              print(error.localizedDescription)
+      if (success != nil && success! > 0) {
+        let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        print(String(format: "Map list fetched from the database! Response: %@", newMapList!))
+        
+        var placeArray: [String: NSArray]
+        var placeIdArray:[String] = []
+        if let data = newMapList?.data(using: .utf8) {
+          do {
+            placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
+            let placeIds = placeArray["places"]!
+            for i in 0...(placeIds.count-1) {
+              let placeid = placeIds[i] as! [String:String]
+              placeIdArray.append(placeid["placeId"]!)
             }
+          } catch {
+            print(error.localizedDescription)
           }
-          
-          if (placeIdArray.count > 0) {
-            libPtr.mapList = placeIdArray
-            libPtr.listMapCbDict[callbackId]!(true, placeIdArray)
-          }
-        } else {
-          let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-          print(String(format: "Failed to add the map! Error msg: %@", errorMsg!))
-          libPtr.listMapCbDict[callbackId]!(false, [])
         }
         
+        if (placeIdArray.count > 0) {
+          DispatchQueue.main.async(execute: {() -> Void in
+            libPtr.mapList = placeIdArray
+            libPtr.listMapCbDict[callbackId]!(true, placeIdArray)
+          })
+        }
+      } else {
+        let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        print(String(format: "Failed to fetch the map list! Error msg: %@", errorMsg!))
+        
+        DispatchQueue.main.async(execute: {() -> Void in
+          libPtr.listMapCbDict[callbackId]!(false, [])
+        })
+      }
+      
+      DispatchQueue.main.async(execute: {() -> Void in
         libPtr.listMapCbDict.removeValue(forKey: callbackId)
         libPtr.ctxDict.removeValue(forKey: callbackId)
       })
