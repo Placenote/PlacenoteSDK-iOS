@@ -1,3 +1,11 @@
+//
+//  LibPlacenote.h
+//  C API header for libPlacenote SDK
+//
+//  Created by Yan Ma on 2017-09-01.
+//  Copyright © 2017 Vertical AI. All rights reserved.
+
+
 #ifndef LIBPLACENOTE_H
 #define LIBPLACENOTE_H
 
