@@ -178,6 +178,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     if (trackingStarted && !mappingStarted) { //ARKit is enabled, start mapping
       print ("New Map")
       mappingStarted = true
+      LibPlacenote.instance.stopSession()
       LibPlacenote.instance.startSession()
       newMapButton.setTitle("Save Map", for: .normal)
       statusLabel.text = "Mapping: Tap to add shapes!"
