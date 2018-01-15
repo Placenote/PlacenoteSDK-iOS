@@ -328,6 +328,8 @@ class LibPlacenote {
    */
   func stopSession() -> Void {
     PNStopSession();
+    multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
+    prevStatus = MappingStatus.waiting
   }
   
   /**
