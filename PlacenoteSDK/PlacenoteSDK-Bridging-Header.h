@@ -18,7 +18,7 @@
 
 enum Status{INVALID, GOOD, BAD, DELETED};
 
-# define API_KEY "0uyv3rjxsg63udl4nyj1ohf7uk11fti13i1zl96o8woa0q7p9ohusnc1wr0vxdjpt8nu02r6or2eezhvknyqz7ajc63dhbcfcr9u" //enter API Key here
+# define API_KEY "" //enter API Key here
 
 void initializeSDK(const char* mapPath, const char* appBasePath, void* swiftContext, result_callback cb)
 {
