@@ -201,7 +201,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.shapeManager.saveFile(filename: mapId) //save file of shapes to persistent memory
             self.statusLabel.text = "Saved Id: " + mapId! //update UI
             LibPlacenote.instance.stopSession()
-            self.ptViz?.reset();
           } else {
             NSLog("Failed to save map")
           }
