@@ -24,12 +24,11 @@ void initializeSDK(const char* mapPath, const char* appBasePath, void* swiftCont
 {
   PNInitParams params;
 
-  // Fill in your API Key here
   params.apiKey = API_KEY;
   params.appBasePath = appBasePath;
   params.mapPath = mapPath;
 
-  PNInitialize (&params, cb, swiftContext); //TODO: Change to PNInitialize (params)
+  PNInitialize (&params, cb, swiftContext); 
 }
 
 
