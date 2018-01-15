@@ -140,12 +140,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     if prevStatus != LibPlacenote.MappingStatus.running && currStatus == LibPlacenote.MappingStatus.running { //just localized draw shapes you've retrieved
       print ("Just localized, drawing view")
       shapeManager.drawView(parent: scnScene.rootNode) //just localized redraw the shapes
-      statusLabel.text = "Map Localized"
+      if mappingStarted {
+       statusLabel.text = "Tap anywhere to add Shapes, Move Slowly"
+      }
+      else if localizationStarted {
+        statusLabel.text = "Map Found!"
+      }
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
-      print ("Just lost, clearing view")
-      statusLabel.text = "Map Lost"
+      print ("Just lost")
+      if mappingStarted {
+        statusLabel.text = "Moved too fast. Map Lost"
+      }
     }
 
   }

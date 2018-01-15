@@ -77,9 +77,7 @@ class ShapeManager {
     
     var shapeArray: [[String: [String: String]]] = []
     if (shapePositions.count > 0) {
-      shapeArray = [["shape": ["style": "\(shapeTypes[0].rawValue)", "x": "\(shapePositions[0].x)",  "y": "\(shapePositions[0].y)",  "z": "\(shapePositions[0].z)" ]]]
-      
-      for i in 1...(shapePositions.count-1) {
+      for i in 0...(shapePositions.count-1) {
         shapeArray.append(["shape": ["style": "\(shapeTypes[i].rawValue)", "x": "\(shapePositions[i].x)",  "y": "\(shapePositions[i].y)",  "z": "\(shapePositions[i].z)" ]])
       }
     }
