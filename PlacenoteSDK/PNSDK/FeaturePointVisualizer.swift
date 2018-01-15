@@ -43,6 +43,13 @@ class FeaturePointVisualizer {
    */
   func disableFeaturePoints() {
     ptcloudTimer.invalidate()
+    reset();
+  }
+  
+  /**
+   A function to reset the pointcloud visualization
+   */
+  func reset() {
     ptcloudNode.removeFromParentNode()
   }
   
