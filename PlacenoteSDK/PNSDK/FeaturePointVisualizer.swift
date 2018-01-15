@@ -11,7 +11,7 @@ import Foundation
 
 /// A helper class that takes fetch the map of feature points from LibPlacenote
 /// and visualize it as a pointcloud periodically when enabled
-class FeaturePointVisualizer {
+class FeaturePointVisualizer: PNDelegate {
   private let verticesPerCube: Int = 36
   private var scene: SCNScene
   private var ptcloudNode: SCNNode = SCNNode()
@@ -25,6 +25,7 @@ class FeaturePointVisualizer {
   init(inputScene: SCNScene) {
     scene = inputScene
     scene.rootNode.addChildNode(ptcloudNode)
+    LibPlacenote.instance.multiDelegate += self
   }
   
   /**
@@ -51,6 +52,27 @@ class FeaturePointVisualizer {
    */
   func reset() {
     ptcloudNode.removeFromParentNode()
+  }
+  
+  /**
+   Callback to subscribe to pose measurements from LibPlacenote
+   
+   - Parameter outputPose: Inertial pose with respect to the map LibPlacenote is tracking against.
+   - Parameter arkitPose: Odometry pose with respect to the ARKit coordinate frame that corresponds with 'outputPose' in time.
+   */
+  func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) -> Void {
+  }
+  
+  /**
+   Callback to subscribe to mapping session status changes.
+   
+   - Parameter prevStatus: Status before the status change
+   - Parameter currStatus: Current status of the mapping engine
+   */
+  func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
+    if (currStatus == LibPlacenote.MappingStatus.waiting) {
+      reset();
+    }
   }
   
   /**
