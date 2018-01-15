@@ -32,6 +32,7 @@ class CameraManager: PNDelegate {
     
     rootNode.addChildNode(cameraParent)
     cameraParent.position = SCNVector3(0, 0, 0)
+    cameraParent.addChildNode(camera)
     
     // IMPORTANT: need to run this line to subscribe to pose and status events
     LibPlacenote.instance.multiDelegate += self;
