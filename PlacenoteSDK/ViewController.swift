@@ -144,7 +144,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
-      shapeManager.clearView() //don't show shapes if you're lost
       print ("Just lost, clearing view")
       statusLabel.text = "Map Lost"
     }
