@@ -10,7 +10,7 @@ The Placenote SDK iOS Sample app provided here is to serve as an example on how 
   * More details can be found on the [git lfs website](https://git-lfs.github.com/)
 * Get an API key from: https://developer.placenote.com/
 * Place API key in the bridging header: PlacenoteSDK-Bridging-Header.h
-* Run Sample App in xcode
+* Run Sample App. Note that within XCode, the library cannot be compiled for simulation and will throw Linker errors. ARKit is also currently incompatible with running in simulation. Please attach hardware and run the sample app on that!
 
 To integrate this into your own app
 * Add all the files under the PNSDK folder and PlacenoteSDK-Bridging-header.h into your project
