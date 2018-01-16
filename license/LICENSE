@@ -18,6 +18,6 @@ License.libPlacenote
   libPlacenote uses some third party libraries, their respective licenses are listed below
   libOpencv is covered under BSD3 with details in License.OpenCV
   gtsam is covered under the BSD license with details in License.BSD
-  curly is covered under the MIT license
-  g2o is covered under the BSD license
+  curly is covered under the MIT license with details in License.MIT
+  g2o is covered under the BSD license with details in License2.BSD
 
