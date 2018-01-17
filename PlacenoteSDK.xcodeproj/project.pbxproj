@@ -10,7 +10,6 @@
 		2A08D58B20053FDA00D7F0CE /* FeaturePointVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08D58A20053FDA00D7F0CE /* FeaturePointVisualizer.swift */; };
 		2A08D58D20054BC900D7F0CE /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08D58C20054BC900D7F0CE /* CameraManager.swift */; };
 		2AA0A2451FEB7EC400F4944D /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AA0A2441FEB7EB900F4944D /* AssetsLibrary.framework */; };
-		2AFFA660200563DB000239D3 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AFFA65F200563DB000239D3 /* libstdc++.tbd */; };
 		2AFFA66420068963000239D3 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFFA66320068963000239D3 /* MulticastDelegate.swift */; };
 		A291F6A2200E87DA000883C3 /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A291F6A1200E87DA000883C3 /* Placenote.framework */; };
 		A291F6A4200E8891000883C3 /* Placenote.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A291F6A1200E87DA000883C3 /* Placenote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -83,7 +82,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AFFA660200563DB000239D3 /* libstdc++.tbd in Frameworks */,
 				A291F6A2200E87DA000883C3 /* Placenote.framework in Frameworks */,
 				2AA0A2451FEB7EC400F4944D /* AssetsLibrary.framework in Frameworks */,
 			);

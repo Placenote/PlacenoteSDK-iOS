@@ -1,13 +1,12 @@
 //
-//  libPlacenote.h
-//  Placenote
+//  LibPlacenote.h
+//  C header of LibPlacenote SDK
 //
-//  Created by Brad Hoekstra on 2018-01-16.
-//  Copyright © 2018 Vertical. All rights reserved.
-//
+//  Created by Yan Ma on 2017-09-01.
+//  Copyright © 2017 Vertical AI. All rights reserved.
 
-#ifndef libPlacenote_h
-#define libPlacenote_h
+#ifndef LIBPLACENOTE_H
+#define LIBPLACENOTE_H
 
 #ifdef __cplusplus
 #define FOUNDATION_EXPORT extern "C"
@@ -16,84 +15,85 @@
 typedef uint8_t bool;
 #endif
 
+
 typedef struct PNCameraInstrinsics_t
 {
-    int width;
-    int height;
-
-    double fx;
-    double fy;
-    double cx;
-    double cy;
-    double k1;
-    double k2;
-    double p1;
-    double p2;
+  int width;
+  int height;
+  
+  double fx;
+  double fy;
+  double cx;
+  double cy;
+  double k1;
+  double k2;
+  double p1;
+  double p2;
 } PNCameraInstrinsics;
 
 typedef struct PNInitParams_t
 {
-    const char* apiKey;
-    const char* appBasePath;
-    const char* mapPath;
+  const char* apiKey;
+  const char* appBasePath;
+  const char* mapPath;
 } PNInitParams;
 
 typedef struct PNCallbackResult_t
 {
-    bool success;
-    const char* msg;
+  bool success;
+  const char* msg;
 } PNCallbackResult;
 
 typedef struct PNVector3_t
 {
-    float x;
-    float y;
-    float z;
+  float x;
+  float y;
+  float z;
 } PNVector3;
 
 typedef struct PNQuaternion_t
 {
-    float x;
-    float y;
-    float z;
-    float w;
+  float x;
+  float y;
+  float z;
+  float w;
 } PNQuaternion;
 
 typedef struct PNTransform_t
 {
-    PNVector3 position;
-    PNQuaternion rotation;
+  PNVector3 position;
+  PNQuaternion rotation;
 } PNTransform;
 
 typedef struct PNImagePlane_t
 {
-    void* buf;
-    int width;
-    int height;
-    int stride;
+  void* buf;
+  int width;
+  int height;
+  int stride;
 } PNImagePlane;
 
 typedef struct PNFeaturePoint_t
 {
-    int idx;
-    int measCount;
-    float maxViewAngle;
-    PNVector3 point;
+  int idx;
+  int measCount;
+  float maxViewAngle;
+  PNVector3 point;
 } PNFeaturePoint;
 
 typedef struct PNKeyframe_t
 {
-    int idx;
-    PNTransform pose;
+  int idx;
+  PNTransform pose;
 } PNKeyframe;
 
 typedef struct PNTransferStatus_t
 {
-    const char* mapId;
-    bool completed;
-    bool faulted;
-    int bytesTransferred;
-    int bytesTotal;
+  const char* mapId;
+  bool completed;
+  bool faulted;
+  int bytesTransferred;
+  int bytesTotal;
 } PNTransferStatus;
 
 typedef void (*result_callback) (PNCallbackResult* result, void* swiftContext);
@@ -115,4 +115,4 @@ FOUNDATION_EXPORT int PNGetPose(PNTransform* transform);
 FOUNDATION_EXPORT int PNSetIntrinsics(PNCameraInstrinsics* instrinsics);
 FOUNDATION_EXPORT int PNSetFrame(PNImagePlane* yPlane, PNImagePlane* vuPlane, PNTransform* arPose);
 
-#endif /* libPlacenote_h */
+#endif  // LIBPLACENOTE_H
