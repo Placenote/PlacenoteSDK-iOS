@@ -11,8 +11,8 @@
 		2A08D58D20054BC900D7F0CE /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08D58C20054BC900D7F0CE /* CameraManager.swift */; };
 		2AA0A2451FEB7EC400F4944D /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AA0A2441FEB7EB900F4944D /* AssetsLibrary.framework */; };
 		2AFFA66420068963000239D3 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFFA66320068963000239D3 /* MulticastDelegate.swift */; };
-		A291F6A2200E87DA000883C3 /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A291F6A1200E87DA000883C3 /* Placenote.framework */; };
-		A291F6A4200E8891000883C3 /* Placenote.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A291F6A1200E87DA000883C3 /* Placenote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2BB047C200FE340005A9E5F /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2BB047B200FE340005A9E5F /* Placenote.framework */; };
+		A2BB047D200FE3A5005A9E5F /* Placenote.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2BB047B200FE340005A9E5F /* Placenote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AF4A60311FEA379E00CE91D9 /* ShapeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A60301FEA379E00CE91D9 /* ShapeManager.swift */; };
 		AF5C90992008200A005F3090 /* Data.bin in Resources */ = {isa = PBXBuildFile; fileRef = AF5C90982008200A005F3090 /* Data.bin */; };
 		AF7A14A41F5A00AE00E0507A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7A14A31F5A00AE00E0507A /* AppDelegate.swift */; };
@@ -48,7 +48,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A291F6A4200E8891000883C3 /* Placenote.framework in CopyFiles */,
+				A2BB047D200FE3A5005A9E5F /* Placenote.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +60,7 @@
 		2AA0A2441FEB7EB900F4944D /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2AFFA65F200563DB000239D3 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		2AFFA66320068963000239D3 /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
-		A291F6A1200E87DA000883C3 /* Placenote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Placenote.framework; path = Frameworks/Placenote.framework; sourceTree = "<group>"; };
+		A2BB047B200FE340005A9E5F /* Placenote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Placenote.framework; sourceTree = "<group>"; };
 		AF4A60301FEA379E00CE91D9 /* ShapeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeManager.swift; sourceTree = "<group>"; };
 		AF5C90982008200A005F3090 /* Data.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = Data.bin; sourceTree = "<group>"; };
 		AF7A14A01F5A00AE00E0507A /* PlacenoteSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacenoteSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A291F6A2200E87DA000883C3 /* Placenote.framework in Frameworks */,
+				A2BB047C200FE340005A9E5F /* Placenote.framework in Frameworks */,
 				2AA0A2451FEB7EC400F4944D /* AssetsLibrary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,7 +107,6 @@
 		2ADDEB971FE8647B00A7F317 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A291F6A1200E87DA000883C3 /* Placenote.framework */,
 				2AFFA65F200563DB000239D3 /* libstdc++.tbd */,
 				2AA0A2441FEB7EB900F4944D /* AssetsLibrary.framework */,
 			);
@@ -153,6 +152,7 @@
 		AFEE510D1FEA3D47004AEFEE /* PNSDK */ = {
 			isa = PBXGroup;
 			children = (
+				A2BB047B200FE340005A9E5F /* Placenote.framework */,
 				AF5C90982008200A005F3090 /* Data.bin */,
 				2AFFA66320068963000239D3 /* MulticastDelegate.swift */,
 				2A08D58A20053FDA00D7F0CE /* FeaturePointVisualizer.swift */,
@@ -472,8 +472,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/PlacenoteSDK/PNSDK",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/Placenote.framework/Headers/";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PlacenoteSDK/PNSDK/Placenote.framework/Headers/";
 				INFOPLIST_FILE = PlacenoteSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -502,8 +503,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/PlacenoteSDK/PNSDK",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/Placenote.framework/Headers/";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PlacenoteSDK/PNSDK/Placenote.framework/Headers/";
 				INFOPLIST_FILE = PlacenoteSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
