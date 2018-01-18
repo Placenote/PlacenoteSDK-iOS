@@ -508,28 +508,28 @@ class LibPlacenote {
       if (success != nil && success! > 0) {
         let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
         print(String(format: "Map list fetched from the database! Response: %@", newMapList!))
-        
+      
         var placeArray: [String: NSArray]
         var placeIdArray:[String] = []
         if let data = newMapList?.data(using: .utf8) {
           do {
             placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
             let placeIds = placeArray["places"]!
-            for i in 0...(placeIds.count-1) {
-              let placeid = placeIds[i] as! [String:String]
-              placeIdArray.append(placeid["placeId"]!)
+            if (placeIds.count > 0) {
+              for i in 0...(placeIds.count-1) {
+                let placeid = placeIds[i] as! [String:String]
+                placeIdArray.append(placeid["placeId"]!)
+              }
             }
           } catch {
             print(error.localizedDescription)
           }
         }
         
-        if (placeIdArray.count > 0) {
-          DispatchQueue.main.async(execute: {() -> Void in
-            libPtr.mapList = placeIdArray
-            libPtr.listMapCbDict[callbackId]!(true, placeIdArray)
-          })
-        }
+        DispatchQueue.main.async(execute: {() -> Void in
+          libPtr.mapList = placeIdArray
+          libPtr.listMapCbDict[callbackId]!(true, placeIdArray)
+        })
       } else {
         let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
         print(String(format: "Failed to fetch the map list! Error msg: %@", errorMsg!))
