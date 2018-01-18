@@ -14,6 +14,8 @@ The Placenote SDK iOS Sample app provided here is to serve as an example on how 
 
 To integrate this into your own app
 * Add all the files under the PNSDK folder and PlacenoteSDK-Bridging-header.h into your project
-* Make sure the library files (libopencv.a and libPlacenote.a) are listed under 'Linked Frameworks and Libraries' under the 'General' tab. This should be automatic
-* Add the libstdc++.tbd library in the 'Linked Frameworks and Libraries' section under the 'General' tab. This will aid in the cross-compilation and linking of C++ libraries
+* Make sure the framework (Placenote.framework) is listed under 'Linked Frameworks and Libraries' under the 'General' tab. This should be automatic
+* Make sure the framework (Placenote.framework) is listed under 'Embedded Binaries' under the 'General' tab.
+* Under 'Build Settings' set 'Enable Bitcode' to NO
+* Add '#import "PlacenoteSDK-Bridging-Header.h"' to your project's bridging header
 * Read further API documentation here: https://developer.placenote.com/api/swift/
