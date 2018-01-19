@@ -19,11 +19,11 @@ To integrate this into your own app
 * Make sure the framework (Placenote.framework) is listed under 'Linked Frameworks and Libraries' under the 'General' tab. This should be automatic
 * Make sure the framework (Placenote.framework) is listed under 'Embedded Binaries' under the 'General' tab.
 * Under 'Build Settings' set 'Enable Bitcode' to NO
-* Under 'Build Settings' add '$(PROJECT_DIR)/<Project Name>/PNSDK/Placenote.framework/Headers/' to Header Search Paths
+* Under 'Build Settings' add '$(PROJECT_DIR)/YOUR_PROJECT_NAME/PNSDK/Placenote.framework/Headers/' to Header Search Paths
     * The path may be different based on where you copied the PNSDK folder to
 * Add the PNSDK bridging header
     * If you have an existing bridging header:
         * Add '#import "PlacenoteSDK-Bridging-Header.h"' to your project's bridging header
     * If you don't have an existing bridging header:
-        * Under 'Build Settings' set 'Objective-C Bridging Header' to '$(PROJECT_DIR)/<Project Name>/PlacenoteSDK-Bridging-Header.h'
+        * Under 'Build Settings' set 'Objective-C Bridging Header' to '$(PROJECT_DIR)/YOUR_PROJECT_NAME/PlacenoteSDK-Bridging-Header.h'
 * Read further API documentation here: https://developer.placenote.com/api/swift/
