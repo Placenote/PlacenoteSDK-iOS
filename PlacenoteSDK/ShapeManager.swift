@@ -94,8 +94,8 @@ class ShapeManager {
   }
   
   //Retrieve JSON file with a certain mapid name
-  func retrieveFromFile(filename: String?) {
-    guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+  func retrieveFromFile(filename: String?) -> Bool {
+    guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return false }
     clearShapes() //clear currently viewing shapes and delete any record of them.
     
     var fileUrl: URL
@@ -109,7 +109,7 @@ class ShapeManager {
     // Read data from .json file and transform data into an array
     do {
       let data = try Data(contentsOf: fileUrl, options: [])
-      guard let shapeArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: [String: String]]] else { return }
+      guard let shapeArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: [String: String]]] else { return false }
       for item in shapeArray {
         
         let x_string: String = item["shape"]!["x"]!
@@ -125,8 +125,10 @@ class ShapeManager {
       }
     } catch {
       print(error)
+      return false
     }
     print ("Shape Manager: retrieved " + String(shapePositions.count) + "shapes")
+    return true
   }
   
   //Delete JSON File
