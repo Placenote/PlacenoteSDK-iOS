@@ -1,10 +1,9 @@
 //
 //  LibPlacenote.h
-//  C API header for libPlacenote SDK
+//  C header of LibPlacenote SDK
 //
 //  Created by Yan Ma on 2017-09-01.
 //  Copyright © 2017 Vertical AI. All rights reserved.
-
 
 #ifndef LIBPLACENOTE_H
 #define LIBPLACENOTE_H
@@ -117,4 +116,3 @@ FOUNDATION_EXPORT int PNSetIntrinsics(PNCameraInstrinsics* instrinsics);
 FOUNDATION_EXPORT int PNSetFrame(PNImagePlane* yPlane, PNImagePlane* vuPlane, PNTransform* arPose);
 
 #endif  // LIBPLACENOTE_H
-
