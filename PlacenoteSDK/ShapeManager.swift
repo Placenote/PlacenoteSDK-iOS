@@ -124,6 +124,7 @@ class ShapeManager {
         print ("Shape Manager: Retrieved " + String(describing: type) + " type at position" + String (describing: position))
       }
     } catch {
+      print ("Could not retrieve shape json file")
       print(error)
       return false
     }
