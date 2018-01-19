@@ -288,8 +288,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                                       self.mapTable.isHidden = true
                                       self.pickMapButton.setTitle("Load Map", for: .normal)
                                       self.newMapButton.isEnabled = true
-                                      self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])
-                                      self.statusLabel.text = "Map Loaded. Look Around"
+                                      
+                                      if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
+                                        self.statusLabel.text = "Map Loaded. Look Around"
+                                      }
+                                      else {
+                                        self.statusLabel.text = "Map Loaded. Shape file not found"
+                                      }
                                       LibPlacenote.instance.startSession()
                                     } else if (faulted) {
                                       print ("Couldnt load map: " + self.maps[indexPath.row])
