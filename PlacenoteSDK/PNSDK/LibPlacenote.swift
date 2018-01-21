@@ -477,9 +477,11 @@ class LibPlacenote {
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else {
-          libPtr.mapTransferCbDict[callbackId]!(
-            false, false, Float(bytesTransferred!)/Float(bytesTotal!)
-          )
+          var progress:Float = 0
+          if (bytesTotal! > 0) {
+            progress = Float(bytesTransferred!)/Float(bytesTotal!)
+          }
+          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
         }
       })
     }, ctxPtr)
