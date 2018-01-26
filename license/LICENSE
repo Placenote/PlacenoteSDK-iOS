@@ -13,11 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-libPlacenote.a is under a proprietary license with details to be found in the file
+Placenote.framework is under a proprietary license with details to be found in the file
 License.libPlacenote
-  libPlacenote uses some third party libraries, their respective licenses are listed below
+  Placenote.framework uses some third party libraries, their respective licenses are listed below
   libOpencv is covered under BSD3 with details in License.OpenCV
-  gtsam is covered under the BSD license with details in License.BSD
-  curly is covered under the MIT license with details in License.MIT
-  g2o is covered under the BSD license with details in License2.BSD
+  gtsam is covered under the BSD license with details in License.gtsam
+  curly is covered under the MIT license with details in License.curly
+  g2o is covered under the BSD license with details in License.g2o
+  DBoW2 is covered under the BSD license with details in License.dbow2
 
