@@ -45,9 +45,7 @@ class CameraManager: PNDelegate {
    - Parameter arkitPose: Odometry pose with respect to the ARKit coordinate frame that corresponds with 'outputPose' in time.
    */
   func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) -> Void {
-    if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
-      cameraParent.simdTransform = outputPose*arkitPose.inverse
-    }
+    cameraParent.simdTransform = outputPose*arkitPose.inverse
   }
   
   /**

@@ -217,8 +217,11 @@ class LibPlacenote {
         let arkitMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (arkitPose?.pointee)!)
         
         DispatchQueue.main.async(execute: {() -> Void in
-          libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
           let status = libPtr.getMappingStatus()
+          if (status == LibPlacenote.MappingStatus.running) {
+            libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
+          }
+          
           if (status != libPtr.prevStatus) {
             libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: status)
             libPtr.prevStatus = status
