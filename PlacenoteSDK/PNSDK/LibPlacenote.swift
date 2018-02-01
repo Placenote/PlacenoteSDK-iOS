@@ -136,6 +136,8 @@ class LibPlacenote {
   
   private typealias NativeInitResultPtr = UnsafeMutablePointer<PNCallbackResult>
   private typealias NativePosePtr = UnsafeMutablePointer<PNTransform>
+  private var currArkitPose: matrix_float4x4 = matrix_identity_float4x4
+  
   private var sdkInitialized: Bool = false
   private let bundlePath = Bundle.main.bundlePath
   private let mapStoragePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
@@ -217,12 +219,17 @@ class LibPlacenote {
         let arkitMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (arkitPose?.pointee)!)
         
         DispatchQueue.main.async(execute: {() -> Void in
-          libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
           let status = libPtr.getMappingStatus()
+          if (status == LibPlacenote.MappingStatus.running) {
+            libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
+          }
+          
           if (status != libPtr.prevStatus) {
             libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: status)
             libPtr.prevStatus = status
           }
+          libPtr.currArkitPose = arkitMat
+          
         })
       }
     }, ctxPtr)
@@ -273,6 +280,44 @@ class LibPlacenote {
     
     return pose;
   }
+  
+  /**
+   Return a pose in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
+   
+   - Returns: A SCNVector3 that describes the position of an object in the inertial pose.
+   */
+  func processPose(pose : SCNVector3) -> SCNVector3 {
+    var tfInARKit :  matrix_float4x4 = matrix_identity_float4x4
+    tfInARKit.columns.3.x = pose.x
+    tfInARKit.columns.3.y = pose.y
+    tfInARKit.columns.3.z = pose.z
+
+    let tfInPN : matrix_float4x4 = getPose()*currArkitPose.inverse*tfInARKit
+    return tfInPN.position()
+  }
+  
+  
+  /**
+   Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
+   
+   - Returns: A SCNMatrix4 that describes the position and orientation of an object in the inertial pose.
+   */
+  func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
+    let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
+    let tfInPN : SCNMatrix4 = SCNMatrix4(getPose()*currArkitPose.inverse*tfInARKit)
+    return tfInPN
+  }
+  
+  
+  /**
+   Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
+   
+   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial pose.
+   */
+  func processPose(pose: matrix_float4x4) -> matrix_float4x4 {
+    return getPose()*currArkitPose.inverse*pose
+  }
+  
   
   /**
    Return an array of 3d points in the inertial map frame that LibPlacenote is currently measuring
