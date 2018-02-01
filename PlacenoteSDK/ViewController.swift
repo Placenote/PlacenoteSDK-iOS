@@ -146,6 +146,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       else if localizationStarted {
         statusLabel.text = "Map Found!"
       }
+      tapRecognizer?.isEnabled = true
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
@@ -153,6 +154,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       if mappingStarted {
         statusLabel.text = "Moved too fast. Map Lost"
       }
+      tapRecognizer?.isEnabled = false
+
     }
 
   }
@@ -340,8 +343,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let tapLocation = sender.location(in: scnView)
     let hitTestResults = scnView.hitTest(tapLocation, types: .featurePoint)
     if let result = hitTestResults.first {
-      let position = result.worldTransform.position()
-      shapeManager.spawnRandomShape(position: position)
+      let pose = LibPlacenote.instance.processPose(pose: result.worldTransform)
+      shapeManager.spawnRandomShape(position: pose.position())
     }
   }
 
