@@ -43,9 +43,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
   private var showFeatures: Bool = true
-  
-  private var currMapPose: matrix_float4x4 = matrix_identity_float4x4
-
 
   //Setup view once loaded
   override func viewDidLoad() {
@@ -134,7 +131,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   //Receive a pose update when a new pose is calculated
   func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) -> Void {
-    currMapPose = outputPose
+
   }
 
   //Receive a status update when the status changes
