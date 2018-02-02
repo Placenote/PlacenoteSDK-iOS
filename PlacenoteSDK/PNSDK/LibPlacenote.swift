@@ -9,6 +9,7 @@
 import Foundation
 import SceneKit
 import GLKit
+import os.log
 
 /// Untility functions to matrix_float4x4
 extension matrix_float4x4 {
@@ -150,6 +151,7 @@ class LibPlacenote {
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
+  private var currStatus: MappingStatus = MappingStatus.waiting
   
   private init() {
     initializePlacenote();
@@ -162,21 +164,21 @@ class LibPlacenote {
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
-    print ("initializing SDK")
+    os_log ("initializing SDK")
     initializeSDK(mapStoragePath, bundlePath, ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
       let libPtr = Unmanaged<LibPlacenote>.fromOpaque(ctxPtr!).takeUnretainedValue()
     
       if (result != nil && success! > 0) {
-        print("Initialized SDK!")
+        os_log("Initialized SDK!")
         libPtr.sdkInitialized = true;
       } else {
-        print("Failed to SDK!")
+        os_log("Failed to initialize SDK!", log: OSLog.default, type: .error)
         let errMsg = result?.pointee.msg
         var str: String = ""
         if (result != nil) {
-          str = (String(cString: errMsg!, encoding: String.Encoding.ascii))!
-          print ("error message: " + str)
+          str = String(cString: errMsg!, encoding: String.Encoding.ascii)!
+          os_log ("Error: %@", log: OSLog.default, type: .error, str)
         }
       }
     })
@@ -205,12 +207,12 @@ class LibPlacenote {
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     PNStartSession({(outputPose: NativePosePtr?, arkitPose: NativePosePtr?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       if (outputPose == nil) {
-        print("outputPose null")
+        os_log("outputPose null",log: OSLog.default, type: .error)
         return
       }
       
       if (arkitPose == nil) {
-        print("arkitPose null")
+        os_log("arkitPose null",log: OSLog.default, type: .error)
         return
       }
       
@@ -229,6 +231,7 @@ class LibPlacenote {
             libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: status)
             libPtr.prevStatus = status
           }
+          libPtr.currStatus = status
           libPtr.currArkitPose = arkitMat
           libPtr.currMapPose = outputMat
           
@@ -265,7 +268,7 @@ class LibPlacenote {
     case 2:
       statusEnum = MappingStatus.lost
     default:
-      print(String(format: "Unknown status: %d", status))
+      os_log("Unknown Status %@",log: OSLog.default, type: .fault, status)
     }
     
     return statusEnum;
@@ -284,17 +287,21 @@ class LibPlacenote {
   }
   
   /**
-   Return a pose in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
+   Return a position vector3 in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
    - Returns: A SCNVector3 that describes the position of an object in the inertial pose.
    */
-  func processPose(pose : SCNVector3) -> SCNVector3 {
+  func processPosition(pose : SCNVector3) -> SCNVector3 {
     var tfInARKit :  matrix_float4x4 = matrix_identity_float4x4
     tfInARKit.columns.3.x = pose.x
     tfInARKit.columns.3.y = pose.y
     tfInARKit.columns.3.z = pose.z
-
     let tfInPN : matrix_float4x4 = currMapPose*currArkitPose.inverse*tfInARKit
+    
+    if(currStatus != MappingStatus.running) {
+      os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
+    }
+    
     return tfInPN.position()
   }
   
@@ -307,6 +314,11 @@ class LibPlacenote {
   func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
     let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
     let tfInPN : SCNMatrix4 = SCNMatrix4(currMapPose*currArkitPose.inverse*tfInARKit)
+    
+    if(currStatus != MappingStatus.running) {
+      os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
+    }
+    
     return tfInPN
   }
   
@@ -317,6 +329,9 @@ class LibPlacenote {
    - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial pose.
    */
   func processPose(pose: matrix_float4x4) -> matrix_float4x4 {
+    if(currStatus != MappingStatus.running) {
+      os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
+    }
     return currMapPose*currArkitPose.inverse*pose
   }
   
@@ -395,7 +410,7 @@ class LibPlacenote {
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
-    print("Saving Map")
+    os_log("Saving Map")
     PNAddMap({(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
       let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
@@ -404,7 +419,7 @@ class LibPlacenote {
       
       if (success != nil && success! > 0) {
         let mapId: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-        print(String(format: "Added map to the database! Response: %@", mapId!))
+        os_log("Added map to the database! Response: %@", mapId!)
         
         PNSaveMap(mapId, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext2: UnsafeMutableRawPointer?) -> Void in
           let cbCtx3 = Unmanaged<CallbackContext>.fromOpaque(swiftContext2!).takeUnretainedValue()
@@ -415,17 +430,17 @@ class LibPlacenote {
           
           DispatchQueue.main.async(execute: {() -> Void in
             if (complete != nil && complete! > 0) {
-              print("Uploaded map!")
+              os_log("Uploaded map!")
               cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
               cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else if (faulted != nil && faulted! > 0) {
-              print("Failed to upload map!")
+              os_log("Failed to upload map!", log: OSLog.default, type: .fault )
               cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
               cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else {
-              print("Uploading map!")
+              os_log("Uploading map!")
               cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(
                 false, false, Float(bytesTransferred!)/Float(bytesTotal!)
               )
@@ -433,14 +448,14 @@ class LibPlacenote {
           })
         }, swiftContext)
         
-        print("Saved Map")
+        os_log("Saved Map")
         DispatchQueue.main.async(execute: {() -> Void in
           libPtr.saveMapCbDict[callbackId]!(mapId!)
           libPtr.saveMapCbDict.removeValue(forKey: callbackId)
         })
       } else {
         let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-        print(String(format: "Failed to add the map! Error msg: %@", errorMsg!))
+        os_log("Failed to add the map! Error msg: %@", log: OSLog.default, type: .error,  errorMsg!)
         
         DispatchQueue.main.async(execute: {() -> Void in
           libPtr.saveMapCbDict[callbackId]!(nil)
@@ -465,7 +480,7 @@ class LibPlacenote {
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
-    print("Deleting Map")
+    os_log("Deleting Map")
     PNDeleteMap(mapId, {(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
       let callbackId = cbReturnedCtx.callbackId
@@ -474,10 +489,10 @@ class LibPlacenote {
       
       DispatchQueue.main.async(execute: {() -> Void in
         if (success != nil && success! > 0) {
-          print("Map deleted!")
+          os_log("Map deleted!")
           libPtr.deleteMapCbDict[callbackId]!(true)
         } else {
-          print("Failed to delete map!")
+          os_log("Failed to delete map!", log: OSLog.default, type: .error)
           libPtr.deleteMapCbDict[callbackId]!(false)
         }
         libPtr.deleteMapCbDict.removeValue(forKey: callbackId)
@@ -502,7 +517,7 @@ class LibPlacenote {
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
-    print("Loading Map")
+    os_log("Loading Map")
     PNLoadMap(mapId, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
       let libPtr = cbRetCtx.libPtr
@@ -514,12 +529,12 @@ class LibPlacenote {
       
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed! > 0) {
-          print("Map loaded!")
+          os_log("Map loaded!")
           libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else if (faulted! > 0) {
-          print("Failed to load map!")
+          os_log("Failed to load map!", log: OSLog.default, type: .fault)
           libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
@@ -556,7 +571,7 @@ class LibPlacenote {
       
       if (success != nil && success! > 0) {
         let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-        print(String(format: "Map list fetched from the database! Response: %@", newMapList!))
+        os_log("Map list fetched from the database! Response: %@", newMapList!)
       
         var placeArray: [String: NSArray]
         var placeIdArray:[String] = []
@@ -571,7 +586,7 @@ class LibPlacenote {
               }
             }
           } catch {
-            print(error.localizedDescription)
+            os_log("Canot parse file list: %@", log: OSLog.default, type: .error, error.localizedDescription)
           }
         }
         
@@ -581,7 +596,7 @@ class LibPlacenote {
         })
       } else {
         let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-        print(String(format: "Failed to fetch the map list! Error msg: %@", errorMsg!))
+        os_log("Failed to fetch the map list! Error msg: %@", log: OSLog.default, type: .error, errorMsg!)
         
         DispatchQueue.main.async(execute: {() -> Void in
           libPtr.listMapCbDict[callbackId]!(false, [])
