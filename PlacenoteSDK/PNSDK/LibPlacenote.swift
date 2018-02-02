@@ -137,6 +137,7 @@ class LibPlacenote {
   private typealias NativeInitResultPtr = UnsafeMutablePointer<PNCallbackResult>
   private typealias NativePosePtr = UnsafeMutablePointer<PNTransform>
   private var currArkitPose: matrix_float4x4 = matrix_identity_float4x4
+  private var currMapPose: matrix_float4x4 = matrix_identity_float4x4
   
   private var sdkInitialized: Bool = false
   private let bundlePath = Bundle.main.bundlePath
@@ -229,6 +230,7 @@ class LibPlacenote {
             libPtr.prevStatus = status
           }
           libPtr.currArkitPose = arkitMat
+          libPtr.currMapPose = outputMat
           
         })
       }
@@ -292,7 +294,7 @@ class LibPlacenote {
     tfInARKit.columns.3.y = pose.y
     tfInARKit.columns.3.z = pose.z
 
-    let tfInPN : matrix_float4x4 = getPose()*currArkitPose.inverse*tfInARKit
+    let tfInPN : matrix_float4x4 = currMapPose*currArkitPose.inverse*tfInARKit
     return tfInPN.position()
   }
   
@@ -304,7 +306,7 @@ class LibPlacenote {
    */
   func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
     let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
-    let tfInPN : SCNMatrix4 = SCNMatrix4(getPose()*currArkitPose.inverse*tfInARKit)
+    let tfInPN : SCNMatrix4 = SCNMatrix4(currMapPose*currArkitPose.inverse*tfInARKit)
     return tfInPN
   }
   
@@ -315,7 +317,7 @@ class LibPlacenote {
    - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial pose.
    */
   func processPose(pose: matrix_float4x4) -> matrix_float4x4 {
-    return getPose()*currArkitPose.inverse*pose
+    return currMapPose*currArkitPose.inverse*pose
   }
   
   
