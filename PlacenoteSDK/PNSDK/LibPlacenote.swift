@@ -225,6 +225,8 @@ class LibPlacenote {
           let status = libPtr.getMappingStatus()
           if (status == LibPlacenote.MappingStatus.running) {
             libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
+            libPtr.currArkitPose = arkitMat
+            libPtr.currMapPose = outputMat
           }
           
           if (status != libPtr.prevStatus) {
@@ -232,9 +234,6 @@ class LibPlacenote {
             libPtr.prevStatus = status
           }
           libPtr.currStatus = status
-          libPtr.currArkitPose = arkitMat
-          libPtr.currMapPose = outputMat
-          
         })
       }
     }, ctxPtr)
