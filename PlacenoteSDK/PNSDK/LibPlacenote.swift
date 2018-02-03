@@ -137,8 +137,7 @@ class LibPlacenote {
   
   private typealias NativeInitResultPtr = UnsafeMutablePointer<PNCallbackResult>
   private typealias NativePosePtr = UnsafeMutablePointer<PNTransform>
-  private var currArkitPose: matrix_float4x4 = matrix_identity_float4x4
-  private var currMapPose: matrix_float4x4 = matrix_identity_float4x4
+  private var currTransform: matrix_float4x4 = matrix_identity_float4x4
   
   private var sdkInitialized: Bool = false
   private let bundlePath = Bundle.main.bundlePath
@@ -225,8 +224,7 @@ class LibPlacenote {
           let status = libPtr.getMappingStatus()
           if (status == LibPlacenote.MappingStatus.running) {
             libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
-            libPtr.currArkitPose = arkitMat
-            libPtr.currMapPose = outputMat
+            libPtr.currTransform = outputMat*arkitMat.inverse
           }
           
           if (status != libPtr.prevStatus) {
@@ -267,7 +265,8 @@ class LibPlacenote {
     case 2:
       statusEnum = MappingStatus.lost
     default:
-      os_log("Unknown Status %@",log: OSLog.default, type: .fault, status)
+      let stat = String(format: "Unknown status: %d", status)
+      os_log("%@" ,log: OSLog.default, type: .error, stat) //TODO: printout status. currently getting garbled memory when API not active
     }
     
     return statusEnum;
@@ -295,7 +294,7 @@ class LibPlacenote {
     tfInARKit.columns.3.x = pose.x
     tfInARKit.columns.3.y = pose.y
     tfInARKit.columns.3.z = pose.z
-    let tfInPN : matrix_float4x4 = currMapPose*currArkitPose.inverse*tfInARKit
+    let tfInPN : matrix_float4x4 = currTransform*tfInARKit
     
     if(currStatus != MappingStatus.running) {
       os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
@@ -312,7 +311,7 @@ class LibPlacenote {
    */
   func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
     let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
-    let tfInPN : SCNMatrix4 = SCNMatrix4(currMapPose*currArkitPose.inverse*tfInARKit)
+    let tfInPN : SCNMatrix4 = SCNMatrix4(currTransform*tfInARKit)
     
     if(currStatus != MappingStatus.running) {
       os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
@@ -331,7 +330,7 @@ class LibPlacenote {
     if(currStatus != MappingStatus.running) {
       os_log("Processing position while map is not localized. Returning input value", log: OSLog.default, type: .error)
     }
-    return currMapPose*currArkitPose.inverse*pose
+    return currTransform*pose
   }
   
   
