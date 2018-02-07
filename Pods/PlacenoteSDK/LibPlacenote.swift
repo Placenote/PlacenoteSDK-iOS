@@ -128,7 +128,12 @@ public class LibPlacenote {
   }
   
   /// Static instance of the LibPlacenote singleton
-  public static let instance = LibPlacenote()
+  private static var _instance = LibPlacenote()
+  public static var instance: LibPlacenote {
+    get {
+        return _instance
+    }
+  }
   
   /// A multicast delegate developers can append to in order to subscribe
   /// to the pose and status events from LibPlacenote
@@ -148,20 +153,15 @@ public class LibPlacenote {
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   
-  private init() {
-    initializePlacenote();
-  }
-  
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
    */
-  func initializePlacenote() -> Void {
+  public func initialize(apiKey: String) -> Void {
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     print ("initializing SDK")
-    print (bundlePath + "/Frameworks/PlacenoteSDK.framework")
-    initializeSDK(mapStoragePath, bundlePath + "/Frameworks/PlacenoteSDK.framework", ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
+    initializeSDK(apiKey, mapStoragePath, bundlePath + "/Frameworks/PlacenoteSDK.framework", ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
       let libPtr = Unmanaged<LibPlacenote>.fromOpaque(ctxPtr!).takeUnretainedValue()
     

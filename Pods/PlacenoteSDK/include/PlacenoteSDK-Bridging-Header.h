@@ -15,16 +15,13 @@
 #import <CoreVideo/CoreVideo.h>
 #import <SceneKit/SceneKit.h>
 
-
 enum Status{INVALID, GOOD, BAD, DELETED};
 
-# define API_KEY "" //enter API Key here
-
-void initializeSDK(const char* mapPath, const char* appBasePath, void* swiftContext, result_callback cb)
+void initializeSDK(const char* apiKey, const char* mapPath, const char* appBasePath, void* swiftContext, result_callback cb)
 {
   PNInitParams params;
 
-  params.apiKey = API_KEY;
+  params.apiKey = apiKey;
   params.appBasePath = appBasePath;
   params.mapPath = mapPath;
 
