@@ -168,7 +168,7 @@ class LibPlacenote {
       let success = result?.pointee.success
       let libPtr = Unmanaged<LibPlacenote>.fromOpaque(ctxPtr!).takeUnretainedValue()
     
-      if (result != nil && success! > 0) {
+      if (result != nil && success!) {
         os_log("Initialized SDK!")
         libPtr.sdkInitialized = true;
       } else {
@@ -415,7 +415,7 @@ class LibPlacenote {
       let callbackId = cbReturnedCtx.callbackId
       let libPtr = cbReturnedCtx.libPtr
       
-      if (success != nil && success! > 0) {
+      if (success != nil && success!) {
         let mapId: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
         os_log("Added map to the database! Response: %@", mapId!)
         
@@ -427,12 +427,12 @@ class LibPlacenote {
           let bytesTotal = status?.pointee.bytesTotal
           
           DispatchQueue.main.async(execute: {() -> Void in
-            if (complete != nil && complete! > 0) {
+            if (complete != nil && complete!) {
               os_log("Uploaded map!")
               cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
               cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
-            } else if (faulted != nil && faulted! > 0) {
+            } else if (faulted != nil && faulted!) {
               os_log("Failed to upload map!", log: OSLog.default, type: .fault )
               cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
               cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
@@ -486,7 +486,7 @@ class LibPlacenote {
       let success = result?.pointee.success
       
       DispatchQueue.main.async(execute: {() -> Void in
-        if (success != nil && success! > 0) {
+        if (success != nil && success!) {
           os_log("Map deleted!")
           libPtr.deleteMapCbDict[callbackId]!(true)
         } else {
@@ -526,12 +526,12 @@ class LibPlacenote {
       let bytesTotal = status?.pointee.bytesTotal
       
       DispatchQueue.main.async(execute: {() -> Void in
-        if (completed! > 0) {
+        if (completed!) {
           os_log("Map loaded!")
           libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
-        } else if (faulted! > 0) {
+        } else if (faulted!) {
           os_log("Failed to load map!", log: OSLog.default, type: .fault)
           libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
@@ -567,7 +567,7 @@ class LibPlacenote {
       let libPtr = cbReturnedCtx.libPtr
       let callbackId = cbReturnedCtx.callbackId
       
-      if (success != nil && success! > 0) {
+      if (success != nil && success!) {
         let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
         os_log("Map list fetched from the database! Response: %@", newMapList!)
       
