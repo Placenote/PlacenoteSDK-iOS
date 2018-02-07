@@ -1,0 +1,21 @@
+PODS:
+  - PlacenoteSDK (1.0.0)
+
+DEPENDENCIES:
+  - PlacenoteSDK (from `https://github.com/Placenote/PlacenoteSDK-CocoaPod.git`)
+
+EXTERNAL SOURCES:
+  PlacenoteSDK:
+    :git: https://github.com/Placenote/PlacenoteSDK-CocoaPod.git
+
+CHECKOUT OPTIONS:
+  PlacenoteSDK:
+    :commit: b7d69500911b702bc28f10bad02c26bc767ddf71
+    :git: https://github.com/Placenote/PlacenoteSDK-CocoaPod.git
+
+SPEC CHECKSUMS:
+  PlacenoteSDK: b0a0c66663161458717bdedb18c79c7be7bd2a8e
+
+PODFILE CHECKSUM: ecc9087d53c48b92f2fa52b175ee0f6ccc111b30
+
+COCOAPODS: 1.4.0

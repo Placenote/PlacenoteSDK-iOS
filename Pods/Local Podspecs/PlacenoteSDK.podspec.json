@@ -1,0 +1,30 @@
+{
+  "name": "PlacenoteSDK",
+  "version": "1.0.0",
+  "summary": "Placenote SDK brings persistence to AR apps.",
+  "homepage": "https://placenote.com/",
+  "authors": {
+    "Vertical Developers": "vertical.ai.dev@gmail.com"
+  },
+  "license": {
+    "type": "Placenote EULA",
+    "file": "LICENSE"
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "source": {
+    "http": "https://github.com/Placenote/PlacenoteSDK-CocoaPod/releases/download/v1.0.0/PlacenoteSDK.zip"
+  },
+  "vendored_frameworks": "Placenote.framework",
+  "source_files": [
+    "*.swift",
+    "include/PlacenoteSDK-Bridging-Header.h",
+    "Placenote.framework/Headers/libPlacenote.h"
+  ],
+  "public_header_files": [
+    "include/PlacenoteSDK-Bridging-Header.h",
+    "Placenote.framework/Headers/libPlacenote.h"
+  ],
+  "resources": "Data.bin"
+}
