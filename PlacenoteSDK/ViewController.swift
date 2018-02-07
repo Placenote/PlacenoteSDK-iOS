@@ -44,7 +44,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var ptViz: FeaturePointVisualizer? = nil;
   private var showFeatures: Bool = true
 
-
   //Setup view once loaded
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -146,6 +145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       else if localizationStarted {
         statusLabel.text = "Map Found!"
       }
+      tapRecognizer?.isEnabled = true
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
@@ -153,6 +153,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       if mappingStarted {
         statusLabel.text = "Moved too fast. Map Lost"
       }
+      tapRecognizer?.isEnabled = false
+
     }
 
   }
@@ -237,7 +239,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     else {
       mapTable.isHidden = true
-      tapRecognizer?.isEnabled = true
       pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.isEnabled = true
       statusLabel.text = "Map Load cancelled"
@@ -296,6 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                                         self.statusLabel.text = "Map Loaded. Shape file not found"
                                       }
                                       LibPlacenote.instance.startSession()
+                                      self.tapRecognizer?.isEnabled = true
                                     } else if (faulted) {
                                       print ("Couldnt load map: " + self.maps[indexPath.row])
                                       self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
@@ -340,8 +342,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let tapLocation = sender.location(in: scnView)
     let hitTestResults = scnView.hitTest(tapLocation, types: .featurePoint)
     if let result = hitTestResults.first {
-      let position = result.worldTransform.position()
-      shapeManager.spawnRandomShape(position: position)
+      let pose = LibPlacenote.instance.processPose(pose: result.worldTransform)
+      shapeManager.spawnRandomShape(position: pose.position())
+
     }
   }
 
