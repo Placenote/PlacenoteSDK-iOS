@@ -159,7 +159,7 @@ class LibPlacenote {
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
    */
-  func initializePlacenote() -> Void {
+  private func initializePlacenote() -> Void {
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
