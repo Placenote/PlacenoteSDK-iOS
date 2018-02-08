@@ -279,32 +279,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     print("Retrieving mapId: " + maps[indexPath.row])
     statusLabel.text = "Retrieving mapId: " + maps[indexPath.row]
 
-
     LibPlacenote.instance.loadMap(mapId: maps[indexPath.row],
-                                  downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-                                    if (completed) {
-                                      self.mappingStarted = false
-                                      self.mappingComplete = false
-                                      self.localizationStarted = true
-                                      self.mapTable.isHidden = true
-                                      self.pickMapButton.setTitle("Load Map", for: .normal)
-                                      self.newMapButton.isEnabled = true
-                                      
-                                      if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
-                                        self.statusLabel.text = "Map Loaded. Look Around"
-                                      }
-                                      else {
-                                        self.statusLabel.text = "Map Loaded. Shape file not found"
-                                      }
-                                      LibPlacenote.instance.startSession()
-                                      self.tapRecognizer?.isEnabled = true
-                                    } else if (faulted) {
-                                      print ("Couldnt load map: " + self.maps[indexPath.row])
-                                      self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
-                                    } else {
-                                      print ("Progress: " + percentage.description)
-                                    }
-    }
+      downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+        if (completed) {
+          self.mappingStarted = false
+          self.mappingComplete = false
+          self.localizationStarted = true
+          self.mapTable.isHidden = true
+          self.pickMapButton.setTitle("Load Map", for: .normal)
+          self.newMapButton.isEnabled = true
+          
+          if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
+            self.statusLabel.text = "Map Loaded. Look Around"
+          }
+          else {
+            self.statusLabel.text = "Map Loaded. Shape file not found"
+          }
+          LibPlacenote.instance.startSession()
+          self.tapRecognizer?.isEnabled = true
+        } else if (faulted) {
+          print ("Couldnt load map: " + self.maps[indexPath.row])
+          self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
+        } else {
+          print ("Progress: " + percentage.description)
+        }
+      }
     )
   }
 
