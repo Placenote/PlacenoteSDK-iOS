@@ -2,3 +2,5 @@ PlacenoteSDK/PNSDK/libPlacenote.a filter=lfs diff=lfs merge=lfs -text
 PlacenoteSDK/PNSDK/libopencv.a filter=lfs diff=lfs merge=lfs -text
 PlacenoteSDK/PNSDK/Data.bin filter=lfs diff=lfs merge=lfs -text
 PlacenoteSDK/PNSDK/Placenote.framework/Placenote filter=lfs diff=lfs merge=lfs -text
+Pods/PlacenoteSDK/Placenote.framework/Placenote filter=lfs diff=lfs merge=lfs -text
+Pods/PlacenoteSDK/Data.bin filter=lfs diff=lfs merge=lfs -text

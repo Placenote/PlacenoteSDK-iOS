@@ -6,7 +6,7 @@ target 'PlacenoteSDKExample' do
   use_frameworks!
 
   # Pods for PlacenoteTest
-  pod 'PlacenoteSDK', :git => 'https://github.com/Placenote/PlacenoteSDK-CocoaPod.git'
+  pod 'PlacenoteSDK'
 
 end
 

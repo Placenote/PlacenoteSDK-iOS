@@ -18,6 +18,7 @@
 #endif
 #endif
 
+
 typedef struct PNCameraInstrinsics_t
 {
   int width;
@@ -112,6 +113,10 @@ FOUNDATION_EXPORT int PNLoadMap (const char* mapId, transfer_map_callback cb, vo
 FOUNDATION_EXPORT int PNDeleteMap (const char* mapId, result_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNAddMap (result_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* swiftContext);
+FOUNDATION_EXPORT int PNStopSession ();
+FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* swiftContext);
+FOUNDATION_EXPORT int PNStartRecordDataset();
+FOUNDATION_EXPORT int PNStopRecordDataset();
 FOUNDATION_EXPORT int PNStopSession ();
 FOUNDATION_EXPORT int PNGetPose(PNTransform* transform);
 FOUNDATION_EXPORT int PNSetIntrinsics(PNCameraInstrinsics* instrinsics);
