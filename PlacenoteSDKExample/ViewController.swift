@@ -10,7 +10,6 @@ import UIKit
 import SceneKit
 import ARKit
 import PlacenoteSDK
-import Pods_PlacenoteSDKExample
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UITableViewDelegate, UITableViewDataSource, PNDelegate {
 
