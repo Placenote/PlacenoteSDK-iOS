@@ -45,7 +45,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var ptViz: FeaturePointVisualizer? = nil;
   private var showFeatures: Bool = true
 
-
   //Setup view once loaded
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -147,6 +146,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       else if localizationStarted {
         statusLabel.text = "Map Found!"
       }
+      tapRecognizer?.isEnabled = true
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
@@ -154,6 +154,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       if mappingStarted {
         statusLabel.text = "Moved too fast. Map Lost"
       }
+      tapRecognizer?.isEnabled = false
+
     }
 
   }
@@ -238,7 +240,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     else {
       mapTable.isHidden = true
-      tapRecognizer?.isEnabled = true
       pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.isEnabled = true
       statusLabel.text = "Map Load cancelled"
@@ -279,31 +280,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     print("Retrieving mapId: " + maps[indexPath.row])
     statusLabel.text = "Retrieving mapId: " + maps[indexPath.row]
 
-
     LibPlacenote.instance.loadMap(mapId: maps[indexPath.row],
-                                  downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-                                    if (completed) {
-                                      self.mappingStarted = false
-                                      self.mappingComplete = false
-                                      self.localizationStarted = true
-                                      self.mapTable.isHidden = true
-                                      self.pickMapButton.setTitle("Load Map", for: .normal)
-                                      self.newMapButton.isEnabled = true
-                                      
-                                      if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
-                                        self.statusLabel.text = "Map Loaded. Look Around"
-                                      }
-                                      else {
-                                        self.statusLabel.text = "Map Loaded. Shape file not found"
-                                      }
-                                      LibPlacenote.instance.startSession()
-                                    } else if (faulted) {
-                                      print ("Couldnt load map: " + self.maps[indexPath.row])
-                                      self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
-                                    } else {
-                                      print ("Progress: " + percentage.description)
-                                    }
-    }
+      downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+        if (completed) {
+          self.mappingStarted = false
+          self.mappingComplete = false
+          self.localizationStarted = true
+          self.mapTable.isHidden = true
+          self.pickMapButton.setTitle("Load Map", for: .normal)
+          self.newMapButton.isEnabled = true
+          
+          if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
+            self.statusLabel.text = "Map Loaded. Look Around"
+          }
+          else {
+            self.statusLabel.text = "Map Loaded. Shape file not found"
+          }
+          LibPlacenote.instance.startSession()
+          self.tapRecognizer?.isEnabled = true
+        } else if (faulted) {
+          print ("Couldnt load map: " + self.maps[indexPath.row])
+          self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
+        } else {
+          print ("Progress: " + percentage.description)
+        }
+      }
     )
   }
 
@@ -341,8 +342,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let tapLocation = sender.location(in: scnView)
     let hitTestResults = scnView.hitTest(tapLocation, types: .featurePoint)
     if let result = hitTestResults.first {
-      let position = result.worldTransform.position()
-      shapeManager.spawnRandomShape(position: position)
+      let pose = LibPlacenote.instance.processPose(pose: result.worldTransform)
+      shapeManager.spawnRandomShape(position: pose.position())
+
     }
   }
 
