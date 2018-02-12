@@ -50,18 +50,20 @@ end
 
 ### Using git (if you don't want to use CocoaPods)
 * Start by following the instruction to get the sample app
-* Add all the files under the Pods/PlacenoteSDK folder into your project
+* Copy the Pods/PlacenoteSDK folder into your project
     * Make sure you choose to 'Create Groups' instead of 'Create Folder References'
     * The PlacenoteSDK folder should appear yellow, not blue
 * Make sure the framework (Placenote.framework) is listed under 'Linked Frameworks and Libraries' under the 'General' tab. This should be automatic
 * Make sure the framework (Placenote.framework) is listed under 'Embedded Binaries' under the 'General' tab.
 * Under 'Build Settings' set 'Enable Bitcode' to NO
-* Under 'Build Settings' add '$(PROJECT_DIR)/YOUR_PROJECT_NAME/PNSDK/Placenote.framework/Headers/' to Header Search Paths
+* Under 'Build Settings' add '$(PROJECT_DIR)/PlacenoteSDK/Placenote.framework/Headers/' to Header Search Paths
     * The path may be different based on where you copied the PlacenoteSDK folder to
 * Add the PlacenoteSDK bridging header
     * If you have an existing bridging header:
         * Add '#import "PlacenoteSDK-Bridging-Header.h"' to your project's bridging header
     * If you don't have an existing bridging header:
-        * Under 'Build Settings' set 'Objective-C Bridging Header' to '$(PROJECT_DIR)/YOUR_PROJECT_NAME/PlacenoteSDK-Bridging-Header.h'
+        * Under 'Build Settings' set 'Objective-C Bridging Header' to '$(PROJECT_DIR)/PlacenoteSDK/include/PlacenoteSDK-Bridging-Header.h'
+        
+## Documentation
 * Read further API documentation here: https://developer.placenote.com/api/swift/
 
