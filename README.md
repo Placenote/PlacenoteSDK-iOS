@@ -45,6 +45,7 @@ post_install do |installer|
 end
 ```
 * Run `pod install` to install the PlacenoteSDK pod
+* Disable Bitcode for your project: Under 'Build Settings' set 'Enable Bitcode' to NO
 * Follow the example in the sample AppDelegate.swift for importing and initializing Placenote
 
 ### Using git (if you don't want to use CocoaPods)
