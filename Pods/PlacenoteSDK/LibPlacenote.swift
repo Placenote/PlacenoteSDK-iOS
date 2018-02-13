@@ -145,7 +145,6 @@ public class LibPlacenote {
   private var currTransform: matrix_float4x4 = matrix_identity_float4x4
   
   private var sdkInitialized: Bool = false
-  private let bundlePath = Bundle.main.bundlePath
   private let mapStoragePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
   
   private var mapList: [String] = []
@@ -165,7 +164,19 @@ public class LibPlacenote {
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     os_log ("initializing SDK")
-    initializeSDK(apiKey, mapStoragePath, bundlePath + "/Frameworks/PlacenoteSDK.framework", ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
+
+    let manager = FileManager.default
+
+    var dataPath = Bundle.main.bundlePath
+    if (!manager.fileExists(atPath: dataPath + "/Data.bin")) {
+        dataPath = Bundle.main.bundlePath + "/Frameworks/PlacenoteSDK.framework"
+        if (!manager.fileExists(atPath: dataPath + "/Data.bin")) {
+            os_log ("Failed to locate Data.bin!")
+            return
+        }
+    }
+
+    initializeSDK(apiKey, mapStoragePath, dataPath, ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
       let libPtr = Unmanaged<LibPlacenote>.fromOpaque(ctxPtr!).takeUnretainedValue()
     

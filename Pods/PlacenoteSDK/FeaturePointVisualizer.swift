@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import SceneKit
 
 /// A helper class that takes fetch the map of feature points from LibPlacenote
 /// and visualize it as a pointcloud periodically when enabled
