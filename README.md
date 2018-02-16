@@ -9,19 +9,19 @@ The Placenote SDK iOS Sample app provided here is to serve as an example on how 
 * Clone this repository
 * Critical library files are stored using lfs, which is the large file storage mechanism for git.
   * To Install these files, install lfs either using HomeBrew:
-  
-     ```Shell Session 
+
+     ```Shell Session
      brew install git-lfs
      ```
 
-      or MacPorts: 
+      or MacPorts:
       ```Shell Session
       port install git-lfs
       ```
-   
-  * And then, to get the library files, run: 
+
+  * And then, to get the library files, run:
      ```Shell Session
-     git lfs install 
+     git lfs install
      git lfs pull
      ```
   * More details can be found on the [git lfs website](https://git-lfs.github.com/)
@@ -33,6 +33,7 @@ The Placenote SDK iOS Sample app provided here is to serve as an example on how 
 ### Using CocoaPods (recommended)
 
 * If you aren't already using CocoaPods, follow the directions here to install and set it up: https://guides.cocoapods.org/using/getting-started.html
+* In your project folder, run `pod init` to create the initial Podfile
 * Add `pod 'PlacenoteSDK'` to your Podfile
 * We recommend automatically disabling bitcode by adding this to the end of your Podfile:
 ```ruby
@@ -63,7 +64,7 @@ end
         * Add '#import "PlacenoteSDK-Bridging-Header.h"' to your project's bridging header
     * If you don't have an existing bridging header:
         * Under 'Build Settings' set 'Objective-C Bridging Header' to '$(PROJECT_DIR)/PlacenoteSDK/include/PlacenoteSDK-Bridging-Header.h'
-        
+
 ## Documentation
 * Read further API documentation here: https://developer.placenote.com/api/swift/
 
