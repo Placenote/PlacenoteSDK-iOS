@@ -114,10 +114,7 @@ FOUNDATION_EXPORT int PNDeleteMap (const char* mapId, result_callback cb, void* 
 FOUNDATION_EXPORT int PNAddMap (result_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNStopSession ();
-FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNStartRecordDataset();
-FOUNDATION_EXPORT int PNStopRecordDataset();
-FOUNDATION_EXPORT int PNStopSession ();
 FOUNDATION_EXPORT int PNGetPose(PNTransform* transform);
 FOUNDATION_EXPORT int PNSetIntrinsics(PNCameraInstrinsics* instrinsics);
 FOUNDATION_EXPORT int PNSetFrame(PNImagePlane* yPlane, PNImagePlane* vuPlane, PNTransform* arPose);
