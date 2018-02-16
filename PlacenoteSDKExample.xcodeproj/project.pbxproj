@@ -13,28 +13,9 @@
 		A28C7968202A46F40052F3FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28C7966202A46F40052F3FB /* Main.storyboard */; };
 		A28C796A202A46F40052F3FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A28C7969202A46F40052F3FB /* Assets.xcassets */; };
 		A28C796D202A46F40052F3FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28C796B202A46F40052F3FB /* LaunchScreen.storyboard */; };
-		A28C7978202A46F40052F3FB /* PlacenoteSDKExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7977202A46F40052F3FB /* PlacenoteSDKExampleTests.swift */; };
-		A28C7983202A46F40052F3FB /* PlacenoteSDKExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7982202A46F40052F3FB /* PlacenoteSDKExampleUITests.swift */; };
 		A28C7992202A48190052F3FB /* ShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7990202A48190052F3FB /* ShapeType.swift */; };
 		A28C7993202A48190052F3FB /* ShapeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7991202A48190052F3FB /* ShapeManager.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A28C7974202A46F40052F3FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A28C7957202A46F40052F3FB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A28C795E202A46F40052F3FB;
-			remoteInfo = PlacenoteSDKExample;
-		};
-		A28C797F202A46F40052F3FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A28C7957202A46F40052F3FB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A28C795E202A46F40052F3FB;
-			remoteInfo = PlacenoteSDKExample;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2904538A54D1EA278D335F50 /* Pods-PlacenoteSDKExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlacenoteSDKExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -46,12 +27,6 @@
 		A28C7969202A46F40052F3FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A28C796C202A46F40052F3FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A28C796E202A46F40052F3FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A28C7973202A46F40052F3FB /* PlacenoteSDKExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlacenoteSDKExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A28C7977202A46F40052F3FB /* PlacenoteSDKExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacenoteSDKExampleTests.swift; sourceTree = "<group>"; };
-		A28C7979202A46F40052F3FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A28C797E202A46F40052F3FB /* PlacenoteSDKExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlacenoteSDKExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A28C7982202A46F40052F3FB /* PlacenoteSDKExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacenoteSDKExampleUITests.swift; sourceTree = "<group>"; };
-		A28C7984202A46F40052F3FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A28C7990202A48190052F3FB /* ShapeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeType.swift; sourceTree = "<group>"; };
 		A28C7991202A48190052F3FB /* ShapeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeManager.swift; sourceTree = "<group>"; };
 		FC572E55F179D977C01BA451 /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacenoteSDKExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,20 +38,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FBF965C5C3B1E5C0F8DE1AB /* Pods_PlacenoteSDKExample.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A28C7970202A46F40052F3FB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A28C797B202A46F40052F3FB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,8 +65,6 @@
 			isa = PBXGroup;
 			children = (
 				A28C7961202A46F40052F3FB /* PlacenoteSDKExample */,
-				A28C7976202A46F40052F3FB /* PlacenoteSDKExampleTests */,
-				A28C7981202A46F40052F3FB /* PlacenoteSDKExampleUITests */,
 				A28C7960202A46F40052F3FB /* Products */,
 				9A3DFA0AD5B2FBB266B40DEE /* Pods */,
 				4C6986BF447C6000E81885EC /* Frameworks */,
@@ -116,8 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				A28C795F202A46F40052F3FB /* PlacenoteSDKExample.app */,
-				A28C7973202A46F40052F3FB /* PlacenoteSDKExampleTests.xctest */,
-				A28C797E202A46F40052F3FB /* PlacenoteSDKExampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,24 +92,6 @@
 				A28C796E202A46F40052F3FB /* Info.plist */,
 			);
 			path = PlacenoteSDKExample;
-			sourceTree = "<group>";
-		};
-		A28C7976202A46F40052F3FB /* PlacenoteSDKExampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				A28C7977202A46F40052F3FB /* PlacenoteSDKExampleTests.swift */,
-				A28C7979202A46F40052F3FB /* Info.plist */,
-			);
-			path = PlacenoteSDKExampleTests;
-			sourceTree = "<group>";
-		};
-		A28C7981202A46F40052F3FB /* PlacenoteSDKExampleUITests */ = {
-			isa = PBXGroup;
-			children = (
-				A28C7982202A46F40052F3FB /* PlacenoteSDKExampleUITests.swift */,
-				A28C7984202A46F40052F3FB /* Info.plist */,
-			);
-			path = PlacenoteSDKExampleUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,42 +117,6 @@
 			productReference = A28C795F202A46F40052F3FB /* PlacenoteSDKExample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A28C7972202A46F40052F3FB /* PlacenoteSDKExampleTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A28C798A202A46F40052F3FB /* Build configuration list for PBXNativeTarget "PlacenoteSDKExampleTests" */;
-			buildPhases = (
-				A28C796F202A46F40052F3FB /* Sources */,
-				A28C7970202A46F40052F3FB /* Frameworks */,
-				A28C7971202A46F40052F3FB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A28C7975202A46F40052F3FB /* PBXTargetDependency */,
-			);
-			name = PlacenoteSDKExampleTests;
-			productName = PlacenoteSDKExampleTests;
-			productReference = A28C7973202A46F40052F3FB /* PlacenoteSDKExampleTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		A28C797D202A46F40052F3FB /* PlacenoteSDKExampleUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A28C798D202A46F40052F3FB /* Build configuration list for PBXNativeTarget "PlacenoteSDKExampleUITests" */;
-			buildPhases = (
-				A28C797A202A46F40052F3FB /* Sources */,
-				A28C797B202A46F40052F3FB /* Frameworks */,
-				A28C797C202A46F40052F3FB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A28C7980202A46F40052F3FB /* PBXTargetDependency */,
-			);
-			name = PlacenoteSDKExampleUITests;
-			productName = PlacenoteSDKExampleUITests;
-			productReference = A28C797E202A46F40052F3FB /* PlacenoteSDKExampleUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -227,16 +130,6 @@
 					A28C795E202A46F40052F3FB = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
-					};
-					A28C7972202A46F40052F3FB = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = A28C795E202A46F40052F3FB;
-					};
-					A28C797D202A46F40052F3FB = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = A28C795E202A46F40052F3FB;
 					};
 				};
 			};
@@ -254,8 +147,6 @@
 			projectRoot = "";
 			targets = (
 				A28C795E202A46F40052F3FB /* PlacenoteSDKExample */,
-				A28C7972202A46F40052F3FB /* PlacenoteSDKExampleTests */,
-				A28C797D202A46F40052F3FB /* PlacenoteSDKExampleUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -268,20 +159,6 @@
 				A28C796D202A46F40052F3FB /* LaunchScreen.storyboard in Resources */,
 				A28C796A202A46F40052F3FB /* Assets.xcassets in Resources */,
 				A28C7968202A46F40052F3FB /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A28C7971202A46F40052F3FB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A28C797C202A46F40052F3FB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,36 +232,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A28C796F202A46F40052F3FB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A28C7978202A46F40052F3FB /* PlacenoteSDKExampleTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A28C797A202A46F40052F3FB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A28C7983202A46F40052F3FB /* PlacenoteSDKExampleUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A28C7975202A46F40052F3FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A28C795E202A46F40052F3FB /* PlacenoteSDKExample */;
-			targetProxy = A28C7974202A46F40052F3FB /* PBXContainerItemProxy */;
-		};
-		A28C7980202A46F40052F3FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A28C795E202A46F40052F3FB /* PlacenoteSDKExample */;
-			targetProxy = A28C797F202A46F40052F3FB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A28C7966202A46F40052F3FB /* Main.storyboard */ = {
@@ -549,72 +397,6 @@
 			};
 			name = Release;
 		};
-		A28C798B202A46F40052F3FB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 76PMXP42RV;
-				INFOPLIST_FILE = PlacenoteSDKExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExampleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PlacenoteSDKExample.app/PlacenoteSDKExample";
-			};
-			name = Debug;
-		};
-		A28C798C202A46F40052F3FB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 76PMXP42RV;
-				INFOPLIST_FILE = PlacenoteSDKExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExampleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PlacenoteSDKExample.app/PlacenoteSDKExample";
-			};
-			name = Release;
-		};
-		A28C798E202A46F40052F3FB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 76PMXP42RV;
-				INFOPLIST_FILE = PlacenoteSDKExampleUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExampleUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PlacenoteSDKExample;
-			};
-			name = Debug;
-		};
-		A28C798F202A46F40052F3FB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 76PMXP42RV;
-				INFOPLIST_FILE = PlacenoteSDKExampleUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExampleUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PlacenoteSDKExample;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -632,24 +414,6 @@
 			buildConfigurations = (
 				A28C7988202A46F40052F3FB /* Debug */,
 				A28C7989202A46F40052F3FB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A28C798A202A46F40052F3FB /* Build configuration list for PBXNativeTarget "PlacenoteSDKExampleTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A28C798B202A46F40052F3FB /* Debug */,
-				A28C798C202A46F40052F3FB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A28C798D202A46F40052F3FB /* Build configuration list for PBXNativeTarget "PlacenoteSDKExampleUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A28C798E202A46F40052F3FB /* Debug */,
-				A28C798F202A46F40052F3FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
