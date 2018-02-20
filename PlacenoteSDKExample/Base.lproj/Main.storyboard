@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="PlacenoteSDKExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="j89-Gv-ip5"/>
+                        <viewControllerLayoutGuide type="bottom" id="Oxp-Pf-bN1"/>
+                    </layoutGuides>
+                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BrB-h1-WRS" userLabel="scnView" customClass="ARSCNView">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hwi-h6-3TD" userLabel="PickMap">
+                                <rect key="frame" x="36" y="593.5" width="131.5" height="53.5"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <state key="normal" title="Load Map">
+                                    <color key="titleColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="pickMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Zcl-py-XNP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Mu-1V-Uq4" userLabel="NewMap">
+                                <rect key="frame" x="208" y="593.5" width="131" height="53.5"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <state key="normal" title="New map">
+                                    <color key="titleColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="newSaveMapButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="0Oj-Hc-0Pi"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Placenote Shape Dropper" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="3Xz-vt-npx" userLabel="Label">
+                                <rect key="frame" x="0.0" y="35" width="375" height="64"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="crg-vt-ghT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0ka-cC-Twy" userLabel="MapList">
+                                <rect key="frame" x="81" y="99" width="213" height="333.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="snL-gx-sgu">
+                                <rect key="frame" x="158" y="547.5" width="51" height="31"/>
+                                <connections>
+                                    <action selector="onShowFeatureChange:" destination="BV1-FR-VrT" eventType="valueChanged" id="KNj-Aj-NYv"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View PN Features" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cc9-rN-p2h">
+                                <rect key="frame" x="227" y="552.5" width="136" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="0ka-cC-Twy" firstAttribute="top" secondItem="3Xz-vt-npx" secondAttribute="bottom" id="5c1-dt-3UB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5Mu-1V-Uq4" secondAttribute="trailing" constant="20" id="B3D-ML-y4p"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="0ka-cC-Twy" secondAttribute="trailing" constant="65" id="BUC-4K-9Sv"/>
+                            <constraint firstItem="3Xz-vt-npx" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" id="Gwf-xO-0NM"/>
+                            <constraint firstItem="0ka-cC-Twy" firstAttribute="height" secondItem="BrB-h1-WRS" secondAttribute="height" multiplier="0.5" id="IRD-mv-C3n"/>
+                            <constraint firstItem="5Mu-1V-Uq4" firstAttribute="top" secondItem="snL-gx-sgu" secondAttribute="bottom" constant="15" id="RhN-Vr-xbk"/>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="5Mu-1V-Uq4" secondAttribute="bottom" constant="20" id="SZu-oe-wGW"/>
+                            <constraint firstItem="3Xz-vt-npx" firstAttribute="top" secondItem="j89-Gv-ip5" secondAttribute="bottom" constant="15" id="UEg-H0-Fpe"/>
+                            <constraint firstItem="5Mu-1V-Uq4" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" multiplier="0.35" id="Urm-TF-hee"/>
+                            <constraint firstItem="0ka-cC-Twy" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="Xq3-Mf-8pd"/>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="hwi-h6-3TD" secondAttribute="bottom" constant="20" id="agp-f5-uWc"/>
+                            <constraint firstItem="Cc9-rN-p2h" firstAttribute="centerY" secondItem="snL-gx-sgu" secondAttribute="centerY" id="cGW-bb-Bsm"/>
+                            <constraint firstItem="snL-gx-sgu" firstAttribute="leading" secondItem="5Mu-1V-Uq4" secondAttribute="leading" constant="-50" id="cR9-OE-BbP"/>
+                            <constraint firstItem="3Xz-vt-npx" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="j5W-PB-yhM"/>
+                            <constraint firstItem="hwi-h6-3TD" firstAttribute="height" secondItem="BrB-h1-WRS" secondAttribute="height" multiplier="0.08" id="jIn-rx-TZX"/>
+                            <constraint firstAttribute="trailing" secondItem="Cc9-rN-p2h" secondAttribute="trailing" constant="12" id="jVP-x8-swX"/>
+                            <constraint firstItem="hwi-h6-3TD" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" multiplier="0.35" id="l8w-2O-HOk"/>
+                            <constraint firstItem="5Mu-1V-Uq4" firstAttribute="height" secondItem="BrB-h1-WRS" secondAttribute="height" multiplier="0.08" id="mW2-jV-Icu"/>
+                            <constraint firstItem="hwi-h6-3TD" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leadingMargin" constant="20" id="naG-ic-JRa"/>
+                            <constraint firstItem="Cc9-rN-p2h" firstAttribute="leading" secondItem="snL-gx-sgu" secondAttribute="trailing" constant="20" id="spT-u0-zdN"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapTable" destination="0ka-cC-Twy" id="Wi9-h9-oaJ"/>
+                        <outlet property="newMapButton" destination="5Mu-1V-Uq4" id="1Fz-Pc-jo4"/>
+                        <outlet property="pickMapButton" destination="hwi-h6-3TD" id="Wzk-Ng-ZJF"/>
+                        <outlet property="scnView" destination="BrB-h1-WRS" id="mCc-Ex-061"/>
+                        <outlet property="showPNLabel" destination="Cc9-rN-p2h" id="ToW-PY-abX"/>
+                        <outlet property="showPNSelection" destination="snL-gx-sgu" id="bJI-IB-7Mu"/>
+                        <outlet property="statusLabel" destination="3Xz-vt-npx" id="wui-wQ-DQj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="24.800000000000001" y="37.331334332833585"/>
+        </scene>
+    </scenes>
+</document>
