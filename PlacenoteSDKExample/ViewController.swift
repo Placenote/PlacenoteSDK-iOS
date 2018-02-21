@@ -32,6 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingStarted: Bool = false;
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
+  private var reportDebug: Bool = false
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -188,6 +189,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       mappingStarted = true
       LibPlacenote.instance.stopSession()
       LibPlacenote.instance.startSession()
+
+      localizationStarted = false
+      pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.setTitle("Save Map", for: .normal)
       statusLabel.text = "Mapping: Tap to add shapes!"
       tapRecognizer?.isEnabled = true
@@ -231,6 +235,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   @IBAction func pickMap(_ sender: Any) {
+    
+    if (localizationStarted) { // currently a map is loaded. StopSession and clearView
+      shapeManager.clearShapes()
+      ptViz?.reset()
+      LibPlacenote.instance.stopSession()
+      localizationStarted = false
+      pickMapButton.setTitle("Load Map", for: .normal)
+      statusLabel.text = "Cleared"
+      return
+    }
+    
+    
+    
     if (mapTable.isHidden) {
       updateMapTable()
       pickMapButton.setTitle("Cancel", for: .normal)
@@ -286,7 +303,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.mappingComplete = false
           self.localizationStarted = true
           self.mapTable.isHidden = true
-          self.pickMapButton.setTitle("Load Map", for: .normal)
+          self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
           
           if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
@@ -331,7 +348,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       })
     }
   }
-
 
   func updateMapTable() {
     LibPlacenote.instance.fetchMapList(listCb: onMapList)

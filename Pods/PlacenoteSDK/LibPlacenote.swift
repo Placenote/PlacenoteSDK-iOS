@@ -620,5 +620,11 @@ public class LibPlacenote {
     }, ctxPtr)
   }
   
+  /** Start recording a dataset to be reported to the Placenote team. Recording is automatically stopped when stopSession() is called.
+   
+   */
+  public func startReportRecord() {
+    PNStartRecordDataset()
+  }
   
 }
