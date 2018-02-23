@@ -103,7 +103,7 @@ public class LibPlacenote {
   public typealias SaveMapCallback = (_ mapId: String?) -> Void
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
-  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String]) -> Void
+  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: Any]) -> Void
   
   /// Enums that indicates the status of the LibPlacenote mapping module
   public enum MappingStatus {
@@ -147,7 +147,7 @@ public class LibPlacenote {
   private var sdkInitialized: Bool = false
   private let mapStoragePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
   
-  private var mapList: [String] = []
+  private var mapList: [String: Any] = [:]
   private var mapTransferCbDict: Dictionary<Int, FileTransferCallback> = Dictionary()
   private var saveMapCbDict: Dictionary<Int, SaveMapCallback> = Dictionary()
   private var deleteMapCbDict: Dictionary<Int, DeleteMapCallback> = Dictionary()
@@ -584,32 +584,32 @@ public class LibPlacenote {
         os_log("Map list fetched from the database! Response: %@", newMapList!)
       
         var placeArray: [String: NSArray]
-        var placeIdArray:[String] = []
+        var placeIdMap:[String: Any] = [:]
         if let data = newMapList?.data(using: .utf8) {
           do {
             placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
-            let placeIds = placeArray["places"]!
-            if (placeIds.count > 0) {
-              for i in 0...(placeIds.count-1) {
-                let placeid = placeIds[i] as! [String:String]
-                placeIdArray.append(placeid["placeId"]!)
+            let places = placeArray["places"]!
+            if (places.count > 0) {
+              for i in 0...(places.count-1) {
+                let place = places[i] as! [String : Any]
+                placeIdMap[place["placeId"] as! String] = place["userData"] as Any
               }
             }
           } catch {
             os_log("Canot parse file list: %@", log: OSLog.default, type: .error, error.localizedDescription)
           }
         }
-        
+
         DispatchQueue.main.async(execute: {() -> Void in
-          libPtr.mapList = placeIdArray
-          libPtr.listMapCbDict[callbackId]!(true, placeIdArray)
+          libPtr.mapList = placeIdMap
+          libPtr.listMapCbDict[callbackId]!(true, placeIdMap)
         })
       } else {
         let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
         os_log("Failed to fetch the map list! Error msg: %@", log: OSLog.default, type: .error, errorMsg!)
         
         DispatchQueue.main.async(execute: {() -> Void in
-          libPtr.listMapCbDict[callbackId]!(false, [])
+          libPtr.listMapCbDict[callbackId]!(false, [:])
         })
       }
       
@@ -619,6 +619,18 @@ public class LibPlacenote {
       })
     }, ctxPtr)
   }
-  
-  
+
+  /**
+   Set the metadata for the given map, which will be returned as the value of the
+   dictionary of ListMapCallback. The metadata must be a valid JSON value, object,
+   or array a serialized string.
+
+   - Parameter mapId: ID of the map
+   - Parameter metadataJson: Serialized JSON metadata
+   - Returns: False if the SDK was not initialized, or metadataJson was invalid.
+     True otherwise.
+   */
+  public func setMapMetadata(mapId: String, metadataJson: String) -> Bool {
+    return PNSetMetadata(mapId, metadataJson) == 0
+  }
 }

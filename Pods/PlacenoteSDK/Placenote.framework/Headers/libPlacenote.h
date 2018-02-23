@@ -99,22 +99,23 @@ typedef struct PNTransferStatus_t
   int bytesTotal;
 } PNTransferStatus;
 
-typedef void (*result_callback) (PNCallbackResult* result, void* swiftContext);
-typedef void (*transfer_map_callback) (PNTransferStatus* status, void* swiftContext);
-typedef void (*pose_callback) (PNTransform* placenotePose, PNTransform* arkitPose, void* swiftContext);
+typedef void (*result_callback) (PNCallbackResult* result, void* context);
+typedef void (*transfer_map_callback) (PNTransferStatus* status, void* context);
+typedef void (*pose_callback) (PNTransform* placenotePose, PNTransform* arkitPose, void* context);
 
 FOUNDATION_EXPORT int PNInitialize(PNInitParams* params, result_callback cb, void* swiftContext);
 FOUNDATION_EXPORT int PNGetStatus ();
 FOUNDATION_EXPORT int PNGetTrackedLandmarks (PNFeaturePoint* points, int size);
 FOUNDATION_EXPORT int PNGetAllLandmarks (PNFeaturePoint* points, int size);
 FOUNDATION_EXPORT int PNListMaps (result_callback cb, void* swiftContext);
-FOUNDATION_EXPORT int PNSaveMap (const char* mapId, transfer_map_callback cb, void* swiftContext);
-FOUNDATION_EXPORT int PNLoadMap (const char* mapId, transfer_map_callback cb, void* swiftContext);
-FOUNDATION_EXPORT int PNDeleteMap (const char* mapId, result_callback cb, void* swiftContext);
-FOUNDATION_EXPORT int PNAddMap (result_callback cb, void* swiftContext);
-FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* swiftContext);
+FOUNDATION_EXPORT int PNSaveMap (const char* mapId, transfer_map_callback cb, void* context);
+FOUNDATION_EXPORT int PNLoadMap (const char* mapId, transfer_map_callback cb, void* context);
+FOUNDATION_EXPORT int PNDeleteMap (const char* mapId, result_callback cb, void* context);
+FOUNDATION_EXPORT int PNAddMap (result_callback cb, void* context);
+FOUNDATION_EXPORT int PNStartSession (pose_callback cb, void* context);
 FOUNDATION_EXPORT int PNStopSession ();
 FOUNDATION_EXPORT int PNStartRecordDataset();
+FOUNDATION_EXPORT int PNSetMetadata (const char* mapId, const char* metadataJson);
 FOUNDATION_EXPORT int PNGetPose(PNTransform* transform);
 FOUNDATION_EXPORT int PNSetIntrinsics(PNCameraInstrinsics* instrinsics);
 FOUNDATION_EXPORT int PNSetFrame(PNImagePlane* yPlane, PNImagePlane* vuPlane, PNTransform* arPose);

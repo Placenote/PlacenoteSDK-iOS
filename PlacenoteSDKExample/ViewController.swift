@@ -160,7 +160,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   //Receive list of maps after it is retrieved. This is only fired when fetchMapList is called (see updateMapTable())
-  func onMapList(success: Bool, mapList: [String]) -> Void {
+  func onMapList(success: Bool, mapList: [String: Any]) -> Void {
     maps.removeAll()
     if (!success) {
       print ("failed to fetch map list")
@@ -170,8 +170,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     print ("map List received")
     for place in mapList {
-      maps.append(place)
-      print ("place:" + place)
+      maps.append(place.key)
+      print ("place:" + place.key + ", metadata: ")
+      print (place.value)
     }
 
     statusLabel.text = "Map List"
