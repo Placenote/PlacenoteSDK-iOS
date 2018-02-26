@@ -39,7 +39,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Mu-1V-Uq4" userLabel="NewMap">
-                                <rect key="frame" x="208" y="593.5" width="131" height="53.5"/>
+                                <rect key="frame" x="207.5" y="593.5" width="131.5" height="53.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <state key="normal" title="New map">
@@ -70,13 +70,19 @@
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="snL-gx-sgu">
-                                <rect key="frame" x="158" y="547.5" width="51" height="31"/>
+                                <rect key="frame" x="157.5" y="547.5" width="51" height="31"/>
                                 <connections>
                                     <action selector="onShowFeatureChange:" destination="BV1-FR-VrT" eventType="valueChanged" id="KNj-Aj-NYv"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View PN Features" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cc9-rN-p2h">
-                                <rect key="frame" x="227" y="552.5" width="136" height="21"/>
+                                <rect key="frame" x="226.5" y="552.5" width="136.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BJ5-11-JDS" userLabel="FileTransfer">
+                                <rect key="frame" x="36" y="523.5" width="131.5" height="80"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -88,11 +94,14 @@
                             <constraint firstAttribute="trailingMargin" secondItem="0ka-cC-Twy" secondAttribute="trailing" constant="65" id="BUC-4K-9Sv"/>
                             <constraint firstItem="3Xz-vt-npx" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" id="Gwf-xO-0NM"/>
                             <constraint firstItem="0ka-cC-Twy" firstAttribute="height" secondItem="BrB-h1-WRS" secondAttribute="height" multiplier="0.5" id="IRD-mv-C3n"/>
+                            <constraint firstItem="BJ5-11-JDS" firstAttribute="leading" secondItem="hwi-h6-3TD" secondAttribute="leading" id="KrP-d6-XXU"/>
                             <constraint firstItem="5Mu-1V-Uq4" firstAttribute="top" secondItem="snL-gx-sgu" secondAttribute="bottom" constant="15" id="RhN-Vr-xbk"/>
                             <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="5Mu-1V-Uq4" secondAttribute="bottom" constant="20" id="SZu-oe-wGW"/>
+                            <constraint firstItem="BJ5-11-JDS" firstAttribute="centerY" secondItem="snL-gx-sgu" secondAttribute="centerY" id="Sjh-dH-kmf"/>
                             <constraint firstItem="3Xz-vt-npx" firstAttribute="top" secondItem="j89-Gv-ip5" secondAttribute="bottom" constant="15" id="UEg-H0-Fpe"/>
                             <constraint firstItem="5Mu-1V-Uq4" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" multiplier="0.35" id="Urm-TF-hee"/>
                             <constraint firstItem="0ka-cC-Twy" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="Xq3-Mf-8pd"/>
+                            <constraint firstItem="BJ5-11-JDS" firstAttribute="height" secondItem="hwi-h6-3TD" secondAttribute="height" multiplier="1.5" id="ZuU-za-PZg"/>
                             <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="hwi-h6-3TD" secondAttribute="bottom" constant="20" id="agp-f5-uWc"/>
                             <constraint firstItem="Cc9-rN-p2h" firstAttribute="centerY" secondItem="snL-gx-sgu" secondAttribute="centerY" id="cGW-bb-Bsm"/>
                             <constraint firstItem="snL-gx-sgu" firstAttribute="leading" secondItem="5Mu-1V-Uq4" secondAttribute="leading" constant="-50" id="cR9-OE-BbP"/>
@@ -102,10 +111,12 @@
                             <constraint firstItem="hwi-h6-3TD" firstAttribute="width" secondItem="BrB-h1-WRS" secondAttribute="width" multiplier="0.35" id="l8w-2O-HOk"/>
                             <constraint firstItem="5Mu-1V-Uq4" firstAttribute="height" secondItem="BrB-h1-WRS" secondAttribute="height" multiplier="0.08" id="mW2-jV-Icu"/>
                             <constraint firstItem="hwi-h6-3TD" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leadingMargin" constant="20" id="naG-ic-JRa"/>
+                            <constraint firstItem="BJ5-11-JDS" firstAttribute="width" secondItem="hwi-h6-3TD" secondAttribute="width" id="s3L-NU-ikT"/>
                             <constraint firstItem="Cc9-rN-p2h" firstAttribute="leading" secondItem="snL-gx-sgu" secondAttribute="trailing" constant="20" id="spT-u0-zdN"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="fileTransferLabel" destination="BJ5-11-JDS" id="4Bg-UM-2xS"/>
                         <outlet property="mapTable" destination="0ka-cC-Twy" id="Wi9-h9-oaJ"/>
                         <outlet property="newMapButton" destination="5Mu-1V-Uq4" id="1Fz-Pc-jo4"/>
                         <outlet property="pickMapButton" destination="hwi-h6-3TD" id="Wzk-Ng-ZJF"/>
