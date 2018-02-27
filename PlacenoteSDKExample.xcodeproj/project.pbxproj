@@ -370,7 +370,7 @@
 				DEVELOPMENT_TEAM = 76PMXP42RV;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PlacenoteSDKExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -388,7 +388,7 @@
 				DEVELOPMENT_TEAM = 76PMXP42RV;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PlacenoteSDKExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.vertical.PlacenoteSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

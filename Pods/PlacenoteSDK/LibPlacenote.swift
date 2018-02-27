@@ -398,7 +398,7 @@ public class LibPlacenote {
    therefore saveMap should be called before you call this function
    */
   public func stopSession() {
-    PNStopSession(nil, nil)
+    PNStopSession()
     multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
     prevStatus = MappingStatus.waiting
   }
@@ -406,7 +406,6 @@ public class LibPlacenote {
   
   /**
     Same as stopSession above but with the ability to report file transfer status of Dataset
-   */
   public func stopSession(uploadProgressCb: @escaping FileTransferCallback) -> Void {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
@@ -448,7 +447,7 @@ public class LibPlacenote {
     
     multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
     prevStatus = MappingStatus.waiting
-  }
+  }*/
   
   /**
    Save the map that LibPlacenote is generating in its current mapping session
@@ -610,7 +609,7 @@ public class LibPlacenote {
    Fetch of list of map IDs that is associated with the given API Key
    
    - Parameter listCb: async callback that returns the map list for a API Key
-   */
+ */
   public func fetchMapList(listCb: @escaping ListMapCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
@@ -669,8 +668,44 @@ public class LibPlacenote {
   /** Start recording a dataset to be reported to the Placenote team. Recording is automatically stopped when stopSession() is called.
    
    */
-  public func startReportRecord() {
-    PNStartRecordDataset()
+  public func startReportRecord(uploadProgressCb: @escaping FileTransferCallback) -> Void {
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    
+    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
+    PNStartRecordDataset({(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+      let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+      let libPtr = cbRetCtx.libPtr
+      let callbackId = cbRetCtx.callbackId
+      let completed = status?.pointee.completed
+      let faulted = status?.pointee.faulted
+      let bytesTransferred = status?.pointee.bytesTransferred
+      let bytesTotal = status?.pointee.bytesTotal
+      
+      DispatchQueue.main.async(execute: {() -> Void in
+        if (completed!) {
+          os_log("Data loaded!")
+          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+        } else if (faulted!) {
+          os_log("Failed to load data!", log: OSLog.default, type: .fault)
+          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+        } else {
+          var progress:Float = 0
+          if (bytesTotal! > 0) {
+            progress = Float(bytesTransferred!)/Float(bytesTotal!)
+          }
+          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
+        }
+      })
+    }, ctxPtr)
   }
   
 }

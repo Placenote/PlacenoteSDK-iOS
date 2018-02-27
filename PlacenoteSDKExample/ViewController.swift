@@ -33,7 +33,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingStarted: Bool = false;
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
-  private var reportDebug: Bool = false
+  private var reportDebug: Bool = true
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -189,22 +189,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       print ("New Map")
       mappingStarted = true
       
-      LibPlacenote.instance.stopSession(uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-        if (completed) {
-          self.statusLabel.text = "Dataset Upload Complete"
-          self.fileTransferLabel.text = ""
-        } else if (faulted) {
-          self.statusLabel.text = "Dataset Upload Faulted"
-          self.fileTransferLabel.text = ""
-        } else {
-          self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
-        }
-      })
+      LibPlacenote.instance.stopSession()
       
       LibPlacenote.instance.startSession()
       
       if (reportDebug) {
-        LibPlacenote.instance.startReportRecord()
+        LibPlacenote.instance.startReportRecord(uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+          if (completed) {
+            self.statusLabel.text = "Dataset Upload Complete"
+            self.fileTransferLabel.text = ""
+          } else if (faulted) {
+            self.statusLabel.text = "Dataset Upload Faulted"
+            self.fileTransferLabel.text = ""
+          } else {
+            self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
+          }
+        })
         print ("Started Debug Report")
       }
 
@@ -228,17 +228,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           if (mapId != nil) {
             self.shapeManager.saveFile(filename: mapId) //save file of shapes to persistent memory
             self.statusLabel.text = "Saved Id: " + mapId! //update UI
-            LibPlacenote.instance.stopSession(uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-              if (completed) {
-                self.statusLabel.text = "Dataset Upload Complete"
-                self.fileTransferLabel.text = ""
-              } else if (faulted) {
-                self.statusLabel.text = "Dataset Upload Faulted"
-                self.fileTransferLabel.text = ""
-              } else {
-                self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
-              }
-            })
+            LibPlacenote.instance.stopSession()
           } else {
             NSLog("Failed to save map")
           }
@@ -267,24 +257,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     if (localizationStarted) { // currently a map is loaded. StopSession and clearView
       shapeManager.clearShapes()
       ptViz?.reset()
-      LibPlacenote.instance.stopSession(uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-        if (completed) {
-          self.statusLabel.text = "Dataset Upload Complete"
-          self.fileTransferLabel.text = ""
-        } else if (faulted) {
-          self.statusLabel.text = "Dataset Upload Faulted"
-          self.fileTransferLabel.text = ""
-        } else {
-          self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
-        }
-      })
+      LibPlacenote.instance.stopSession()
       localizationStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
       statusLabel.text = "Cleared"
       return
     }
-    
-    
     
     if (mapTable.isHidden) {
       updateMapTable()
@@ -352,7 +330,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           }
           LibPlacenote.instance.startSession()
           if (self.reportDebug) {
-            LibPlacenote.instance.startReportRecord()
+            LibPlacenote.instance.startReportRecord (uploadProgressCb: ({(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+              if (completed) {
+                self.statusLabel.text = "Dataset Upload Complete"
+                self.fileTransferLabel.text = ""
+              } else if (faulted) {
+                self.statusLabel.text = "Dataset Upload Faulted"
+                self.fileTransferLabel.text = ""
+              } else {
+                self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
+              }
+            })
+            )
             print ("Started Debug Report")
           }
           
