@@ -33,7 +33,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingStarted: Bool = false;
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
-  private var reportDebug: Bool = true
+  private var reportDebug: Bool = false
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -202,7 +202,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Dataset Upload Faulted"
             self.fileTransferLabel.text = ""
           } else {
-            self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
+            self.fileTransferLabel.text = "Dataset Upload: " + String(format: "%.3f", percentage) + "/1.0"
           }
         })
         print ("Started Debug Report")
@@ -241,7 +241,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             print ("Couldnt upload map")
           } else {
             print ("Progress: " + percentage.description)
-            self.fileTransferLabel.text = "Map Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
+            self.fileTransferLabel.text = "Map Upload: " + String(format: "%.3f", percentage) + "/1.0"
           }
       }
       )
@@ -338,7 +338,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 self.statusLabel.text = "Dataset Upload Faulted"
                 self.fileTransferLabel.text = ""
               } else {
-                self.fileTransferLabel.text = "Dataset Upload: " + String(Float(round(1000*percentage)/1000)) + "/1.0"
+                self.fileTransferLabel.text = "Dataset Upload: " + String(format: "%.3f", percentage) + "/1.0"
               }
             })
             )
