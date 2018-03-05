@@ -23,7 +23,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   @IBOutlet var statusLabel: UILabel!
   @IBOutlet var showPNLabel: UILabel!
   @IBOutlet var showPNSelection: UISwitch!
-
+  @IBOutlet var fileTransferLabel: UILabel!
+  
   //AR Scene
   private var scnScene: SCNScene!
 
@@ -32,6 +33,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingStarted: Bool = false;
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
+  private var reportDebug: Bool = false
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -72,7 +74,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     newMapButton.isEnabled = false
     showPNLabel.isHidden = true
     showPNSelection.isHidden = true
-
+    
   }
 
   //Initialize view and scene
@@ -186,16 +188,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     if (trackingStarted && !mappingStarted) { //ARKit is enabled, start mapping
       print ("New Map")
       mappingStarted = true
+      
       LibPlacenote.instance.stopSession()
+      
       LibPlacenote.instance.startSession()
+      
+      if (reportDebug) {
+        LibPlacenote.instance.startReportRecord(uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+          if (completed) {
+            self.statusLabel.text = "Dataset Upload Complete"
+            self.fileTransferLabel.text = ""
+          } else if (faulted) {
+            self.statusLabel.text = "Dataset Upload Faulted"
+            self.fileTransferLabel.text = ""
+          } else {
+            self.fileTransferLabel.text = "Dataset Upload: " + String(format: "%.3f", percentage) + "/1.0"
+          }
+        })
+        print ("Started Debug Report")
+      }
+
+      localizationStarted = false
+      pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.setTitle("Save Map", for: .normal)
       statusLabel.text = "Mapping: Tap to add shapes!"
       tapRecognizer?.isEnabled = true
       mapTable.isHidden = true
       showPNLabel.isHidden = false
       showPNSelection.isHidden = false
-
-
       shapeManager.clearShapes() //creating new map, remove old shapes.
     }
     else if (mappingStarted) { //mapping been running, save map
@@ -216,10 +236,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
           if (completed) {
             print ("Uploaded!")
+            self.fileTransferLabel.text = ""
           } else if (faulted) {
             print ("Couldnt upload map")
           } else {
             print ("Progress: " + percentage.description)
+            self.fileTransferLabel.text = "Map Upload: " + String(format: "%.3f", percentage) + "/1.0"
           }
       }
       )
@@ -231,6 +253,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   @IBAction func pickMap(_ sender: Any) {
+    
+    if (localizationStarted) { // currently a map is loaded. StopSession and clearView
+      shapeManager.clearShapes()
+      ptViz?.reset()
+      LibPlacenote.instance.stopSession()
+      localizationStarted = false
+      pickMapButton.setTitle("Load Map", for: .normal)
+      statusLabel.text = "Cleared"
+      return
+    }
+    
     if (mapTable.isHidden) {
       updateMapTable()
       pickMapButton.setTitle("Cancel", for: .normal)
@@ -286,7 +319,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.mappingComplete = false
           self.localizationStarted = true
           self.mapTable.isHidden = true
-          self.pickMapButton.setTitle("Load Map", for: .normal)
+          self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
           
           if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
@@ -296,6 +329,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
           LibPlacenote.instance.startSession()
+          if (self.reportDebug) {
+            LibPlacenote.instance.startReportRecord (uploadProgressCb: ({(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+              if (completed) {
+                self.statusLabel.text = "Dataset Upload Complete"
+                self.fileTransferLabel.text = ""
+              } else if (faulted) {
+                self.statusLabel.text = "Dataset Upload Faulted"
+                self.fileTransferLabel.text = ""
+              } else {
+                self.fileTransferLabel.text = "Dataset Upload: " + String(format: "%.3f", percentage) + "/1.0"
+              }
+            })
+            )
+            print ("Started Debug Report")
+          }
+          
           self.tapRecognizer?.isEnabled = true
         } else if (faulted) {
           print ("Couldnt load map: " + self.maps[indexPath.row])
@@ -331,7 +380,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       })
     }
   }
-
 
   func updateMapTable() {
     LibPlacenote.instance.fetchMapList(listCb: onMapList)

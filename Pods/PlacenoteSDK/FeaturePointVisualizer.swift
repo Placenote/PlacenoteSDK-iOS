@@ -50,7 +50,7 @@ public class FeaturePointVisualizer: PNDelegate {
   /**
    A function to reset the pointcloud visualization
    */
-  func reset() {
+  public func reset() {
     ptcloudNode.removeFromParentNode()
   }
   
