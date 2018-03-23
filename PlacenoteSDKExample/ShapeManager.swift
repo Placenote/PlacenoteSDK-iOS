@@ -63,87 +63,42 @@ class ShapeManager {
     scnView = view
   }
   
-  //Save JSON File of Shapes with MapID as its name
-  func saveFile (filename: String?) {
-    guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-    
-    var fileUrl: URL
-    if let inputFileName = filename {
-      fileUrl = documentDirectoryUrl.appendingPathComponent(inputFileName + ".json")
-    }
-    else {
-      fileUrl = documentDirectoryUrl.appendingPathComponent("Shapes.json")
-    }
-    
-    
+  func getShapeArray() -> [[String: [String: String]]] {
     var shapeArray: [[String: [String: String]]] = []
     if (shapePositions.count > 0) {
       for i in 0...(shapePositions.count-1) {
         shapeArray.append(["shape": ["style": "\(shapeTypes[i].rawValue)", "x": "\(shapePositions[i].x)",  "y": "\(shapePositions[i].y)",  "z": "\(shapePositions[i].z)" ]])
       }
     }
-    
-    do {
-      let dataOut = try JSONSerialization.data(withJSONObject: shapeArray, options: [])
-      try dataOut.write(to: fileUrl, options: [])
-    } catch {
-      print (error)
-      return;
-    }
-    
-    
+    return shapeArray
   }
-  
-  //Retrieve JSON file with a certain mapid name
-  func retrieveFromFile(filename: String?) -> Bool {
-    guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return false }
+
+  // Load shape array
+  func loadShapeArray(shapeArray: [[String: [String: String]]]?) -> Bool {
     clearShapes() //clear currently viewing shapes and delete any record of them.
-    
-    var fileUrl: URL
-    if let inputFileName = filename {
-      fileUrl = documentDirectoryUrl.appendingPathComponent(inputFileName + ".json")
+
+    if (shapeArray == nil) {
+        print ("Shape Manager: No shapes for this map")
+        return false
     }
-    else {
-      fileUrl = documentDirectoryUrl.appendingPathComponent("Shapes.json")
+
+    for item in shapeArray! {
+      let x_string: String = item["shape"]!["x"]!
+      let y_string: String = item["shape"]!["y"]!
+      let z_string: String = item["shape"]!["z"]!
+      let position: SCNVector3 = SCNVector3(x: Float(x_string)!, y: Float(y_string)!, z: Float(z_string)!)
+      let type: ShapeType = ShapeType(rawValue: Int(item["shape"]!["style"]!)!)!
+      shapePositions.append(position)
+      shapeTypes.append(type)
+      shapeNodes.append(createShape(position: position, type: type))
+
+      print ("Shape Manager: Retrieved " + String(describing: type) + " type at position" + String (describing: position))
     }
-    
-    // Read data from .json file and transform data into an array
-    do {
-      let data = try Data(contentsOf: fileUrl, options: [])
-      guard let shapeArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: [String: String]]] else { return false }
-      for item in shapeArray {
-        
-        let x_string: String = item["shape"]!["x"]!
-        let y_string: String = item["shape"]!["y"]!
-        let z_string: String = item["shape"]!["z"]!
-        let position: SCNVector3 = SCNVector3(x: Float(x_string)!, y: Float(y_string)!, z: Float(z_string)!)
-        let type: ShapeType = ShapeType(rawValue: Int(item["shape"]!["style"]!)!)!
-        shapePositions.append(position)
-        shapeTypes.append(type)
-        shapeNodes.append(createShape(position: position, type: type))
-        
-        print ("Shape Manager: Retrieved " + String(describing: type) + " type at position" + String (describing: position))
-      }
-    } catch {
-      print ("Could not retrieve shape json file")
-      print(error)
-      return false
-    }
-    print ("Shape Manager: retrieved " + String(shapePositions.count) + "shapes")
+
+    print ("Shape Manager: retrieved " + String(shapePositions.count) + " shapes")
     return true
   }
-  
-  //Delete JSON File
-  func deleteFile (filename: String) {
-    let fileManager = FileManager.default
-    do {
-      try fileManager.removeItem(atPath: filename + ".json")
-    }
-    catch let error as NSError {
-      print("Shape Manager: Couldn't delete \(filename).json because: \(error)")
-    }
-  }
-  
+
   func clearView() { //clear shapes from view
     for shape in shapeNodes {
       shape.removeFromParentNode()

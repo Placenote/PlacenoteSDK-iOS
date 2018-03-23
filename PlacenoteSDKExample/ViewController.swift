@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import CoreLocation
 import SceneKit
 import ARKit
 import PlacenoteSDK
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UITableViewDelegate, UITableViewDataSource, PNDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UITableViewDelegate, UITableViewDataSource, PNDelegate, CLLocationManagerDelegate {
 
 
   //UI Elements
@@ -41,10 +42,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
 
   //Variables to manage PlacenoteSDK features and helpers
-  private var maps: [String] = ["Sample Map"]
+  private var maps: [(String, [String: Any]?)] = [("Sample Map", [:])]
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
   private var showFeatures: Bool = true
+
+  private var locationManager: CLLocationManager!
+  private var lastLocation: CLLocation? = nil
 
   //Setup view once loaded
   override func viewDidLoad() {
@@ -74,7 +78,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     newMapButton.isEnabled = false
     showPNLabel.isHidden = true
     showPNSelection.isHidden = true
-    
+
+    locationManager = CLLocationManager()
+    locationManager.requestWhenInUseAuthorization()
+
+    if CLLocationManager.locationServicesEnabled() {
+        locationManager.delegate = self;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+        locationManager.startUpdatingLocation()
+    }
   }
 
   //Initialize view and scene
@@ -162,7 +174,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   //Receive list of maps after it is retrieved. This is only fired when fetchMapList is called (see updateMapTable())
-  func onMapList(success: Bool, mapList: [String]) -> Void {
+  func onMapList(success: Bool, mapList: [String: Any]) -> Void {
     maps.removeAll()
     if (!success) {
       print ("failed to fetch map list")
@@ -172,8 +184,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     print ("map List received")
     for place in mapList {
-      maps.append(place)
-      print ("place:" + place)
+      maps.append((place.key, place.value as? [String: Any]))
+      print ("place:" + place.key + ", metadata: ")
+      print (place.value)
     }
 
     statusLabel.text = "Map List"
@@ -226,9 +239,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       LibPlacenote.instance.saveMap(
         savedCb: {(mapId: String?) -> Void in
           if (mapId != nil) {
-            self.shapeManager.saveFile(filename: mapId) //save file of shapes to persistent memory
             self.statusLabel.text = "Saved Id: " + mapId! //update UI
             LibPlacenote.instance.stopSession()
+
+            var metadata: [String: Any] = [:]
+            if (self.lastLocation != nil) {
+                metadata["location"] = ["latitude": self.lastLocation!.coordinate.latitude,
+                                        "longitude": self.lastLocation!.coordinate.longitude,
+                                        "altitude": self.lastLocation!.altitude]
+            }
+            metadata["shapeArray"] = self.shapeManager.getShapeArray()
+
+            let jsonData = try? JSONSerialization.data(withJSONObject: metadata)
+            let jsonString = String.init(data: jsonData!, encoding: String.Encoding.utf8)
+            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadataJson: jsonString!)) {
+                print ("Failed to set map metadata")
+            }
+
           } else {
             NSLog("Failed to save map")
           }
@@ -298,21 +325,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   //Label Map rows
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    var cell:UITableViewCell? = mapTable.dequeueReusableCell(withIdentifier: "cell")
+    let map = self.maps[indexPath.row]
+    var cell:UITableViewCell? = mapTable.dequeueReusableCell(withIdentifier: map.0)
     if cell==nil {
-      cell =  UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "cell")
+      cell =  UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: map.0)
     }
-    cell?.textLabel?.text = self.maps[indexPath.row]
+    cell?.textLabel?.text = map.0
+
+    var subtitle = "Distance Unknown"
+
+    var location = map.1?["location"] as? [String: Any]
+
+    if (lastLocation == nil) {
+        subtitle = "User location unknown"
+    } else if (location == nil) {
+        subtitle = "Map location unknown"
+    } else {
+        let distance = lastLocation!.distance(from: CLLocation(
+            latitude: location!["latitude"] as! Double,
+            longitude: location!["longitude"] as! Double))
+        subtitle = String(format: "Distance: %0.3fkm", distance / 1000)
+    }
+
+    cell?.detailTextLabel?.text = subtitle
+
     return cell!
   }
 
   //Map selected
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     print(String(format: "Retrieving row: %d", indexPath.row))
-    print("Retrieving mapId: " + maps[indexPath.row])
-    statusLabel.text = "Retrieving mapId: " + maps[indexPath.row]
+    print("Retrieving mapId: " + maps[indexPath.row].0)
+    statusLabel.text = "Retrieving mapId: " + maps[indexPath.row].0
 
-    LibPlacenote.instance.loadMap(mapId: maps[indexPath.row],
+    LibPlacenote.instance.loadMap(mapId: maps[indexPath.row].0,
       downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
         if (completed) {
           self.mappingStarted = false
@@ -322,7 +368,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
           
-          if (self.shapeManager.retrieveFromFile(filename: self.maps[indexPath.row])) {
+          if (self.shapeManager.loadShapeArray(shapeArray: self.maps[indexPath.row].1?["shapeArray"] as? [[String: [String: String]]])) {
             self.statusLabel.text = "Map Loaded. Look Around"
           }
           else {
@@ -347,8 +393,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           
           self.tapRecognizer?.isEnabled = true
         } else if (faulted) {
-          print ("Couldnt load map: " + self.maps[indexPath.row])
-          self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row]
+          print ("Couldnt load map: " + self.maps[indexPath.row].0)
+          self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row].0
         } else {
           print ("Progress: " + percentage.description)
         }
@@ -364,17 +410,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //Delete Row and its corresponding map
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if (editingStyle == UITableViewCellEditingStyle.delete) {
-      statusLabel.text = "Deleting Map:" + maps[indexPath.row]
-      LibPlacenote.instance.deleteMap(mapId: maps[indexPath.row], deletedCb: {(deleted: Bool) -> Void in
+      statusLabel.text = "Deleting Map:" + maps[indexPath.row].0
+      LibPlacenote.instance.deleteMap(mapId: maps[indexPath.row].0, deletedCb: {(deleted: Bool) -> Void in
         if (deleted) {
-          print("Deleting: " + self.maps[indexPath.row])
-          self.statusLabel.text = "Deleted Map: " + self.maps[indexPath.row]
+          print("Deleting: " + self.maps[indexPath.row].0)
+          self.statusLabel.text = "Deleted Map: " + self.maps[indexPath.row].0
           self.maps.remove(at: indexPath.row)
           self.mapTable.reloadData()
         }
         else {
-          print ("Can't Delete: " + self.maps[indexPath.row])
-          self.statusLabel.text = "Can't Delete: " + self.maps[indexPath.row]
+          print ("Can't Delete: " + self.maps[indexPath.row].0)
+          self.statusLabel.text = "Can't Delete: " + self.maps[indexPath.row].0
 
         }
       })
@@ -403,7 +449,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let node = SCNNode()
     return node
   }
-
 
   // MARK: - ARSessionDelegate
 
@@ -443,6 +488,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     statusLabel.text = status
   }
 
+  // MARK: - CLLocationManagerDelegate
+
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    lastLocation = locations.last
+  }
 }
 
 
