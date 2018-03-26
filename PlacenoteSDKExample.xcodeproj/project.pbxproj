@@ -387,6 +387,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76PMXP42RV;
 				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_FILE = PlacenoteSDKExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
