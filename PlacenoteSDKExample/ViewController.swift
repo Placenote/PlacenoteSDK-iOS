@@ -522,8 +522,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     switch camera.trackingState {
     case ARCamera.TrackingState.notAvailable:
       status = "Not available"
-    case ARCamera.TrackingState.limited(_):
-      status = "Initializing ARKit.."
+    case ARCamera.TrackingState.limited(.excessiveMotion):
+      status = "Excessive Motion."
+    case ARCamera.TrackingState.limited(.insufficientFeatures):
+      status = "Insufficient features"
+    case ARCamera.TrackingState.limited(.initializing):
+      status = "Initializing"
+    case ARCamera.TrackingState.limited(.relocalizing):
+      status = "Relocalizing"
     case ARCamera.TrackingState.normal:
       if (!trackingStarted) {
         trackingStarted = true
