@@ -24,7 +24,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   @IBOutlet var statusLabel: UILabel!
   @IBOutlet var showPNLabel: UILabel!
   @IBOutlet var showPNSelection: UISwitch!
+  @IBOutlet var planeDetLabel: UILabel!
+  @IBOutlet var planeDetSelection: UISwitch!
   @IBOutlet var fileTransferLabel: UILabel!
+
   
   //AR Scene
   private var scnScene: SCNScene!
@@ -45,7 +48,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var maps: [(String, [String: Any]?)] = [("Sample Map", [:])]
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
+  private var planesVizNode = [UUID: SCNNode]();
+  private var planesVizTf = [UUID: SCNMatrix4]();
+  
   private var showFeatures: Bool = true
+  private var planeDetection: Bool = false
 
   private var locationManager: CLLocationManager!
   private var lastLocation: CLLocation? = nil
@@ -78,6 +85,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     newMapButton.isEnabled = false
     showPNLabel.isHidden = true
     showPNSelection.isHidden = true
+    planeDetLabel.isHidden = true
+    planeDetSelection.isHidden = true
+    
 
     locationManager = CLLocationManager()
     locationManager.requestWhenInUseAuthorization()
@@ -92,17 +102,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //Initialize view and scene
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
-    // Create a session configuration
-    let configuration = ARWorldTrackingConfiguration()
-    configuration.worldAlignment = ARWorldTrackingConfiguration.WorldAlignment.gravity //TODO: Maybe not heading?
-    if #available(iOS 11.3, *) {
-      configuration.planeDetection = [.horizontal, .vertical]
-    } else {
-      configuration.planeDetection = [.horizontal]
-    }
-    // Run the view's session
-    scnView.session.run(configuration)
+    configureSession();
   }
 
   override func viewWillDisappear(_ animated: Bool) {
@@ -164,6 +164,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         statusLabel.text = "Map Found!"
       }
       tapRecognizer?.isEnabled = true
+      
+      for (id, transform) in planesVizTf {
+        planesVizNode[id]?.transform = LibPlacenote.instance.processPose(pose: transform);
+      }
     }
 
     if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
@@ -233,6 +237,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       mapTable.isHidden = true
       showPNLabel.isHidden = false
       showPNSelection.isHidden = false
+      planeDetLabel.isHidden = false
+      planeDetSelection.isHidden = false
       shapeManager.clearShapes() //creating new map, remove old shapes.
     }
     else if (mappingStarted) { //mapping been running, save map
@@ -280,6 +286,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       tapRecognizer?.isEnabled = false
       showPNLabel.isHidden = true
       showPNSelection.isHidden = true
+      planeDetLabel.isHidden = true
+      planeDetSelection.isHidden = true
     }
   }
 
@@ -292,16 +300,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       localizationStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
       statusLabel.text = "Cleared"
+      showPNLabel.isHidden = true
+      showPNSelection.isHidden = true
+      planeDetLabel.isHidden = true
+      planeDetSelection.isHidden = true
+      
       return
     }
     
-    if (mapTable.isHidden) {
+    if (mapTable.isHidden) { //fetch map list and show table of maps
       updateMapTable()
       pickMapButton.setTitle("Cancel", for: .normal)
       newMapButton.isEnabled = false
       statusLabel.text = "Fetching Map List"
+
     }
-    else {
+    else { //map load/localization session cancelled
       mapTable.isHidden = true
       pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.isEnabled = true
@@ -318,6 +332,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       ptViz?.disableFeaturePoints()
     }
   }
+  
+  
+  @IBAction func onPlaneDetectionOnOff(_ sender: Any) {
+    planeDetection = !planeDetection
+    configureSession()
+  }
+  
+  func configureSession() {
+    // Create a session configuration
+    let configuration = ARWorldTrackingConfiguration()
+    configuration.worldAlignment = ARWorldTrackingConfiguration.WorldAlignment.gravity //TODO: Maybe not heading?
+    
+    if (planeDetection) {
+      if #available(iOS 11.3, *) {
+        configuration.planeDetection = [.horizontal, .vertical]
+      } else {
+        configuration.planeDetection = [.horizontal]
+      }
+    }
+    else {
+      for (_, node) in planesVizNode {
+        node.removeFromParentNode();
+      }
+      planesVizTf.removeAll()
+      planesVizNode.removeAll()
+      configuration.planeDetection = []
+    }
+    // Run the view's session
+    scnView.session.run(configuration)
+  }
+  
 
   // MARK: - UITableViewDelegate and UITableviewDataSource to manage retrieving, viewing, deleting and selecting maps on a TableView
 
@@ -371,6 +416,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.mapTable.isHidden = true
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
+          self.showPNLabel.isHidden = false
+          self.showPNSelection.isHidden = false
+          self.planeDetLabel.isHidden = false
+          self.planeDetSelection.isHidden = false
           
           if (self.shapeManager.loadShapeArray(shapeArray: self.maps[indexPath.row].1?["shapeArray"] as? [[String: [String: String]]])) {
             self.statusLabel.text = "Map Loaded. Look Around"
@@ -379,6 +428,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
           LibPlacenote.instance.startSession()
+          
+          
+          
           if (self.reportDebug) {
             LibPlacenote.instance.startReportRecord (uploadProgressCb: ({(completed: Bool, faulted: Bool, percentage: Float) -> Void in
               if (completed) {
@@ -462,6 +514,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let planeNode = SCNNode(geometry: plane)
     planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
     
+    node.transform = LibPlacenote.instance.processPose(pose: node.transform); //transform through
+    planesVizNode[anchor.identifier] = node; //keep track of nodes so you can move them once you localize to a new map.
+    planesVizTf[anchor.identifier] = node.transform;
+    
     /*
      `SCNPlane` is vertically oriented in its local coordinate space, so
      rotate the plane to match the horizontal orientation of `ARPlaneAnchor`.
@@ -469,7 +525,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     planeNode.eulerAngles.x = -.pi / 2
     
     // Make the plane visualization semitransparent to clearly show real-world placement.
-    planeNode.opacity = 0.25
+    planeNode.opacity = 0.35
     
     /*
      Add the plane visualization to the ARKit-managed node so that it tracks
@@ -496,6 +552,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
      */
     plane.width = CGFloat(planeAnchor.extent.x)
     plane.height = CGFloat(planeAnchor.extent.z)
+    
+    planesVizTf[anchor.identifier] = node.transform
+    
+    node.transform = LibPlacenote.instance.processPose(pose: node.transform)
   }
 
   // MARK: - ARSessionDelegate
