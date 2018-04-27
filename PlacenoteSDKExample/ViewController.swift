@@ -48,8 +48,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var maps: [(String, [String: Any]?)] = [("Sample Map", [:])]
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
+  private var planesVizAnchors = [ARAnchor]();
   private var planesVizNodes = [UUID: SCNNode]();
-  private var planesVizTf = [UUID: SCNMatrix4]();
   
   private var showFeatures: Bool = true
   private var planeDetection: Bool = false
@@ -167,8 +167,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       
       //As you are localized, the camera has been moved to match that of Placenote's Map. Transform the planes
       //currently being drawn from the arkit frame of reference to the Placenote map's frame of reference.
-      for (id, transform) in planesVizTf {
-        planesVizNodes[id]?.transform = LibPlacenote.instance.processPose(pose: transform);
+      for (_, node) in planesVizNodes {
+        node.transform = LibPlacenote.instance.processPose(pose: node.transform);
       }
     }
 
@@ -359,9 +359,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     else {
       for (_, node) in planesVizNodes {
-        node.removeFromParentNode();
+        node.removeFromParentNode()
       }
-      planesVizTf.removeAll()
+      for (anchor) in planesVizAnchors { //remove anchors because in iOS versions <11.3, the anchors are not automatically removed when plane detection is turned off.
+        scnView.session.remove(anchor: anchor)
+      }
       planesVizNodes.removeAll()
       configuration.planeDetection = []
     }
@@ -522,7 +524,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     node.transform = LibPlacenote.instance.processPose(pose: node.transform); //transform through
     planesVizNodes[anchor.identifier] = node; //keep track of plane nodes so you can move them once you localize to a new map.
-    planesVizTf[anchor.identifier] = node.transform;
     
     /*
      `SCNPlane` is vertically oriented in its local coordinate space, so
@@ -559,8 +560,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     plane.width = CGFloat(planeAnchor.extent.x)
     plane.height = CGFloat(planeAnchor.extent.z)
     
-    
-    planesVizTf[anchor.identifier] = node.transform
     node.transform = LibPlacenote.instance.processPose(pose: node.transform)
   }
 
@@ -606,6 +605,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       status = "Ready"
     }
     statusLabel.text = status
+  }
+  
+  func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+    for (anchor) in anchors {
+      planesVizAnchors.append(anchor)
+    }
   }
 
   // MARK: - CLLocationManagerDelegate
