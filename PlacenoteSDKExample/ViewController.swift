@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var maps: [(String, [String: Any]?)] = [("Sample Map", [:])]
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
-  private var planesVizNode = [UUID: SCNNode]();
+  private var planesVizNodes = [UUID: SCNNode]();
   private var planesVizTf = [UUID: SCNMatrix4]();
   
   private var showFeatures: Bool = true
@@ -165,8 +165,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       }
       tapRecognizer?.isEnabled = true
       
+      //As you are localized, the camera has been moved to match that of Placenote's Map. Transform the planes
+      //currently being drawn from the arkit frame of reference to the Placenote map's frame of reference.
       for (id, transform) in planesVizTf {
-        planesVizNode[id]?.transform = LibPlacenote.instance.processPose(pose: transform);
+        planesVizNodes[id]?.transform = LibPlacenote.instance.processPose(pose: transform);
       }
     }
 
@@ -265,7 +267,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadataJson: jsonString!)) {
                 print ("Failed to set map metadata")
             }
-
+            self.planeDetSelection.isOn = false
+            self.planeDetection = false
+            self.configureSession()
           } else {
             NSLog("Failed to save map")
           }
@@ -304,7 +308,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       showPNSelection.isHidden = true
       planeDetLabel.isHidden = true
       planeDetSelection.isHidden = true
-      
+      planeDetSelection.isOn = false
+      planeDetection = false
+      configureSession()
       return
     }
     
@@ -352,11 +358,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       }
     }
     else {
-      for (_, node) in planesVizNode {
+      for (_, node) in planesVizNodes {
         node.removeFromParentNode();
       }
       planesVizTf.removeAll()
-      planesVizNode.removeAll()
+      planesVizNodes.removeAll()
       configuration.planeDetection = []
     }
     // Run the view's session
@@ -515,7 +521,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
     
     node.transform = LibPlacenote.instance.processPose(pose: node.transform); //transform through
-    planesVizNode[anchor.identifier] = node; //keep track of nodes so you can move them once you localize to a new map.
+    planesVizNodes[anchor.identifier] = node; //keep track of plane nodes so you can move them once you localize to a new map.
     planesVizTf[anchor.identifier] = node.transform;
     
     /*
@@ -525,7 +531,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     planeNode.eulerAngles.x = -.pi / 2
     
     // Make the plane visualization semitransparent to clearly show real-world placement.
-    planeNode.opacity = 0.35
+    planeNode.opacity = 0.25
     
     /*
      Add the plane visualization to the ARKit-managed node so that it tracks
@@ -553,8 +559,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     plane.width = CGFloat(planeAnchor.extent.x)
     plane.height = CGFloat(planeAnchor.extent.z)
     
-    planesVizTf[anchor.identifier] = node.transform
     
+    planesVizTf[anchor.identifier] = node.transform
     node.transform = LibPlacenote.instance.processPose(pose: node.transform)
   }
 
