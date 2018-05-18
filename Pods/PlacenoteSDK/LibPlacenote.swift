@@ -103,7 +103,7 @@ public class LibPlacenote {
   public typealias SaveMapCallback = (_ mapId: String?) -> Void
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
-  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: Any]) -> Void
+  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
   
   /// Enums that indicates the status of the LibPlacenote mapping module
   public enum MappingStatus {
@@ -126,6 +126,56 @@ public class LibPlacenote {
       callbackId = id.hash
       libPtr = ptr
     }
+  }
+
+  /// Struct that contains location data for the map. All fields are required.
+  public class MapLocation
+  {
+    public init() {}
+
+    /// The GPS latitude
+    public var latitude: Double = 0
+    /// The GPS longitude
+    public var longitude: Double = 0
+    /// The GPS altitude
+    public var altitude: Double = 0
+  }
+
+  /// Struct for searching maps by location. All fields are required.
+  public class MapLocationSearch
+  {
+    public init() {}
+
+    /// The GPS latitude for the center of the search circle.
+    public var latitude: Double = 0
+    /// The GPS longitude for the center of the search circle.
+    public var longitude: Double = 0
+    /// The radius (in meters) of the search circle.
+    public var radius: Double = 0
+  }
+
+  /// Struct for setting map metadata. All fields are optional.
+  public class MapMetadataSettable
+  {
+    public init() {}
+
+    /// The map name.
+    public var name: String? = nil
+
+    /// The map location information.
+    public var location: MapLocation? = nil
+
+    /// Arbitrary user data, in JSON form.
+    public var userdata: Any? = nil
+  }
+
+  /// <summary>
+  /// Struct for getting map metatada.
+  /// </summary>
+  public class MapMetadata : MapMetadataSettable
+  {
+    /// The creation time of the map (in milliseconds since EPOCH).
+    public var created: UInt64? = nil
   }
   
   /// Static instance of the LibPlacenote singleton
@@ -629,7 +679,7 @@ public class LibPlacenote {
         os_log("Map list fetched from the database! Response: %@", newMapList!)
       
         var placeArray: [String: NSArray]
-        var placeIdMap:[String: Any] = [:]
+        var placeIdMap:[String: MapMetadata] = [:]
         if let data = newMapList?.data(using: .utf8) {
           do {
             placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
@@ -637,7 +687,22 @@ public class LibPlacenote {
             if (places.count > 0) {
               for i in 0...(places.count-1) {
                 let place = places[i] as! [String : Any]
-                placeIdMap[place["placeId"] as! String] = place["metadata"] as Any
+                let placeId = place["placeId"] as! String
+                let metadataJson = place["metadata"] as! [String:Any]
+                let locationJson = metadataJson["location"] as? [String:Double]
+
+                let metadata = MapMetadata()
+                metadata.created = metadataJson["created"] as? UInt64
+                metadata.name = metadataJson["name"] as? String
+                if (locationJson != nil) {
+                  metadata.location = MapLocation()
+                  metadata.location?.latitude = locationJson!["latitude"]!
+                  metadata.location?.longitude = locationJson!["longitude"]!
+                  metadata.location?.altitude = locationJson!["altitude"]!
+                }
+                metadata.userdata = metadataJson["userdata"]
+
+                placeIdMap[placeId] = metadata
               }
             }
           } catch {
@@ -675,8 +740,32 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
      True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadataJson: String) -> Bool {
-    return PNSetMetadata(mapId, metadataJson) == 0
+  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
+
+    var metadataDict:[String: Any] = [:]
+    if (metadata.name != nil) {
+      metadataDict["name"] = metadata.name!
+    }
+    if (metadata.location != nil) {
+      var location:[String: Any] = [:]
+      location["latitude"] = metadata.location?.latitude
+      location["longitude"] = metadata.location?.longitude
+      location["altitude"] = metadata.location?.altitude
+      metadataDict["location"] = location
+    }
+    if (metadata.userdata != nil) {
+      metadataDict["userdata"] = metadata.userdata!
+    }
+
+    do {
+      let metadataData = try JSONSerialization.data(withJSONObject: metadataDict)
+      let metadataJson = String(data: metadataData, encoding: String.Encoding.utf8)
+
+      return PNSetMetadata(mapId, metadataJson) == 0
+    } catch {
+      print (error)
+      return false
+    }
   }
   
   /** Start recording a dataset to be reported to the Placenote team. Recording is automatically stopped when stopSession() is called.

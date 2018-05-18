@@ -58,7 +58,7 @@
 		DCC7784419AB39F357D5A1CCEF377939 /* Pods-PlacenoteSDKExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PlacenoteSDKExample-umbrella.h"; sourceTree = "<group>"; };
 		DD38CD536561EA9464B42DCEBC1BADC2 /* libPlacenote.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = libPlacenote.h; path = Placenote.framework/Headers/libPlacenote.h; sourceTree = "<group>"; };
 		EF1BF5010BCCF2496B64CFE771B1B94E /* Pods-PlacenoteSDKExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlacenoteSDKExample-resources.sh"; sourceTree = "<group>"; };
-		F4EA89BE151021D7B6237F8A89053428 /* LibPlacenote.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibPlacenote.swift; sourceTree = "<group>"; };
+		F4EA89BE151021D7B6237F8A89053428 /* LibPlacenote.swift */ = {isa = PBXFileReference; includeInIndex = 1; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = LibPlacenote.swift; sourceTree = "<group>"; tabWidth = 2; };
 		F700A186E1E4A21DA7768B214781912D /* PlacenoteSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PlacenoteSDK-dummy.m"; sourceTree = "<group>"; };
 		F989A6B4CFE2C5BB209C325D94CA6B8E /* Pods-PlacenoteSDKExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
