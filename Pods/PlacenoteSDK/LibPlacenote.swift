@@ -637,7 +637,7 @@ public class LibPlacenote {
             if (places.count > 0) {
               for i in 0...(places.count-1) {
                 let place = places[i] as! [String : Any]
-                placeIdMap[place["placeId"] as! String] = place["userData"] as Any
+                placeIdMap[place["placeId"] as! String] = place["metadata"] as Any
               }
             }
           } catch {
