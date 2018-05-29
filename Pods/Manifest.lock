@@ -1,12 +1,16 @@
 PODS:
-  - PlacenoteSDK (1.4.1)
+  - PlacenoteSDK (1.5.1)
 
 DEPENDENCIES:
   - PlacenoteSDK
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - PlacenoteSDK
+
 SPEC CHECKSUMS:
-  PlacenoteSDK: 50182b0aac4a9dc460da98eaacc304ba779f25ea
+  PlacenoteSDK: e5a23214f391b18118a70ca1a54faeb84426b7a8
 
 PODFILE CHECKSUM: da40cb9f880c21da8adc255335032f9639aaa4e7
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.2
