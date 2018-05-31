@@ -495,7 +495,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         else {
           print ("Can't Delete: " + self.maps[indexPath.row].0)
           self.statusLabel.text = "Can't Delete: " + self.maps[indexPath.row].0
-
         }
       })
     }

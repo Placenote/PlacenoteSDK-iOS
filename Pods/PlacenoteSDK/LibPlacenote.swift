@@ -160,10 +160,10 @@ public class LibPlacenote {
   {
     /// The map name to search for. The search is case insensitive and will match
     /// and map that's name included the search name.
-    public var name: String = "";
+    public var name: String? = nil
     /// The location to search for maps in. Maps without location data will
     /// not be returned if this is set.
-    public var location: MapLocationSearch = MapLocationSearch();
+    public var location: MapLocationSearch?;
     /// Only return maps newer than this (in milliseconds since EPOCH). Value '0' disable this constraint.
     public var newerThan: Double = 0;
     /// Only return maps older than this (in milliseconds since EPOCH). Value '0' disable this constraint.
@@ -176,7 +176,7 @@ public class LibPlacenote {
     /// in the userdata object, simply pass 'shapeList'.
     ///
     /// For other help, contact us on Slack.
-    public var userdataQuery: String = "";
+    public var userdataQuery: String? = nil
     
     /// <summary>
     /// Helper function for setting newerThan via a DateTime
@@ -676,13 +676,13 @@ public class LibPlacenote {
   /**
    Fetch a list of maps filtered with Date range limits.
    
-   - Parameter newThan: limit the list of returned maps to be newer than this Date.
+   - Parameter newerThan: limit the list of returned maps to be newer than this Date.
    - Parameter olderThan: limit the list of returned maps to be older than this Date.
    - Parameter listCb: async callback that returns the map list for based on parameters specified in search.
    */
-  public func searchMaps(newThan: Date, olderThan: Date, listCb: @escaping ListMapCallback) {
+  public func searchMaps(newerThan: Date, olderThan: Date, listCb: @escaping ListMapCallback) {
     let ms: MapSearch = MapSearch ();
-    ms.setNewerThan(dt: newThan);
+    ms.setNewerThan(dt: newerThan);
     ms.setOlderThan(dt: olderThan);
     searchMaps (searchParams: ms, listCb: listCb);
   }
@@ -698,9 +698,9 @@ public class LibPlacenote {
   public func searchMaps(latitude: Double, longitude: Double, radius: Double, listCb: @escaping ListMapCallback) {
     let ms: MapSearch = MapSearch ();
     ms.location = MapLocationSearch ();
-    ms.location.latitude = latitude;
-    ms.location.longitude = longitude;
-    ms.location.radius = radius;
+    ms.location!.latitude = latitude;
+    ms.location!.longitude = longitude;
+    ms.location!.radius = radius;
     searchMaps (searchParams: ms, listCb: listCb);
   }
   
@@ -737,6 +737,7 @@ public class LibPlacenote {
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     let searchJson: String = String(data: searchData!, encoding: .utf8)!;
+    print("searchJson:\n" + searchJson);
     PNSearchMaps(searchJson, {(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
       let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
