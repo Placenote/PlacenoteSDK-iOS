@@ -143,11 +143,9 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${PODS_ROOT}/PlacenoteSDK/Placenote.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PlacenoteSDK/PlacenoteSDK.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${PODS_ROOT}/PlacenoteSDK/Placenote.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PlacenoteSDK/PlacenoteSDK.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
