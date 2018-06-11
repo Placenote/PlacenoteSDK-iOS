@@ -18,7 +18,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //UI Elements
   @IBOutlet var scnView: ARSCNView!
 
+  //UI Elements for the map table
   @IBOutlet var mapTable: UITableView!
+  @IBOutlet var filterLabel2: UILabel!
+  @IBOutlet var filterLabel1: UILabel!
+  @IBOutlet var filterSlider: UISlider!
+  
+  
   @IBOutlet var newMapButton: UIButton!
   @IBOutlet var pickMapButton: UIButton!
   @IBOutlet var statusLabel: UILabel!
@@ -38,6 +44,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
   private var reportDebug: Bool = false
+  private var maxRadiusSearch: Float = 10000.0 //m
+  private var currRadiusSearch: Float = 10000.0 //m
+  
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -122,6 +131,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     scnView.isPlaying = true
     scnView.debugOptions = []
     mapTable.isHidden = true //hide the map list until 'Load Map' is clicked
+    filterSlider.isHidden = true
+    filterSlider.value = 1.0
+    filterSlider.isContinuous = false
+    filterLabel1.isHidden = true
+    filterLabel2.isHidden = true
 
     //scnView.debugOptions = ARSCNDebugOptions.showFeaturePoints
     //scnView.debugOptions = ARSCNDebugOptions.showWorldOrigin
@@ -202,11 +216,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     statusLabel.text = "Map List"
     self.mapTable.reloadData() //reads from maps array (see: tableView functions)
     self.mapTable.isHidden = false
+    self.filterLabel1.isHidden = false
+    self.filterLabel2.isHidden = false
+    self.filterSlider.isHidden = false
+   
+    
+    
     self.tapRecognizer?.isEnabled = false
   }
 
   // MARK: - UI functions
-
+  
   @IBAction func newSaveMapButton(_ sender: Any) {
     if (trackingStarted && !mappingStarted) { //ARKit is enabled, start mapping
       print ("New Map")
@@ -237,6 +257,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       statusLabel.text = "Mapping: Tap to add shapes!"
       tapRecognizer?.isEnabled = true
       mapTable.isHidden = true
+      filterSlider.isHidden = true
+      filterLabel1.isHidden = true
+      filterLabel2.isHidden = true
+      
+      
       showPNLabel.isHidden = false
       showPNSelection.isHidden = false
       planeDetLabel.isHidden = false
@@ -323,10 +348,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       pickMapButton.setTitle("Cancel", for: .normal)
       newMapButton.isEnabled = false
       statusLabel.text = "Fetching Map List"
-
+      self.filterLabel1.text = "Distance Label: Off"
+      self.filterSlider.value = 1.0
+      
     }
     else { //map load/localization session cancelled
       mapTable.isHidden = true
+      filterSlider.isHidden = true
+      filterLabel1.isHidden = true
+      filterLabel2.isHidden = true
       pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.isEnabled = true
       statusLabel.text = "Map Load cancelled"
@@ -343,6 +373,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
   }
   
+  @IBAction func onDistanceFilterChange(_ sender: UISlider) {
+    let currentValue = Float(sender.value)*maxRadiusSearch
+    filterLabel1.text = String.localizedStringWithFormat("Distance filter: %.2f km", currentValue/1000.0)
+    currRadiusSearch = currentValue
+    updateMapTable(radius: currRadiusSearch)
+  }
   
   @IBAction func onPlaneDetectionOnOff(_ sender: Any) {
     planeDetection = !planeDetection
@@ -431,12 +467,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.mappingComplete = false
           self.localizationStarted = true
           self.mapTable.isHidden = true
+          self.filterSlider.isHidden = true
+          self.filterLabel1.isHidden = true
+          self.filterLabel2.isHidden = true
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
           self.showPNLabel.isHidden = false
           self.showPNSelection.isHidden = false
           self.planeDetLabel.isHidden = false
           self.planeDetSelection.isHidden = false
+          
+          self.filterSlider.value = 1.0
+          self.filterLabel1.text = "Distance slider: Off"
 
           let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
           
@@ -502,6 +544,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   func updateMapTable() {
     LibPlacenote.instance.fetchMapList(listCb: onMapList)
+  }
+  
+  func updateMapTable(radius: Float) {
+    LibPlacenote.instance.searchMaps(latitude: self.lastLocation!.coordinate.latitude, longitude: self.lastLocation!.coordinate.longitude, radius: Double(radius), listCb: onMapList)
   }
 
   @objc func handleTap(sender: UITapGestureRecognizer) {
