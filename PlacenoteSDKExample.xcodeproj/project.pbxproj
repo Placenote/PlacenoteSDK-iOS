@@ -15,6 +15,7 @@
 		A28C796D202A46F40052F3FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28C796B202A46F40052F3FB /* LaunchScreen.storyboard */; };
 		A28C7992202A48190052F3FB /* ShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7990202A48190052F3FB /* ShapeType.swift */; };
 		A28C7993202A48190052F3FB /* ShapeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28C7991202A48190052F3FB /* ShapeManager.swift */; };
+		A2EC47FA20AF28D200C29CB5 /* RandomName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC47F920AF28D200C29CB5 /* RandomName.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,13 +23,14 @@
 		8D2EF9CBDC0F285A1BE9E787 /* Pods-PlacenoteSDKExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlacenoteSDKExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.debug.xcconfig"; sourceTree = "<group>"; };
 		A28C795F202A46F40052F3FB /* PlacenoteSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacenoteSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28C7962202A46F40052F3FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A28C7964202A46F40052F3FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A28C7964202A46F40052F3FB /* ViewController.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A28C7967202A46F40052F3FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A28C7969202A46F40052F3FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A28C796C202A46F40052F3FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A28C796E202A46F40052F3FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A28C7990202A48190052F3FB /* ShapeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeType.swift; sourceTree = "<group>"; };
 		A28C7991202A48190052F3FB /* ShapeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeManager.swift; sourceTree = "<group>"; };
+		A2EC47F920AF28D200C29CB5 /* RandomName.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = RandomName.swift; sourceTree = "<group>"; tabWidth = 2; };
 		FC572E55F179D977C01BA451 /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacenoteSDKExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -90,6 +92,7 @@
 				A28C7969202A46F40052F3FB /* Assets.xcassets */,
 				A28C796B202A46F40052F3FB /* LaunchScreen.storyboard */,
 				A28C796E202A46F40052F3FB /* Info.plist */,
+				A2EC47F920AF28D200C29CB5 /* RandomName.swift */,
 			);
 			path = PlacenoteSDKExample;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 			files = (
 				A28C7965202A46F40052F3FB /* ViewController.swift in Sources */,
 				A28C7993202A48190052F3FB /* ShapeManager.swift in Sources */,
+				A2EC47FA20AF28D200C29CB5 /* RandomName.swift in Sources */,
 				A28C7992202A48190052F3FB /* ShapeType.swift in Sources */,
 				A28C7963202A46F40052F3FB /* AppDelegate.swift in Sources */,
 			);

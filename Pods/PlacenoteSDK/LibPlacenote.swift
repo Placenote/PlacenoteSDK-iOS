@@ -76,6 +76,18 @@ extension SCNMatrix4 {
   }
 }
 
+extension Date {
+  /**
+   Return the total milliseconds since epoch
+   
+   - Returns: An int that contains the total milliseconds since epoch
+   */
+  var millisecondsSince1970:Int {
+    return Int((self.timeIntervalSince1970 * 1000.0).rounded())
+  }
+}
+
+
 
 /// Interface to be implemented by listener classes that subscribes to pose and mapping status from LibPlacenote
 public protocol PNDelegate {
@@ -103,7 +115,7 @@ public class LibPlacenote {
   public typealias SaveMapCallback = (_ mapId: String?) -> Void
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
-  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: Any]) -> Void
+  public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
   
   /// Enums that indicates the status of the LibPlacenote mapping module
   public enum MappingStatus {
@@ -126,6 +138,96 @@ public class LibPlacenote {
       callbackId = id.hash
       libPtr = ptr
     }
+  }
+
+  /// Struct that contains location data for the map. All fields are required.
+  public class MapLocation: Codable
+  {
+    public init() {}
+
+    /// The GPS latitude
+    public var latitude: Double = 0
+    /// The GPS longitude
+    public var longitude: Double = 0
+    /// The GPS altitude
+    public var altitude: Double = 0
+  }
+  
+  /// Structure used for searching your maps. All fields are optional.
+  /// When multiple fields are set the search condition is logically ANDed,
+  /// returning a smaller list of maps.
+  public class MapSearch: Codable
+  {
+    /// The map name to search for. The search is case insensitive and will match
+    /// and map that's name included the search name.
+    public var name: String? = nil
+    /// The location to search for maps in. Maps without location data will
+    /// not be returned if this is set.
+    public var location: MapLocationSearch?;
+    /// Only return maps newer than this (in milliseconds since EPOCH). Value '0' disable this constraint.
+    public var newerThan: Double = 0;
+    /// Only return maps older than this (in milliseconds since EPOCH). Value '0' disable this constraint.
+    public var olderThan: Double = 0;
+    /// Filter maps based on this query, which is run via json-query:
+    /// https://www.npmjs.com/package/json-query
+    /// The filter will match if the query return a valid.
+    ///
+    /// For a simple example, to match only maps that have a 'shapeList'
+    /// in the userdata object, simply pass 'shapeList'.
+    ///
+    /// For other help, contact us on Slack.
+    public var userdataQuery: String? = nil
+    
+    /// <summary>
+    /// Helper function for setting newerThan via a DateTime
+    /// </summary>
+    public func setNewerThan(dt: Date) -> Void {
+      newerThan = Double(dt.millisecondsSince1970);
+    }
+    
+    /// <summary>
+    /// Helper function for setting olderThan via a DateTime
+    /// </summary>
+    public func setOlderThan(dt: Date)  -> Void {
+      olderThan = Double(dt.millisecondsSince1970);
+    }
+  }
+
+  /// Struct for searching maps by location. All fields are required.
+  public class MapLocationSearch: Codable
+  {
+    public init() {}
+
+    /// The GPS latitude for the center of the search circle.
+    public var latitude: Double = 0
+    /// The GPS longitude for the center of the search circle.
+    public var longitude: Double = 0
+    /// The radius (in meters) of the search circle.
+    public var radius: Double = 0
+  }
+
+  /// Struct for setting map metadata. All fields are optional.
+  public class MapMetadataSettable
+  {
+    public init() {}
+
+    /// The map name.
+    public var name: String? = nil
+
+    /// The map location information.
+    public var location: MapLocation? = nil
+
+    /// Arbitrary user data, in JSON form.
+    public var userdata: Any? = nil
+  }
+
+  /// <summary>
+  /// Struct for getting map metatada.
+  /// </summary>
+  public class MapMetadata : MapMetadataSettable
+  {
+    /// The creation time of the map (in milliseconds since EPOCH).
+    public var created: UInt64? = nil
   }
   
   /// Static instance of the LibPlacenote singleton
@@ -405,51 +507,6 @@ public class LibPlacenote {
   
   
   /**
-    Same as stopSession above but with the ability to report file transfer status of Dataset
-  public func stopSession(uploadProgressCb: @escaping FileTransferCallback) -> Void {
-    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
-    
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
-    ctxDict[cbCtx.callbackId] = cbCtx
-    
-    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
-    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
-        
-    PNStopSession({(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
-      let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
-      let libPtr = cbRetCtx.libPtr
-      let callbackId = cbRetCtx.callbackId
-      let completed = status?.pointee.completed
-      let faulted = status?.pointee.faulted
-      let bytesTransferred = status?.pointee.bytesTransferred
-      let bytesTotal = status?.pointee.bytesTotal
-      
-      DispatchQueue.main.async(execute: {() -> Void in
-        if (completed!) {
-          os_log("Data loaded!")
-          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
-          libPtr.ctxDict.removeValue(forKey: callbackId)
-        } else if (faulted!) {
-          os_log("Failed to load data!", log: OSLog.default, type: .fault)
-          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
-          libPtr.ctxDict.removeValue(forKey: callbackId)
-        } else {
-          var progress:Float = 0
-          if (bytesTotal! > 0) {
-            progress = Float(bytesTransferred!)/Float(bytesTotal!)
-          }
-          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
-        }
-      })
-    }, ctxPtr)
-    
-    multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
-    prevStatus = MappingStatus.waiting
-  }*/
-  
-  /**
    Save the map that LibPlacenote is generating in its current mapping session
    
    - Parameter savedCb: an asynchronous callback that indicates whether a map has been saved and what the unique mapId is
@@ -604,12 +661,150 @@ public class LibPlacenote {
     }, ctxPtr)
   }
   
+  /**
+   Fetch a list of maps filtered with name identifier.
+   
+   - Parameter name: name of the map you're looking for.
+   - Parameter listCb: async callback that returns the map list for based on parameters specified in search.
+   */
+  public func searchMaps(name: String, listCb: @escaping ListMapCallback) {
+    let ms: MapSearch = MapSearch ();
+    ms.name = name;
+    searchMaps (searchParams: ms, listCb: listCb);
+  }
+  
+  /**
+   Fetch a list of maps filtered with Date range limits.
+   
+   - Parameter newerThan: limit the list of returned maps to be newer than this Date.
+   - Parameter olderThan: limit the list of returned maps to be older than this Date.
+   - Parameter listCb: async callback that returns the map list for based on parameters specified in search.
+   */
+  public func searchMaps(newerThan: Date, olderThan: Date, listCb: @escaping ListMapCallback) {
+    let ms: MapSearch = MapSearch ();
+    ms.setNewerThan(dt: newerThan);
+    ms.setOlderThan(dt: olderThan);
+    searchMaps (searchParams: ms, listCb: listCb);
+  }
+  
+  /**
+   Fetch a list of maps filtered within the radius of a circle around the GPS location passed in.
+   
+   - Parameter latitude: latitude of the neighbourhood center for the map search.
+   - Parameter longitude: longitude of the neighbourhood center for the map search.
+   - Parameter radius: radius of the neighbourhood center for the map search.
+   - Parameter listCb: async callback that returns the map list for based on parameters specified in search
+   */
+  public func searchMaps(latitude: Double, longitude: Double, radius: Double, listCb: @escaping ListMapCallback) {
+    let ms: MapSearch = MapSearch ();
+    ms.location = MapLocationSearch ();
+    ms.location!.latitude = latitude;
+    ms.location!.longitude = longitude;
+    ms.location!.radius = radius;
+    searchMaps (searchParams: ms, listCb: listCb);
+  }
+  
+  /**
+   Fetch a list of maps filtered within the radius of a circle around the GPS location passed in.
+   
+   - Parameter userdataQuery: see "MapSearch.userdataQuery" for details.
+   */
+  public func searchMapsByUserData(userDataQuery: String, listCb: @escaping ListMapCallback) {
+    let ms: MapSearch = MapSearch ();
+    ms.userdataQuery = userDataQuery;
+    searchMaps (searchParams: ms, listCb: listCb);
+  }
+  
+  /**
+   Fetch a list of maps filtered by some search parameters.
+   
+   - Parameter search: parameters to constrain the map search. See MapSearch for details.
+   - Parameter listCb: async callback that returns the map list for based on parameters specified in search.
+   */
+  public func searchMaps(searchParams: MapSearch, listCb: @escaping ListMapCallback) {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .prettyPrinted
+    let searchData = try? encoder.encode(searchParams);
+    if (searchData == nil) {
+      listCb(false, [:]);
+      return;
+    }
+    
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    listMapCbDict[cbCtx.callbackId] = listCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
+    let searchJson: String = String(data: searchData!, encoding: .utf8)!;
+    print("searchJson:\n" + searchJson);
+    PNSearchMaps(searchJson, {(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+      let success = result?.pointee.success
+      let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+      let libPtr = cbReturnedCtx.libPtr
+      let callbackId = cbReturnedCtx.callbackId
+      
+      if (success != nil && success!) {
+        let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        os_log("Map list fetched from the database! Response: %@", newMapList!)
+        
+        var placeArray: [String: NSArray]
+        var placeIdMap:[String: MapMetadata] = [:]
+        if let data = newMapList?.data(using: .utf8) {
+          do {
+            placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
+            let places = placeArray["places"]!
+            if (places.count > 0) {
+              for i in 0...(places.count-1) {
+                let place = places[i] as! [String : Any]
+                let placeId = place["placeId"] as! String
+                let metadataJson = place["metadata"] as! [String:Any]
+                let locationJson = metadataJson["location"] as? [String:Double]
+                
+                let metadata = MapMetadata()
+                metadata.created = metadataJson["created"] as? UInt64
+                metadata.name = metadataJson["name"] as? String
+                if (locationJson != nil) {
+                  metadata.location = MapLocation()
+                  metadata.location?.latitude = locationJson!["latitude"]!
+                  metadata.location?.longitude = locationJson!["longitude"]!
+                  metadata.location?.altitude = locationJson!["altitude"]!
+                }
+                metadata.userdata = metadataJson["userdata"]
+                
+                placeIdMap[placeId] = metadata
+              }
+            }
+          } catch {
+            os_log("Canot parse file list: %@", log: OSLog.default, type: .error, error.localizedDescription)
+          }
+        }
+        
+        DispatchQueue.main.async(execute: {() -> Void in
+          libPtr.mapList = placeIdMap
+          libPtr.listMapCbDict[callbackId]!(true, placeIdMap)
+        })
+      } else {
+        let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        os_log("Failed to fetch the map list! Error msg: %@", log: OSLog.default, type: .error, errorMsg!)
+        
+        DispatchQueue.main.async(execute: {() -> Void in
+          libPtr.listMapCbDict[callbackId]!(false, [:])
+        })
+      }
+      
+      DispatchQueue.main.async(execute: {() -> Void in
+        libPtr.listMapCbDict.removeValue(forKey: callbackId)
+        libPtr.ctxDict.removeValue(forKey: callbackId)
+      })
+    }, ctxPtr)
+  }
   
   /**
    Fetch of list of map IDs that is associated with the given API Key
    
    - Parameter listCb: async callback that returns the map list for a API Key
- */
+   */
   public func fetchMapList(listCb: @escaping ListMapCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
@@ -629,7 +824,7 @@ public class LibPlacenote {
         os_log("Map list fetched from the database! Response: %@", newMapList!)
       
         var placeArray: [String: NSArray]
-        var placeIdMap:[String: Any] = [:]
+        var placeIdMap:[String: MapMetadata] = [:]
         if let data = newMapList?.data(using: .utf8) {
           do {
             placeArray = (try JSONSerialization.jsonObject(with: data, options: []) as? [String: NSArray])!
@@ -637,7 +832,22 @@ public class LibPlacenote {
             if (places.count > 0) {
               for i in 0...(places.count-1) {
                 let place = places[i] as! [String : Any]
-                placeIdMap[place["placeId"] as! String] = place["userData"] as Any
+                let placeId = place["placeId"] as! String
+                let metadataJson = place["metadata"] as! [String:Any]
+                let locationJson = metadataJson["location"] as? [String:Double]
+
+                let metadata = MapMetadata()
+                metadata.created = metadataJson["created"] as? UInt64
+                metadata.name = metadataJson["name"] as? String
+                if (locationJson != nil) {
+                  metadata.location = MapLocation()
+                  metadata.location?.latitude = locationJson!["latitude"]!
+                  metadata.location?.longitude = locationJson!["longitude"]!
+                  metadata.location?.altitude = locationJson!["altitude"]!
+                }
+                metadata.userdata = metadataJson["userdata"]
+
+                placeIdMap[placeId] = metadata
               }
             }
           } catch {
@@ -675,12 +885,39 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
      True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadataJson: String) -> Bool {
-    return PNSetMetadata(mapId, metadataJson) == 0
+  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
+
+    var metadataDict:[String: Any] = [:]
+    if (metadata.name != nil) {
+      metadataDict["name"] = metadata.name!
+    }
+    if (metadata.location != nil) {
+      var location:[String: Any] = [:]
+      location["latitude"] = metadata.location?.latitude
+      location["longitude"] = metadata.location?.longitude
+      location["altitude"] = metadata.location?.altitude
+      metadataDict["location"] = location
+    }
+    if (metadata.userdata != nil) {
+      metadataDict["userdata"] = metadata.userdata!
+    }
+
+    do {
+      let metadataData = try JSONSerialization.data(withJSONObject: metadataDict)
+      let metadataJson = String(data: metadataData, encoding: String.Encoding.utf8)
+
+      return PNSetMetadata(mapId, metadataJson) == 0
+    } catch {
+      print (error)
+      return false
+    }
   }
   
-  /** Start recording a dataset to be reported to the Placenote team. Recording is automatically stopped when stopSession() is called.
-   
+  /**
+   Start recording a dataset to be reported to the Placenote team. Recording is automatically
+   stopped when stopSession() is called.
+
+   - Parameter uploadProgressCb: callback to monitor upload progress of the dataset
    */
   public func startReportRecord(uploadProgressCb: @escaping FileTransferCallback) -> Void {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
@@ -702,12 +939,12 @@ public class LibPlacenote {
       
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed!) {
-          os_log("Data loaded!")
+          os_log("Dataset uploaded!")
           libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else if (faulted!) {
-          os_log("Failed to load data!", log: OSLog.default, type: .fault)
+          os_log("Failed to upload dataset!", log: OSLog.default, type: .fault)
           libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
           libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)

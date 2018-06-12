@@ -45,7 +45,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
 
   //Variables to manage PlacenoteSDK features and helpers
-  private var maps: [(String, [String: Any]?)] = [("Sample Map", [:])]
+  private var maps: [(String, LibPlacenote.MapMetadata)] = [("Sample Map", LibPlacenote.MapMetadata())]
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
   private var planesVizAnchors = [ARAnchor]();
@@ -184,7 +184,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   //Receive list of maps after it is retrieved. This is only fired when fetchMapList is called (see updateMapTable())
-  func onMapList(success: Bool, mapList: [String: Any]) -> Void {
+  func onMapList(success: Bool, mapList: [String: LibPlacenote.MapMetadata]) -> Void {
     maps.removeAll()
     if (!success) {
       print ("failed to fetch map list")
@@ -194,7 +194,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     print ("map List received")
     for place in mapList {
-      maps.append((place.key, place.value as? [String: Any]))
+      maps.append((place.key, place.value))
       print ("place:" + place.key + ", metadata: ")
       print (place.value)
     }
@@ -254,17 +254,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Saved Id: " + mapId! //update UI
             LibPlacenote.instance.stopSession()
 
-            var metadata: [String: Any] = [:]
-            if (self.lastLocation != nil) {
-                metadata["location"] = ["latitude": self.lastLocation!.coordinate.latitude,
-                                        "longitude": self.lastLocation!.coordinate.longitude,
-                                        "altitude": self.lastLocation!.altitude]
-            }
-            metadata["shapeArray"] = self.shapeManager.getShapeArray()
+            let metadata = LibPlacenote.MapMetadataSettable()
+            metadata.name = RandomName.Get()
+            self.statusLabel.text = "Saved Map: " + metadata.name! //update UI
 
-            let jsonData = try? JSONSerialization.data(withJSONObject: metadata)
-            let jsonString = String.init(data: jsonData!, encoding: String.Encoding.utf8)
-            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadataJson: jsonString!)) {
+            if (self.lastLocation != nil) {
+                metadata.location = LibPlacenote.MapLocation()
+                metadata.location!.latitude = self.lastLocation!.coordinate.latitude
+                metadata.location!.longitude = self.lastLocation!.coordinate.longitude
+                metadata.location!.altitude = self.lastLocation!.altitude
+            }
+            var userdata: [String:Any] = [:]
+            userdata["shapeArray"] = self.shapeManager.getShapeArray()
+            metadata.userdata = userdata
+
+            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata)) {
                 print ("Failed to set map metadata")
             }
             self.planeDetSelection.isOn = false
@@ -389,9 +393,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     cell?.textLabel?.text = map.0
 
+    let name = map.1.name
+    if name != nil && !name!.isEmpty {
+        cell?.textLabel?.text = name
+    }
+
     var subtitle = "Distance Unknown"
 
-    var location = map.1?["location"] as? [String: Any]
+    let location = map.1.location
 
     if (lastLocation == nil) {
         subtitle = "User location unknown"
@@ -399,8 +408,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         subtitle = "Map location unknown"
     } else {
         let distance = lastLocation!.distance(from: CLLocation(
-            latitude: location!["latitude"] as! Double,
-            longitude: location!["longitude"] as! Double))
+            latitude: location!.latitude,
+            longitude: location!.longitude))
         subtitle = String(format: "Distance: %0.3fkm", distance / 1000)
     }
 
@@ -428,11 +437,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.showPNSelection.isHidden = false
           self.planeDetLabel.isHidden = false
           self.planeDetSelection.isHidden = false
+
+          let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
           
-          if (self.shapeManager.loadShapeArray(shapeArray: self.maps[indexPath.row].1?["shapeArray"] as? [[String: [String: String]]])) {
+          if (self.shapeManager.loadShapeArray(shapeArray: userdata?["shapeArray"] as? [[String: [String: String]]])) {
             self.statusLabel.text = "Map Loaded. Look Around"
-          }
-          else {
+          } else {
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
           LibPlacenote.instance.startSession()
@@ -485,7 +495,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         else {
           print ("Can't Delete: " + self.maps[indexPath.row].0)
           self.statusLabel.text = "Can't Delete: " + self.maps[indexPath.row].0
-
         }
       })
     }
