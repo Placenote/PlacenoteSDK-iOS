@@ -14,8 +14,10 @@ import SceneKit
 public class FeaturePointVisualizer: PNDelegate {
   private let verticesPerCube: Int = 36
   private var scene: SCNScene
-  private var ptcloudNode: SCNNode = SCNNode()
-  private var ptcloudTimer: Timer = Timer()
+  private var mapNode: SCNNode = SCNNode()
+  private var trackedPtsNode: SCNNode = SCNNode()
+  private var mapTimer: Timer = Timer()
+  private var trackedPtsTimer: Timer = Timer()
   
   /**
    Constructor that appends the the scene as an input and append a node containing the pointcloud geometry in it
@@ -24,7 +26,8 @@ public class FeaturePointVisualizer: PNDelegate {
    */
   public init(inputScene: SCNScene) {
     scene = inputScene
-    scene.rootNode.addChildNode(ptcloudNode)
+    scene.rootNode.addChildNode(mapNode)
+    scene.rootNode.addChildNode(trackedPtsNode)
     LibPlacenote.instance.multiDelegate += self
   }
   
@@ -32,10 +35,16 @@ public class FeaturePointVisualizer: PNDelegate {
    A function to enable visualization of the map pointcloud
    */
   public func enableFeaturePoints() {
-    ptcloudTimer = Timer.scheduledTimer(
+    mapTimer = Timer.scheduledTimer(
         timeInterval: 0.5, target: self,
         selector: #selector(FeaturePointVisualizer.drawPointcloud),
         userInfo: nil, repeats: true
+    )
+    
+    trackedPtsTimer = Timer.scheduledTimer(
+      timeInterval: 0.1, target: self,
+      selector: #selector(FeaturePointVisualizer.drawTrackedPoints),
+      userInfo: nil, repeats: true
     )
   }
   
@@ -43,7 +52,8 @@ public class FeaturePointVisualizer: PNDelegate {
    A function to disable visualization of the map pointcloud
    */
   public func disableFeaturePoints() {
-    ptcloudTimer.invalidate()
+    mapTimer.invalidate()
+    trackedPtsTimer.invalidate()
     reset();
   }
   
@@ -51,7 +61,8 @@ public class FeaturePointVisualizer: PNDelegate {
    A function to reset the pointcloud visualization
    */
   public func reset() {
-    ptcloudNode.removeFromParentNode()
+    mapNode.removeFromParentNode()
+    trackedPtsNode.removeFromParentNode()
   }
   
   /**
@@ -82,7 +93,19 @@ public class FeaturePointVisualizer: PNDelegate {
     if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
       let landmarks = LibPlacenote.instance.getAllLandmarks();
       if (landmarks.count > 0) {
-        addPointcloud(landmarks: landmarks)
+        addPointcloud(landmarks: landmarks, node: mapNode)
+      }
+    }
+  }
+  
+  /**
+   Function to be called periodically to draw the tracked points geometry
+   */
+  @objc private func drawTrackedPoints() {
+    if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
+      let trackedLandmarks = LibPlacenote.instance.getTrackedLandmarks();
+      if (trackedLandmarks.count > 0) {
+        addPointcloud(landmarks: trackedLandmarks, node: trackedPtsNode)
       }
     }
   }
@@ -92,7 +115,7 @@ public class FeaturePointVisualizer: PNDelegate {
    
    - Parameter landmarks: an array of feature points in the inertial map frame to be rendered
    */
-  private func addPointcloud(landmarks: Array<PNFeaturePoint>) { //TODO: Only works with OpenGL (where ARKit doesn't work)
+  private func addPointcloud(landmarks: Array<PNFeaturePoint>, node: SCNNode) { //TODO: Only works with OpenGL (where ARKit doesn't work)
     var vertices : [SCNVector3] = [SCNVector3]()
     var normals: [SCNVector3] = [SCNVector3]()
     var colors: [SCNVector3] = [SCNVector3]()
@@ -131,10 +154,10 @@ public class FeaturePointVisualizer: PNDelegate {
     let element = SCNGeometryElement(data: indexData as Data, primitiveType: .triangles,
                                      primitiveCount: indices.count/3, bytesPerIndex: MemoryLayout<Int32>.size)
     let pointCloud = SCNGeometry(sources: [vertexSource, normalSource, colorSource], elements: [element])
-    
-    ptcloudNode.removeFromParentNode()
-    ptcloudNode = SCNNode(geometry: pointCloud)
-    scene.rootNode.addChildNode(ptcloudNode)
+  
+    node.removeFromParentNode()
+    node.geometry = pointCloud
+    scene.rootNode.addChildNode(node)
   }
   
   
