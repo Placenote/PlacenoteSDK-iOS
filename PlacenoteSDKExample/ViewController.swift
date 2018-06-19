@@ -18,7 +18,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //UI Elements
   @IBOutlet var scnView: ARSCNView!
 
+  //UI Elements for the map table
   @IBOutlet var mapTable: UITableView!
+  @IBOutlet var filterLabel2: UILabel!
+  @IBOutlet var filterLabel1: UILabel!
+  @IBOutlet var filterSlider: UISlider!
+  
+  
   @IBOutlet var newMapButton: UIButton!
   @IBOutlet var pickMapButton: UIButton!
   @IBOutlet var statusLabel: UILabel!
@@ -38,6 +44,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
   private var reportDebug: Bool = false
+  private var maxRadiusSearch: Float = 500.0 //m
+  private var currRadiusSearch: Float = 0.0 //m
+  
 
   //Application related variables
   private var shapeManager: ShapeManager!
@@ -83,12 +92,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     //UI Updates
     newMapButton.isEnabled = false
-    showPNLabel.isHidden = true
-    showPNSelection.isHidden = true
-    planeDetLabel.isHidden = true
-    planeDetSelection.isHidden = true
-    
-
+    toggleMappingUI(true) //hide mapping UI options
     locationManager = CLLocationManager()
     locationManager.requestWhenInUseAuthorization()
 
@@ -122,7 +126,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     scnView.isPlaying = true
     scnView.debugOptions = []
     mapTable.isHidden = true //hide the map list until 'Load Map' is clicked
-
+    filterSlider.isContinuous = false
+    toggleSliderUI(true, reset: true) //hide the radius search UI, reset values as we are initializating
     //scnView.debugOptions = ARSCNDebugOptions.showFeaturePoints
     //scnView.debugOptions = ARSCNDebugOptions.showWorldOrigin
   }
@@ -202,11 +207,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     statusLabel.text = "Map List"
     self.mapTable.reloadData() //reads from maps array (see: tableView functions)
     self.mapTable.isHidden = false
+    self.toggleSliderUI(false, reset: false)
     self.tapRecognizer?.isEnabled = false
   }
 
   // MARK: - UI functions
-
+  
   @IBAction func newSaveMapButton(_ sender: Any) {
     if (trackingStarted && !mappingStarted) { //ARKit is enabled, start mapping
       print ("New Map")
@@ -237,10 +243,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       statusLabel.text = "Mapping: Tap to add shapes!"
       tapRecognizer?.isEnabled = true
       mapTable.isHidden = true
-      showPNLabel.isHidden = false
-      showPNSelection.isHidden = false
-      planeDetLabel.isHidden = false
-      planeDetSelection.isHidden = false
+      toggleSliderUI(true, reset: false)
+      toggleMappingUI(false)
       shapeManager.clearShapes() //creating new map, remove old shapes.
     }
     else if (mappingStarted) { //mapping been running, save map
@@ -292,10 +296,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       )
       newMapButton.setTitle("New Map", for: .normal)
       tapRecognizer?.isEnabled = false
-      showPNLabel.isHidden = true
-      showPNSelection.isHidden = true
-      planeDetLabel.isHidden = true
-      planeDetSelection.isHidden = true
+      toggleMappingUI(true) //hide mapping UI
     }
   }
 
@@ -308,10 +309,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       localizationStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
       statusLabel.text = "Cleared"
-      showPNLabel.isHidden = true
-      showPNSelection.isHidden = true
-      planeDetLabel.isHidden = true
-      planeDetSelection.isHidden = true
+      toggleMappingUI(true) //hided mapping options
       planeDetSelection.isOn = false
       planeDetection = false
       configureSession()
@@ -323,10 +321,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       pickMapButton.setTitle("Cancel", for: .normal)
       newMapButton.isEnabled = false
       statusLabel.text = "Fetching Map List"
-
+      toggleSliderUI(true, reset: true)
     }
     else { //map load/localization session cancelled
       mapTable.isHidden = true
+      toggleSliderUI(true, reset: false)
       pickMapButton.setTitle("Load Map", for: .normal)
       newMapButton.isEnabled = true
       statusLabel.text = "Map Load cancelled"
@@ -343,6 +342,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
   }
   
+  @IBAction func onDistanceFilterChange(_ sender: UISlider) {
+    let currentValue = Float(sender.value)*maxRadiusSearch
+    filterLabel1.text = String.localizedStringWithFormat("Distance filter: %.2f km", currentValue/1000.0)
+    currRadiusSearch = currentValue
+    updateMapTable(radius: currRadiusSearch)
+  }
   
   @IBAction func onPlaneDetectionOnOff(_ sender: Any) {
     planeDetection = !planeDetection
@@ -375,6 +380,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     scnView.session.run(configuration)
   }
   
+  func toggleSliderUI (_ on: Bool, reset: Bool) {
+    filterSlider.isHidden = on
+    filterLabel1.isHidden = on
+    filterLabel2.isHidden = on
+    if (reset) {
+      filterSlider.value = 1.0
+      filterLabel1.text = "Distance slider: Off"
+    }
+  }
+  
+  func toggleMappingUI(_ on: Bool) {
+    planeDetLabel.isHidden = on
+    planeDetSelection.isHidden = on
+    showPNLabel.isHidden = on
+    showPNSelection.isHidden = on
+  }
 
   // MARK: - UITableViewDelegate and UITableviewDataSource to manage retrieving, viewing, deleting and selecting maps on a TableView
 
@@ -433,13 +454,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           self.mapTable.isHidden = true
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
-          self.showPNLabel.isHidden = false
-          self.showPNSelection.isHidden = false
-          self.planeDetLabel.isHidden = false
-          self.planeDetSelection.isHidden = false
-
+          self.toggleMappingUI(false) //show mapping options UI
+          self.toggleSliderUI(true, reset: true) //hide + reset UI for later
           let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
-          
           if (self.shapeManager.loadShapeArray(shapeArray: userdata?["shapeArray"] as? [[String: [String: String]]])) {
             self.statusLabel.text = "Map Loaded. Look Around"
           } else {
@@ -502,6 +519,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   func updateMapTable() {
     LibPlacenote.instance.fetchMapList(listCb: onMapList)
+  }
+  
+  func updateMapTable(radius: Float) {
+    LibPlacenote.instance.searchMaps(latitude: self.lastLocation!.coordinate.latitude, longitude: self.lastLocation!.coordinate.longitude, radius: Double(radius), listCb: onMapList)
   }
 
   @objc func handleTap(sender: UITapGestureRecognizer) {
