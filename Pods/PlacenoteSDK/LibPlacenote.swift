@@ -297,7 +297,6 @@ public class LibPlacenote {
     })
   }
   
-  
   /**
    Accessor function that returns initialization status of LibPlacenote
    
@@ -305,6 +304,13 @@ public class LibPlacenote {
    */
   public func initialized() -> Bool {
     return sdkInitialized
+  }
+  
+  /**
+   Function to shutdown all LibPlacenote SDK functions, creates a cleaner exit and shutdown of critical mapper threads
+   */
+  public func shutdown() -> Void {
+    PNShutdown()
   }
   
   /**
