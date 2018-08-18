@@ -10,11 +10,11 @@
 		</data>
 		<key>Headers/libPlacenote.h</key>
 		<data>
-		n6AStsmHLFd3sgrNwpigjV7l448=
+		E2JIKBkikiA8i5JM8kbO0a+0Wjo=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		G9ghcwYMLEJqkF3sMHhbRwL9VuY=
+		gnr3nm/+L4BQVTqt2yNSu/TT018=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -25,10 +25,6 @@
 	<dict>
 		<key>Headers/Placenote.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			En6ZeTNirflaFP+ZkcO291IqkXE=
-			</data>
 			<key>hash2</key>
 			<data>
 			dSGanwvUdGeoddwCMZejkMIgQ1oWmDmujPigAgDyMoI=
@@ -36,21 +32,13 @@
 		</dict>
 		<key>Headers/libPlacenote.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			n6AStsmHLFd3sgrNwpigjV7l448=
-			</data>
 			<key>hash2</key>
 			<data>
-			ICkYrX7N7MQiUYaEXtgHrjgLbRcuqOoDBHp+TazkKWE=
+			OT3WmaGAtBblmrhNip5IHaAkr2bzF3sCWIy0cQsTYaI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			7Y58iNxAz5P3ISzEWCSB6z4NG9E=
-			</data>
 			<key>hash2</key>
 			<data>
 			zIlJpdS78cE1vAOESS/BX/tEMXqyKqZu9PYmyv1bMtA=
