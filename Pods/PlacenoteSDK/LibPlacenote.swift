@@ -321,7 +321,7 @@ public class LibPlacenote {
    
    - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
    */
-  public func startSession() -> Void {
+  public func startSession(extend: Bool = false) -> Void {
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     PNStartSession({(outputPose: NativePosePtr?, arkitPose: NativePosePtr?, swiftContext: UnsafeMutableRawPointer?) -> Void in
@@ -354,7 +354,7 @@ public class LibPlacenote {
           libPtr.currStatus = status
         })
       }
-    }, ctxPtr)
+    }, extend, ctxPtr)
   }
   
   /**

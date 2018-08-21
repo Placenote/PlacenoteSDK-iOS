@@ -41,7 +41,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //Status variables to track the state of the app with respect to libPlacenote
   private var trackingStarted: Bool = false;
   private var mappingStarted: Bool = false;
-  private var mappingComplete: Bool = false;
   private var localizationStarted: Bool = false;
   private var reportDebug: Bool = false
   private var maxRadiusSearch: Float = 500.0 //m
@@ -251,7 +250,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       print("Saving Map")
       statusLabel.text = "Saving Map"
       mappingStarted = false
-      mappingComplete = true
       LibPlacenote.instance.saveMap(
         savedCb: {(mapId: String?) -> Void in
           if (mapId != nil) {
@@ -295,7 +293,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       }
       )
       newMapButton.setTitle("New Map", for: .normal)
+      pickMapButton.setTitle("Load Map", for: .normal)
       tapRecognizer?.isEnabled = false
+      localizationStarted = false
       toggleMappingUI(true) //hide mapping UI
     }
   }
@@ -307,7 +307,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       ptViz?.reset()
       LibPlacenote.instance.stopSession()
       localizationStarted = false
+      mappingStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
+      newMapButton.setTitle("New Map", for: .normal)
       statusLabel.text = "Cleared"
       toggleMappingUI(true) //hided mapping options
       planeDetSelection.isOn = false
@@ -448,12 +450,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     LibPlacenote.instance.loadMap(mapId: maps[indexPath.row].0,
       downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
         if (completed) {
-          self.mappingStarted = false
-          self.mappingComplete = false
+          self.mappingStarted = true //extending the map
           self.localizationStarted = true
           self.mapTable.isHidden = true
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
+          self.newMapButton.setTitle("Save Map", for: .normal)
+
           self.toggleMappingUI(false) //show mapping options UI
           self.toggleSliderUI(true, reset: true) //hide + reset UI for later
           let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
@@ -462,7 +465,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           } else {
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
-          LibPlacenote.instance.startSession()
+          LibPlacenote.instance.startSession(extend: true)
           
           
           
