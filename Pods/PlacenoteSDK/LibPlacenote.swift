@@ -115,6 +115,7 @@ public class LibPlacenote {
   public typealias SaveMapCallback = (_ mapId: String?) -> Void
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
+  public typealias MetadataSavedCallback = (_ success: Bool) -> Void
   public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
   
   /// Enums that indicates the status of the LibPlacenote mapping module
@@ -254,6 +255,7 @@ public class LibPlacenote {
   private var saveMapCbDict: Dictionary<Int, SaveMapCallback> = Dictionary()
   private var deleteMapCbDict: Dictionary<Int, DeleteMapCallback> = Dictionary()
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
+  private var setMetadataCbDict: Dictionary<Int, MetadataSavedCallback> = Dictionary()
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
@@ -881,6 +883,23 @@ public class LibPlacenote {
     }, ctxPtr)
   }
 
+
+  /**
+   Set the metadata for the given map, which will be returned as the value of the
+   dictionary of ListMapCallback. The metadata must be a valid JSON value, object,
+   or array a serialized string.
+   
+   - Parameter mapId: ID of the map
+   - Parameter metadataJson: Serialized JSON metadata
+   - Returns: False if the SDK was not initialized, or metadataJson was invalid.
+   True otherwise.
+   */
+  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
+    return setMapMetadata(mapId: mapId, metadata: metadata, metadataSavedCb: {(success:Bool) -> Void in
+    })
+  }
+
+
   /**
    Set the metadata for the given map, which will be returned as the value of the
    dictionary of ListMapCallback. The metadata must be a valid JSON value, object,
@@ -888,11 +907,18 @@ public class LibPlacenote {
 
    - Parameter mapId: ID of the map
    - Parameter metadataJson: Serialized JSON metadata
+   - Parameter metadataSavedCb: Callback to indicate the success/failure of the setMapMetadata result
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
      True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
-
+  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable, metadataSavedCb: @escaping MetadataSavedCallback) -> Bool {
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    
+    setMetadataCbDict[cbCtx.callbackId] = metadataSavedCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
     var metadataDict:[String: Any] = [:]
     if (metadata.name != nil) {
       metadataDict["name"] = metadata.name!
@@ -912,7 +938,35 @@ public class LibPlacenote {
       let metadataData = try JSONSerialization.data(withJSONObject: metadataDict)
       let metadataJson = String(data: metadataData, encoding: String.Encoding.utf8)
 
-      return PNSetMetadata(mapId, metadataJson) == 0
+      let retCode: Int32 = PNSetMetadata(mapId, metadataJson,
+        {(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+          let success = result?.pointee.success
+          let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+          let libPtr = cbReturnedCtx.libPtr
+          let callbackId = cbReturnedCtx.callbackId
+          
+          if (success != nil && success!) {
+            DispatchQueue.main.async(execute: {() -> Void in
+              libPtr.setMetadataCbDict[callbackId]!(true)
+            })
+          } else {
+            let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+            os_log("Failed to set the map metadata! Error msg: %@", log: OSLog.default, type: .error, errorMsg!)
+            
+            DispatchQueue.main.async(execute: {() -> Void in
+              libPtr.setMetadataCbDict[callbackId]!(false)
+            })
+          }
+          
+          DispatchQueue.main.async(execute: {() -> Void in
+            libPtr.setMetadataCbDict.removeValue(forKey: callbackId)
+            libPtr.ctxDict.removeValue(forKey: callbackId)
+          })
+        },
+        ctxPtr
+      )
+      
+      return retCode == 0
     } catch {
       print (error)
       return false

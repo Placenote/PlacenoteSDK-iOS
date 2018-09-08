@@ -270,7 +270,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             userdata["shapeArray"] = self.shapeManager.getShapeArray()
             metadata.userdata = userdata
 
-            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata)) {
+            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
                 print ("Failed to set map metadata")
             }
             self.planeDetSelection.isOn = false
