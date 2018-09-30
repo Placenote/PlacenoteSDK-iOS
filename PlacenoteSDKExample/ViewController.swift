@@ -196,11 +196,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       return
     }
 
-    print ("map List received")
+    //Cycle through the maplist and create a database of all the maps (place.key) and its metadata (place.value)
     for place in mapList {
       maps.append((place.key, place.value))
-      print ("place:" + place.key + ", metadata: ")
-      print (place.value)
     }
 
     statusLabel.text = "Map List"
@@ -213,8 +211,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   // MARK: - UI functions
   
   @IBAction func newSaveMapButton(_ sender: Any) {
+    
     if (trackingStarted && !mappingStarted) { //ARKit is enabled, start mapping
-      print ("New Map")
       mappingStarted = true
       
       LibPlacenote.instance.stopSession()
@@ -459,6 +457,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
           self.toggleMappingUI(false) //show mapping options UI
           self.toggleSliderUI(true, reset: true) //hide + reset UI for later
+          
+          //Using this method you can individual retrieve the metadata for a single map,
+          //However, as we called a blanket fetchMapList before, it already acquired all the metadata for all maps
+          //We'll just use that meta data for now.
+  
+          /*LibPlacenote.instance.getMapMetadata(mapId: self.maps[indexPath.row].0, getMetadataCb: {(success: Bool, metadata: LibPlacenote.MapMetadata) -> Void in
+            let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
+            if (self.shapeManager.loadShapeArray(shapeArray: userdata?["shapeArray"] as? [[String: [String: String]]])) {
+              self.statusLabel.text = "Map Loaded. Look Around"
+            } else {
+              self.statusLabel.text = "Map Loaded. Shape file not found"
+            }
+            LibPlacenote.instance.startSession(extend: true)
+          })*/
+          
+          //Use metadata acquired from fetchMapList
           let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
           if (self.shapeManager.loadShapeArray(shapeArray: userdata?["shapeArray"] as? [[String: [String: String]]])) {
             self.statusLabel.text = "Map Loaded. Look Around"
@@ -466,7 +480,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
           LibPlacenote.instance.startSession(extend: true)
-          
           
           
           if (self.reportDebug) {
