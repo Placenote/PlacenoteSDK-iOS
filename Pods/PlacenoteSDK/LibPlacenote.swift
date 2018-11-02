@@ -116,6 +116,7 @@ public class LibPlacenote {
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
   public typealias MetadataSavedCallback = (_ success: Bool) -> Void
+  public typealias GetMetadataCallback = (_ success: Bool, _ metadata: MapMetadata) -> Void
   public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
   
   /// Enums that indicates the status of the LibPlacenote mapping module
@@ -256,6 +257,7 @@ public class LibPlacenote {
   private var deleteMapCbDict: Dictionary<Int, DeleteMapCallback> = Dictionary()
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
   private var setMetadataCbDict: Dictionary<Int, MetadataSavedCallback> = Dictionary()
+  private var getMetadataCbDict: Dictionary<Int, GetMetadataCallback> = Dictionary()
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
@@ -754,7 +756,6 @@ public class LibPlacenote {
       
       if (success != nil && success!) {
         let newMapList: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
-        os_log("Map list fetched from the database! Response: %@", newMapList!)
         
         var placeArray: [String: NSArray]
         var placeIdMap:[String: MapMetadata] = [:]
@@ -882,6 +883,73 @@ public class LibPlacenote {
       })
     }, ctxPtr)
   }
+  
+  /**
+   Get the metadata for the given map, which will be returned as Libplacenote.metadata with metadata
+  
+   - Parameter mapId: ID of the map
+               getMetadataCb: async callback that returns meta in the form of Libplacenote.metadata. Metadata is empty if the mapid is incorrect
+                or does not exist
+   */
+  
+  public func getMapMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
+    
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    getMetadataCbDict[cbCtx.callbackId] = getMetadataCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
+    PNGetMetadata(mapId, {(result: UnsafeMutablePointer<PNCallbackResult>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+      let success = result?.pointee.success
+      let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+      let libPtr = cbReturnedCtx.libPtr
+      let callbackId = cbReturnedCtx.callbackId
+      if (success != nil && success! && result?.pointee.msg != nil) {
+        
+        let metadataString = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        let data = metadataString!.data(using: .utf8)
+        
+        do {
+          let metadata: LibPlacenote.MapMetadata = LibPlacenote.MapMetadata()
+
+          if (data != nil) {
+            let dataJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any?]
+            let metadataJson = dataJson!["metadata"] as! [String: Any?]
+            metadata.created = metadataJson["created"] as? UInt64
+            metadata.name = metadataJson["name"] as? String
+            metadata.location = LibPlacenote.MapLocation()
+            
+            metadata.location?.latitude = (metadataJson["location"]! as! [String: Double])["latitude"]!
+            metadata.location?.longitude = (metadataJson["location"] as! [String: Double])["longitude"]!
+            metadata.location?.altitude = (metadataJson["location"] as! [String: Double])["altitude"]!
+            metadata.userdata = metadataJson["userdata"] as? [String: Any?]
+            
+          }
+          else {
+            os_log("Failed to convert received map metadata to string", log: OSLog.default, type: .error)
+          }
+          DispatchQueue.main.async(execute: {() -> Void in
+            libPtr.getMetadataCbDict[callbackId]!(true, metadata)
+          })
+        }
+        catch {
+          os_log("Failed to convert received map metadata", log: OSLog.default, type: .error)
+        }
+      }
+      else {
+        let errorMsg: String? = String(cString: (result?.pointee.msg)!, encoding: String.Encoding.ascii)
+        os_log("Failed to receive map metadata! Error msg: %@", log: OSLog.default, type: .error, errorMsg!)
+        
+        DispatchQueue.main.async(execute: {() -> Void in
+          let metadata: LibPlacenote.MapMetadata = LibPlacenote.MapMetadata() //empty metadata
+          libPtr.getMetadataCbDict[callbackId]!(false , metadata)
+        })
+      }
+      
+    },ctxPtr)
+  }
 
 
   /**
@@ -972,6 +1040,7 @@ public class LibPlacenote {
       return false
     }
   }
+  
   
   /**
    Start recording a dataset to be reported to the Placenote team. Recording is automatically

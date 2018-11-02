@@ -1,5 +1,5 @@
 PODS:
-  - PlacenoteSDK (1.6.6)
+  - PlacenoteSDK (1.6.9)
 
 DEPENDENCIES:
   - PlacenoteSDK
@@ -9,7 +9,7 @@ SPEC REPOS:
     - PlacenoteSDK
 
 SPEC CHECKSUMS:
-  PlacenoteSDK: e6058170f868605ae029fd173da86a5477e741cf
+  PlacenoteSDK: 99ec0baf6acf46fcae1d51a3c0a900f340025e3d
 
 PODFILE CHECKSUM: da40cb9f880c21da8adc255335032f9639aaa4e7
 
