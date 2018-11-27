@@ -118,6 +118,8 @@ public class LibPlacenote {
   public typealias MetadataSavedCallback = (_ success: Bool) -> Void
   public typealias GetMetadataCallback = (_ success: Bool, _ metadata: MapMetadata) -> Void
   public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
+  public typealias OnInitializedCallback = (_ success: Bool) -> Void
+
   
   /// Enums that indicates the status of the LibPlacenote mapping module
   public enum MappingStatus {
@@ -258,6 +260,7 @@ public class LibPlacenote {
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
   private var setMetadataCbDict: Dictionary<Int, MetadataSavedCallback> = Dictionary()
   private var getMetadataCbDict: Dictionary<Int, GetMetadataCallback> = Dictionary()
+  private var onInitializedCbDict: Dictionary<Int, OnInitializedCallback> = Dictionary()
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
@@ -265,8 +268,20 @@ public class LibPlacenote {
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
    */
-  public func initialize(apiKey: String) -> Void {
-    let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
+  public func initialize(apiKey: String, onInitialized: (OnInitializedCallback)? = nil) -> Void {
+    
+    /*let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    saveMapCbDict[cbCtx.callbackId] = savedCb
+    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())*/
+    
+    
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    onInitializedCbDict[cbCtx.callbackId] = onInitialized;
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     os_log ("initializing SDK")
@@ -284,11 +299,17 @@ public class LibPlacenote {
 
     initializeSDK(apiKey, mapStoragePath, dataPath, ctxPtr, {(result: NativeInitResultPtr?, ctxPtr: UnsafeMutableRawPointer?) -> Void in
       let success = result?.pointee.success
-      let libPtr = Unmanaged<LibPlacenote>.fromOpaque(ctxPtr!).takeUnretainedValue()
+      let cbReturnedCtx = Unmanaged<CallbackContext>.fromOpaque(ctxPtr!).takeUnretainedValue()
+      let callbackId = cbReturnedCtx.callbackId
+      let libPtr = cbReturnedCtx.libPtr
     
       if (result != nil && success!) {
         os_log("Initialized SDK!")
         libPtr.sdkInitialized = true;
+        let cb = libPtr.onInitializedCbDict[callbackId]
+        if (cb != nil) {
+          cb!(true);
+        }
       } else {
         os_log("Failed to initialize SDK!", log: OSLog.default, type: .error)
         let errMsg = result?.pointee.msg
@@ -296,6 +317,10 @@ public class LibPlacenote {
         if (result != nil) {
           str = String(cString: errMsg!, encoding: String.Encoding.ascii)!
           os_log ("Error: %@", log: OSLog.default, type: .error, str)
+        }
+        let cb = libPtr.onInitializedCbDict[callbackId]
+        if (cb != nil) {
+          cb!(false);
         }
       }
     })
