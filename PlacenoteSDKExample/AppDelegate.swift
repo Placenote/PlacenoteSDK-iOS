@@ -17,8 +17,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        LibPlacenote.instance.initialize(apiKey: Enter_API_KEY_here)
-
+        LibPlacenote.instance.initialize(apiKey: "Enter API key here",  onInitialized: {(initialized: Bool?) -> Void in
+          if (initialized!) {
+            print ("SDK Initialized")
+          }
+          else {
+            print ("SDK Could not be initialized")
+          }
+        })
         return true
     }
 
