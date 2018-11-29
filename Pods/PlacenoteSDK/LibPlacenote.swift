@@ -269,15 +269,6 @@ public class LibPlacenote {
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
    */
   public func initialize(apiKey: String, onInitialized: (OnInitializedCallback)? = nil) -> Void {
-    
-    /*let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
-    saveMapCbDict[cbCtx.callbackId] = savedCb
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
-    ctxDict[cbCtx.callbackId] = cbCtx
-    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
-    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())*/
-    
-    
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     onInitializedCbDict[cbCtx.callbackId] = onInitialized;
     ctxDict[cbCtx.callbackId] = cbCtx
