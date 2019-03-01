@@ -479,7 +479,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
           } else {
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
-          LibPlacenote.instance.startSession(extend: true)
+          LibPlacenote.instance.startSession(extend: false)
           
           
           if (self.reportDebug) {
