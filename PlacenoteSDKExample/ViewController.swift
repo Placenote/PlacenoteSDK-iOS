@@ -307,6 +307,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       localizationStarted = false
       mappingStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
+      newMapButton.isHidden = false;
       newMapButton.setTitle("New Map", for: .normal)
       statusLabel.text = "Cleared"
       toggleMappingUI(true) //hided mapping options
@@ -448,11 +449,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     LibPlacenote.instance.loadMap(mapId: maps[indexPath.row].0,
       downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
         if (completed) {
-          self.mappingStarted = true //extending the map
+          //self.mappingStarted = false //extending the map
           self.localizationStarted = true
           self.mapTable.isHidden = true
           self.pickMapButton.setTitle("Stop/Clear", for: .normal)
           self.newMapButton.isEnabled = true
+          self.newMapButton.isHidden = true;
           self.newMapButton.setTitle("Save Map", for: .normal)
 
           self.toggleMappingUI(false) //show mapping options UI
@@ -480,7 +482,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.statusLabel.text = "Map Loaded. Shape file not found"
           }
           LibPlacenote.instance.startSession(extend: false)
-          
           
           if (self.reportDebug) {
             LibPlacenote.instance.startReportRecord (uploadProgressCb: ({(completed: Bool, faulted: Bool, percentage: Float) -> Void in
