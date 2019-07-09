@@ -411,7 +411,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let map = self.maps[indexPath.row]
     var cell:UITableViewCell? = mapTable.dequeueReusableCell(withIdentifier: map.0)
     if cell==nil {
-      cell =  UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: map.0)
+      cell =  UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: map.0)
     }
     cell?.textLabel?.text = map.0
 
@@ -516,8 +516,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   }
 
   //Delete Row and its corresponding map
-  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    if (editingStyle == UITableViewCellEditingStyle.delete) {
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if (editingStyle == UITableViewCell.EditingStyle.delete) {
       statusLabel.text = "Deleting Map:" + maps[indexPath.row].0
       LibPlacenote.instance.deleteMap(mapId: maps[indexPath.row].0, deletedCb: {(deleted: Bool) -> Void in
         if (deleted) {

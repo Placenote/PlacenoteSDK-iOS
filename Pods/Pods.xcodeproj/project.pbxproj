@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -34,12 +34,12 @@
 
 /* Begin PBXFileReference section */
 		06C0E275C3CBED4621D75CAA4E3948BA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0C79DBED0AB5BA58A8BDB2EB7616B5FC /* PlacenoteSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PlacenoteSDK.framework; path = PlacenoteSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C79DBED0AB5BA58A8BDB2EB7616B5FC /* PlacenoteSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlacenoteSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12419D0885451CAA7516EBF100CFA483 /* Pods-PlacenoteSDKExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlacenoteSDKExample-frameworks.sh"; sourceTree = "<group>"; };
-		142329D1DDB5BFC5726E18837844714A /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_PlacenoteSDKExample.framework; path = "Pods-PlacenoteSDKExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		142329D1DDB5BFC5726E18837844714A /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacenoteSDKExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		192DFD6F4E4B8905FFBECAACD11B484E /* PlacenoteSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-prefix.pch"; sourceTree = "<group>"; };
 		207992C5DD06822069CF9E0040097E1A /* PlacenoteSDK.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PlacenoteSDK.xcconfig; sourceTree = "<group>"; };
-		223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = Data.bin; sourceTree = "<group>"; };
+		223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.macbinary; path = Data.bin; sourceTree = "<group>"; };
 		27C91530171ECBEDBDA7B734AB710550 /* Pods-PlacenoteSDKExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.release.xcconfig"; sourceTree = "<group>"; };
 		27EAF25A6DA7EE086D33F1E4F8F23469 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
@@ -50,7 +50,7 @@
 		7AD7ABD26FC9D36EAA0373749D2A5428 /* Placenote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Placenote.framework; sourceTree = "<group>"; };
 		7C36BE6D134E668139DD5A92AE3121A7 /* PlacenoteSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-umbrella.h"; sourceTree = "<group>"; };
 		924DB3E72B01EE375E7709222315C173 /* Pods-PlacenoteSDKExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-PlacenoteSDKExample-dummy.m"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A82FF6E3BC07484DFC29F4699D93CB86 /* FeaturePointVisualizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeaturePointVisualizer.swift; sourceTree = "<group>"; };
 		AC0C18D6AD4629F1D63C1E76D0701550 /* Pods-PlacenoteSDKExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PlacenoteSDKExample-umbrella.h"; sourceTree = "<group>"; };
 		B932D944E23A7D7A8B043CBEC03B40DF /* Pods-PlacenoteSDKExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlacenoteSDKExample-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -104,7 +104,6 @@
 				C8F6A85E7DACF3CE00EA36C10D589DEB /* Resources */,
 				8390894CA9503D54CFCCEC6C3410264E /* Support Files */,
 			);
-			name = PlacenoteSDK;
 			path = PlacenoteSDK;
 			sourceTree = "<group>";
 		};
@@ -274,6 +273,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
@@ -490,7 +490,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -587,7 +587,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
