@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		251F4E125E9B2CD0A400CFBA3C93BEB6 /* PlacenoteSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C36BE6D134E668139DD5A92AE3121A7 /* PlacenoteSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2967CB21053D08AFA0D86B7D2D8DC72D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
+		2A0068BC232C37560078A68B /* LocalizationThumbnailSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */; };
+		2AFC5BB623313A970093A436 /* UIImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC5BB523313A960093A436 /* UIImageUtil.swift */; };
 		3BE4F4FA7843E88C41727537D6C9B070 /* PlacenoteSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65381FA37BA273C116CB47A843311F59 /* PlacenoteSDK-dummy.m */; };
 		48ED30B940111A6D64CA9D454B134E30 /* PlacenoteSDK-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = CA1FA45038049FD60AA2FB0537C15E9F /* PlacenoteSDK-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		69E7619CB850ABB489905EDD62BD9FBB /* Pods-PlacenoteSDKExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AC0C18D6AD4629F1D63C1E76D0701550 /* Pods-PlacenoteSDKExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,6 +44,8 @@
 		223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.macbinary; path = Data.bin; sourceTree = "<group>"; };
 		27C91530171ECBEDBDA7B734AB710550 /* Pods-PlacenoteSDKExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.release.xcconfig"; sourceTree = "<group>"; };
 		27EAF25A6DA7EE086D33F1E4F8F23469 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationThumbnailSelector.swift; sourceTree = "<group>"; };
+		2AFC5BB523313A960093A436 /* UIImageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageUtil.swift; sourceTree = "<group>"; };
 		4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		65381FA37BA273C116CB47A843311F59 /* PlacenoteSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PlacenoteSDK-dummy.m"; sourceTree = "<group>"; };
@@ -94,6 +98,8 @@
 		1E1A15DC926C2F14E5432035E82E5B83 /* PlacenoteSDK */ = {
 			isa = PBXGroup;
 			children = (
+				2AFC5BB523313A960093A436 /* UIImageUtil.swift */,
+				2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */,
 				4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */,
 				A82FF6E3BC07484DFC29F4699D93CB86 /* FeaturePointVisualizer.swift */,
 				DD38CD536561EA9464B42DCEBC1BADC2 /* libPlacenote.h */,
@@ -312,9 +318,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				735ECF4AFDA381FD2921831CE4D3C5F1 /* CameraManager.swift in Sources */,
+				2AFC5BB623313A970093A436 /* UIImageUtil.swift in Sources */,
 				A6199B096412DDE0121AB118A8E1D550 /* FeaturePointVisualizer.swift in Sources */,
 				791B32376F059E7E104CAEF1354578FB /* LibPlacenote.swift in Sources */,
 				BF8BB89C2FB40F5AE14818E81538FB03 /* MulticastDelegate.swift in Sources */,
+				2A0068BC232C37560078A68B /* LocalizationThumbnailSelector.swift in Sources */,
 				3BE4F4FA7843E88C41727537D6C9B070 /* PlacenoteSDK-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

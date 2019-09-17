@@ -133,6 +133,14 @@ public class LibPlacenote {
     case lost
   }
   
+  /// Enums that indicates the mode of the LibPlacenote mapping module
+  public enum MappingMode {
+    /// Indicates that a Placenote SDK is in mapping mode
+    case mapping
+    /// Indicates that a Placenote SDK is in localization mode against a map you loaded
+    case localizing
+  }
+  
   /// A helper class that contains the context information about a callback that gets passed between the C and Swift runtimes
   private class CallbackContext {
     var callbackId: Int
@@ -254,7 +262,7 @@ public class LibPlacenote {
   private let mapStoragePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
   
   private var mapList: [String: Any] = [:]
-  private var mapTransferCbDict: Dictionary<Int, FileTransferCallback> = Dictionary()
+  private var fileTransferCbDict: Dictionary<Int, FileTransferCallback> = Dictionary()
   private var saveMapCbDict: Dictionary<Int, SaveMapCallback> = Dictionary()
   private var deleteMapCbDict: Dictionary<Int, DeleteMapCallback> = Dictionary()
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
@@ -264,6 +272,8 @@ public class LibPlacenote {
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
+  private var localizing: Bool = false
+  private var currImage: CVPixelBuffer? = nil;
   
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
@@ -389,6 +399,21 @@ public class LibPlacenote {
     setIntrinsicsNative(intrinsics)
   }
   
+  /// <summary>
+  /// Gets the mode of the running session
+  /// </summary>
+  /// <returns>The mode of the mapping session.</returns>
+  public func getMode () -> MappingMode {
+    if (localizing)
+    {
+      return MappingMode.localizing;
+    }
+    else
+    {
+      return MappingMode.mapping;
+    }
+  }
+  
   /**
    Return the current status of the mapping engine
    
@@ -422,6 +447,15 @@ public class LibPlacenote {
     let pose: matrix_float4x4  = matrix_float4x4.fromPNTransform(pose: poseNative)
     
     return pose;
+  }
+  
+  /**
+   Return the current 6DoF inertial pose of the LibPlacenote pose tracker against its map
+   
+   - Returns: A matrix_float4x4 that describes the inertial pose
+   */
+  public func getCurrentFrame() -> CVImageBuffer? {
+    return currImage;
   }
   
   /**
@@ -516,7 +550,8 @@ public class LibPlacenote {
    - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
    inertial map frame that LibPlacenote generated within this mapping session
    */
-  public func setFrame(image: CVImageBuffer, pose: matrix_float4x4) -> Void {
+  public func setFrame(image: CVPixelBuffer, pose: matrix_float4x4) -> Void {
+    currImage = image;
     setFrameNative(image, pose.position(), pose.rotation());
   }
   
@@ -526,6 +561,7 @@ public class LibPlacenote {
    therefore saveMap should be called before you call this function
    */
   public func stopSession() {
+    localizing = false
     PNStopSession()
     multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
     prevStatus = MappingStatus.waiting
@@ -542,7 +578,7 @@ public class LibPlacenote {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     saveMapCbDict[cbCtx.callbackId] = savedCb
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = uploadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
@@ -569,17 +605,17 @@ public class LibPlacenote {
           DispatchQueue.main.async(execute: {() -> Void in
             if (complete != nil && complete!) {
               os_log("Uploaded map!")
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
-              cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
+              cbCtx3.libPtr.fileTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else if (faulted != nil && faulted!) {
               os_log("Failed to upload map!", log: OSLog.default, type: .fault )
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
-              cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
+              cbCtx3.libPtr.fileTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else {
               os_log("Uploading map!")
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(
                 false, false, Float(bytesTransferred!)/Float(bytesTotal!)
               )
             }
@@ -650,7 +686,7 @@ public class LibPlacenote {
   public func loadMap(mapId: String, downloadProgressCb : @escaping FileTransferCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
-    mapTransferCbDict[cbCtx.callbackId] = downloadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = downloadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
@@ -668,20 +704,72 @@ public class LibPlacenote {
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed!) {
           os_log("Map loaded!")
-          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
+          libPtr.localizing = true;
         } else if (faulted!) {
           os_log("Failed to load map!", log: OSLog.default, type: .fault)
-          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else {
           var progress:Float = 0
           if (bytesTotal! > 0) {
             progress = Float(bytesTransferred!)/Float(bytesTotal!)
           }
-          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
+        }
+      })
+    }, ctxPtr)
+  }
+  
+  
+  /**
+   Synchronize a thumbnail given its mapId and file path. If the thumbnail does not exist in the filesystem, tries to download
+   from the Placenote Map Cloud; if it does, make sure the Placenote Cloud contains a copy of the thumbnail.
+   
+   - Parameter mapId: ID of the map to be deleted from the filesystem and the Map Cloud
+   - Parameter thumbnailPath: path of the thumbnail image file.
+   - Parameter syncProgressCb: async callback to indicate whether the thumbnail image is successfully synced
+   */
+  public func syncLocalizationThumbnail(mapId: String, thumbnailPath: String,
+                                        syncProgressCb : @escaping FileTransferCallback) {
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    
+    fileTransferCbDict[cbCtx.callbackId] = syncProgressCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
+    os_log("Syncing thumbnail file")
+    PNSyncThumbnail(mapId, thumbnailPath, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+      let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+      let libPtr = cbRetCtx.libPtr
+      let callbackId = cbRetCtx.callbackId
+      let completed = status?.pointee.completed
+      let faulted = status?.pointee.faulted
+      let bytesTransferred = status?.pointee.bytesTransferred
+      let bytesTotal = status?.pointee.bytesTotal
+      
+      DispatchQueue.main.async(execute: {() -> Void in
+        if (completed!) {
+          os_log("Thumbnail synced!")
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+          libPtr.localizing = true;
+        } else if (faulted!) {
+          os_log("Failed to sync thumbnail!", log: OSLog.default, type: .fault)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+        } else {
+          var progress:Float = 0
+          if (bytesTotal! > 0) {
+            progress = Float(bytesTransferred!)/Float(bytesTotal!)
+          }
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
         }
       })
     }, ctxPtr)
@@ -1067,7 +1155,7 @@ public class LibPlacenote {
   public func startReportRecord(uploadProgressCb: @escaping FileTransferCallback) -> Void {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = uploadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
@@ -1085,20 +1173,20 @@ public class LibPlacenote {
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed!) {
           os_log("Dataset uploaded!")
-          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else if (faulted!) {
           os_log("Failed to upload dataset!", log: OSLog.default, type: .fault)
-          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else {
           var progress:Float = 0
           if (bytesTotal! > 0) {
             progress = Float(bytesTransferred!)/Float(bytesTotal!)
           }
-          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
         }
       })
     }, ctxPtr)

@@ -23,7 +23,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   @IBOutlet var filterLabel2: UILabel!
   @IBOutlet var filterLabel1: UILabel!
   @IBOutlet var filterSlider: UISlider!
-  
+  @IBOutlet var thumbnailView: UIImageView!
   
   @IBOutlet var newMapButton: UIButton!
   @IBOutlet var pickMapButton: UIButton!
@@ -81,6 +81,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     //IMPORTANT: need to run this line to subscribe to pose and status events
     //Declare yourself to be one of the delegates of PNDelegate to receive pose and status updates
     LibPlacenote.instance.multiDelegate += self;
+    LocalizationThumbnailSelector.instance.setUIImageView(imageView: thumbnailView)
 
     //Initialize tableview for the list of maps
     mapTable.delegate = self
@@ -248,6 +249,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       print("Saving Map")
       statusLabel.text = "Saving Map"
       mappingStarted = false
+      LocalizationThumbnailSelector.instance.reset()
       LibPlacenote.instance.saveMap(
         savedCb: {(mapId: String?) -> Void in
           if (mapId != nil) {
@@ -274,10 +276,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.planeDetSelection.isOn = false
             self.planeDetection = false
             self.configureSession()
+            
+            LocalizationThumbnailSelector.instance.uploadThumbnail(mapId: mapId!)
           } else {
             NSLog("Failed to save map")
           }
-      },
+        },
         uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
           if (completed) {
             print ("Uploaded!")
@@ -288,7 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             print ("Progress: " + percentage.description)
             self.fileTransferLabel.text = "Map Upload: " + String(format: "%.3f", percentage) + "/1.0"
           }
-      }
+        }
       )
       newMapButton.setTitle("New Map", for: .normal)
       pickMapButton.setTitle("Load Map", for: .normal)
@@ -297,13 +301,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       toggleMappingUI(true) //hide mapping UI
     }
   }
-
+  
+  @IBAction func pickThumbnail(_ sender: Any) {
+    let picked: Bool = LocalizationThumbnailSelector.instance.selectCurrentThumbnail()
+    if (picked) {
+      statusLabel.text = "Selected a thumbnail"
+    } else {
+      statusLabel.text = "Fail to a thumbnail, not enough features"
+    }
+  }
+  
   @IBAction func pickMap(_ sender: Any) {
     
     if (localizationStarted) { // currently a map is loaded. StopSession and clearView
       shapeManager.clearShapes()
       ptViz?.reset()
       LibPlacenote.instance.stopSession()
+      LocalizationThumbnailSelector.instance.reset()
       localizationStarted = false
       mappingStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
@@ -440,13 +454,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     return cell!
   }
 
-  //Map selected
+  // Map selected
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     print(String(format: "Retrieving row: %d", indexPath.row))
-    print("Retrieving mapId: " + maps[indexPath.row].0)
-    statusLabel.text = "Retrieving mapId: " + maps[indexPath.row].0
+    let mapId: String = maps[indexPath.row].0
+    print("Retrieving mapId: " + mapId)
+    statusLabel.text = "Retrieving mapId: " + mapId
 
-    LibPlacenote.instance.loadMap(mapId: maps[indexPath.row].0,
+    LibPlacenote.instance.loadMap(mapId: mapId,
       downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
         if (completed) {
           //self.mappingStarted = false //extending the map
@@ -459,20 +474,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
           self.toggleMappingUI(false) //show mapping options UI
           self.toggleSliderUI(true, reset: true) //hide + reset UI for later
-          
-          //Using this method you can individual retrieve the metadata for a single map,
-          //However, as we called a blanket fetchMapList before, it already acquired all the metadata for all maps
-          //We'll just use that meta data for now.
-  
-          /*LibPlacenote.instance.getMapMetadata(mapId: self.maps[indexPath.row].0, getMetadataCb: {(success: Bool, metadata: LibPlacenote.MapMetadata) -> Void in
-            let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
-            if (self.shapeManager.loadShapeArray(shapeArray: userdata?["shapeArray"] as? [[String: [String: String]]])) {
-              self.statusLabel.text = "Map Loaded. Look Around"
-            } else {
-              self.statusLabel.text = "Map Loaded. Shape file not found"
-            }
-            LibPlacenote.instance.startSession(extend: true)
-          })*/
           
           //Use metadata acquired from fetchMapList
           let userdata = self.maps[indexPath.row].1.userdata as? [String:Any]
@@ -499,10 +500,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             print ("Started Debug Report")
           }
           
+          LocalizationThumbnailSelector.instance.downloadThumbnail(mapId: mapId)
           self.tapRecognizer?.isEnabled = true
         } else if (faulted) {
-          print ("Couldnt load map: " + self.maps[indexPath.row].0)
-          self.statusLabel.text = "Load error Map Id: " +  self.maps[indexPath.row].0
+          print ("Couldnt load map: " + mapId)
+          self.statusLabel.text = "Load error Map Id: " + mapId
         } else {
           print ("Progress: " + percentage.description)
         }
