@@ -29,15 +29,15 @@ void initializeSDK(const char* apiKey, const char* mapPath, const char* appBaseP
 }
 
 
-void setIntrinsicsNative(matrix_float3x3 calibMat)
+void setIntrinsicsNative(int width, int height, matrix_float3x3 calibMat)
 {
   PNCameraInstrinsics intrinsics;
-  intrinsics.width = 640;
-  intrinsics.height = 360;
-  intrinsics.fx = calibMat.columns[0].x/2;
-  intrinsics.fy = calibMat.columns[1].y/2;
-  intrinsics.cx = calibMat.columns[2].x/2;
-  intrinsics.cy = calibMat.columns[2].y/2;
+  intrinsics.width = width;
+  intrinsics.height = height;
+  intrinsics.fx = calibMat.columns[0].x;
+  intrinsics.fy = calibMat.columns[1].y;
+  intrinsics.cx = calibMat.columns[2].x;
+  intrinsics.cy = calibMat.columns[2].y;
   intrinsics.k1 = intrinsics.k2 = intrinsics.p1 = intrinsics.p2 = 0.0f;
 
   PNSetIntrinsics(&intrinsics);

@@ -41,6 +41,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //Status variables to track the state of the app with respect to libPlacenote
   private var trackingStarted: Bool = false;
   private var mappingStarted: Bool = false;
+  private var sentIntrinsics: Bool = false;
   private var localizationStarted: Bool = false;
   private var reportDebug: Bool = false
   private var maxRadiusSearch: Float = 500.0 //m
@@ -616,17 +617,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   //Provides a newly captured camera image and accompanying AR information to the delegate.
   func session(_ session: ARSession, didUpdate: ARFrame) {
-    let image: CVPixelBuffer = didUpdate.capturedImage
-    let pose: matrix_float4x4 = didUpdate.camera.transform
-
-    if (!LibPlacenote.instance.initialized()) {
-      print("SDK is not initialized")
-      return
-    }
-
-    if (mappingStarted || localizationStarted) {
-      LibPlacenote.instance.setFrame(image: image, pose: pose)
-    }
+    LibPlacenote.instance.setFrame(frame: didUpdate)
   }
 
 

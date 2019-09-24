@@ -9,6 +9,7 @@
 import Foundation
 import SceneKit
 import GLKit
+import ARKit
 import os.log
 
 /// Untility functions to matrix_float4x4
@@ -273,7 +274,9 @@ public class LibPlacenote {
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
   private var localizing: Bool = false
-  private var currImage: CVPixelBuffer? = nil;
+  private var sessionStarted: Bool = false
+  private var intrinsicSet: Bool = false
+  private var currImage: CVPixelBuffer? = nil
   
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
@@ -352,6 +355,7 @@ public class LibPlacenote {
    - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
    */
   public func startSession(extend: Bool = false) -> Void {
+    sessionStarted = true
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     PNStartSession({(outputPose: NativePosePtr?, arkitPose: NativePosePtr?, swiftContext: UnsafeMutableRawPointer?) -> Void in
@@ -369,6 +373,15 @@ public class LibPlacenote {
         let libPtr = Unmanaged<LibPlacenote>.fromOpaque(swiftContext!).takeUnretainedValue()
         let outputMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (outputPose?.pointee)!)
         let arkitMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (arkitPose?.pointee)!)
+        
+        
+        if (!libPtr.sessionStarted) {
+          if (libPtr.prevStatus != MappingStatus.waiting) {
+            libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: MappingStatus.waiting)
+            libPtr.prevStatus = MappingStatus.waiting
+          }
+          return;
+        }
         
         DispatchQueue.main.async(execute: {() -> Void in
           let status = libPtr.getMappingStatus()
@@ -395,8 +408,8 @@ public class LibPlacenote {
    
    - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
    */
-  func setIntrinsics (intrinsics: matrix_float3x3) -> Void {
-    setIntrinsicsNative(intrinsics)
+  func setIntrinsics (width: Int, height: Int, intrinsics: matrix_float3x3) -> Void {
+    setIntrinsicsNative(Int32(width), Int32(height), intrinsics)
   }
   
   /// <summary>
@@ -545,14 +558,30 @@ public class LibPlacenote {
   
   
   /**
-   Return the entire map that LibPlacenote has generated over the current session
+   Function that sent the latest ARFrame to the Placenote Mapping SDK
    
-   - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
-   inertial map frame that LibPlacenote generated within this mapping session
+   - Parameter frame: latest frame from ARSession to be sent to Placenote Mapping SDK
    */
-  public func setFrame(image: CVPixelBuffer, pose: matrix_float4x4) -> Void {
-    currImage = image;
-    setFrameNative(image, pose.position(), pose.rotation());
+  public func setFrame(frame: ARFrame) -> Void {
+    if (!LibPlacenote.instance.initialized()) {
+      os_log("Placenote SDK not initialized")
+      return
+    }
+    
+    if (sessionStarted) {
+      let image: CVPixelBuffer = frame.capturedImage
+      let width: Int = CVPixelBufferGetWidthOfPlane (image, 0);
+      let height: Int = CVPixelBufferGetHeightOfPlane (image, 0);
+      if (!intrinsicSet) {
+        setIntrinsics(width: width, height: height, intrinsics: frame.camera.intrinsics)
+        intrinsicSet = true
+      }
+      let pose: matrix_float4x4 = frame.camera.transform
+      currImage = image;
+      setFrameNative(image, pose.position(), pose.rotation());
+      os_log("pos: %f %f %f", pose.position().x, pose.position().y, pose.position().z)
+      os_log("rot: %f %f %f", pose.rotation().x, pose.rotation().y, pose.rotation().z, pose.rotation().w)
+    }
   }
   
   /**
@@ -562,9 +591,13 @@ public class LibPlacenote {
    */
   public func stopSession() {
     localizing = false
+    sessionStarted = false
     PNStopSession()
-    multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
-    prevStatus = MappingStatus.waiting
+    
+    if (prevStatus != MappingStatus.waiting) {
+      multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
+      prevStatus = MappingStatus.waiting
+    }
   }
   
   

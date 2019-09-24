@@ -14,8 +14,6 @@ public class CameraManager: PNDelegate {
   private let verticesPerCube: Int = 36
   private var camera: SCNNode
   private var rootNode: SCNNode
-  private var ptcloudNode: SCNNode = SCNNode()
-  private var ptcloudTimer: Timer = Timer()
   private var cameraParent: SCNNode = SCNNode()
   
   /**
