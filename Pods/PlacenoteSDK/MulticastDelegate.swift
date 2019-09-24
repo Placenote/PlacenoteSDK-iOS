@@ -61,6 +61,15 @@ public class MulticastPNDelegate {
       del.onStatusChange(prevStatus, currStatus)
     }
   }
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  func onLocalized() -> Void {
+    for del in delegates {
+      del.onLocalized()
+    }
+  }
 }
 
 /**

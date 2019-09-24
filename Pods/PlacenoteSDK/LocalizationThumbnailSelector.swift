@@ -98,6 +98,12 @@ public class LocalizationThumbnailSelector: PNDelegate {
   }
   
   /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  public func onLocalized() -> Void {
+  }
+  
+  /**
    Select current frame to be the thumbnail manually.
    */
   public func selectCurrentThumbnail() -> Bool {

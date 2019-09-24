@@ -157,34 +157,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) -> Void {
 
   }
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  public func onLocalized() -> Void {
+    print ("Just localized, drawing view")
+    shapeManager.drawView(parent: scnScene.rootNode) //just localized redraw the shapes
+    statusLabel.text = "Map Found!"
+    tapRecognizer?.isEnabled = true
+  }
 
   //Receive a status update when the status changes
   func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
-    if prevStatus != LibPlacenote.MappingStatus.running && currStatus == LibPlacenote.MappingStatus.running { //just localized draw shapes you've retrieved
-      print ("Just localized, drawing view")
-      shapeManager.drawView(parent: scnScene.rootNode) //just localized redraw the shapes
-      if mappingStarted {
-       statusLabel.text = "Tap anywhere to add Shapes, Move Slowly"
-      }
-      else if localizationStarted {
-        statusLabel.text = "Map Found!"
-      }
+    if (prevStatus != LibPlacenote.MappingStatus.running && currStatus == LibPlacenote.MappingStatus.running) {
       tapRecognizer?.isEnabled = true
       
-      //As you are localized, the camera has been moved to match that of Placenote's Map. Transform the planes
-      //currently being drawn from the arkit frame of reference to the Placenote map's frame of reference.
+      if (LibPlacenote.instance.getMode() == LibPlacenote.MappingMode.mapping) {
+        statusLabel.text = "Tap anywhere to add Shapes, Move Slowly"
+      }
+      
       for (_, node) in planesVizNodes {
         node.transform = LibPlacenote.instance.processPose(pose: node.transform);
       }
     }
 
-    if prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.running { //just lost localization
+    if (prevStatus == LibPlacenote.MappingStatus.running && currStatus != LibPlacenote.MappingStatus.lost) {
       print ("Just lost")
-      if mappingStarted {
-        statusLabel.text = "Moved too fast. Map Lost"
-      }
       tapRecognizer?.isEnabled = false
-
     }
 
   }

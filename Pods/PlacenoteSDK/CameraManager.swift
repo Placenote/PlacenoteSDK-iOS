@@ -57,4 +57,10 @@ public class CameraManager: PNDelegate {
   public func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
     
   }
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  public func onLocalized() -> Void {
+  }
 }

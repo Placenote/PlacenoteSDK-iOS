@@ -17,7 +17,11 @@ extension matrix_float4x4 {
   /**
    Calculate position vector of a pose matrix
    
-   - Returns: A SCNVector3 from the translation components of the matrix
+   - Returns: A SCNVector3 from the translation component
+   public func onLocalized() {
+   <#code#>
+   }
+   s of the matrix
    */
   public func position() -> SCNVector3 {
     return SCNVector3(columns.3.x, columns.3.y, columns.3.z)
@@ -107,6 +111,11 @@ public protocol PNDelegate {
    - Parameter currStatus: Current status of the mapping engine
    */
   func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) -> Void
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  func onLocalized() -> Void
 }
 
 
@@ -123,10 +132,10 @@ public class LibPlacenote {
 
   
   /// Enums that indicates the status of the LibPlacenote mapping module
-  public enum MappingStatus {
+  public enum MappingStatus: Int {
     /// Indicates that the mapping module is waiting for request to start a mapping session.
     /// When 'stopSession' is called, the status will be reset to 'waiting'
-    case waiting
+    case waiting = 0
     /// Indicates that a mapping/localization session is currently running and returning poses
     case running
     /// Indicates that the localization module module currently fails to find a valid pose
@@ -135,9 +144,9 @@ public class LibPlacenote {
   }
   
   /// Enums that indicates the mode of the LibPlacenote mapping module
-  public enum MappingMode {
+  public enum MappingMode: Int {
     /// Indicates that a Placenote SDK is in mapping mode
-    case mapping
+    case mapping = 0
     /// Indicates that a Placenote SDK is in localization mode against a map you loaded
     case localizing
   }
@@ -277,6 +286,7 @@ public class LibPlacenote {
   private var sessionStarted: Bool = false
   private var intrinsicSet: Bool = false
   private var currImage: CVPixelBuffer? = nil
+  private var localizedCount: Int = 0
   
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
@@ -391,6 +401,16 @@ public class LibPlacenote {
           }
           
           if (status != libPtr.prevStatus) {
+            let message = String(format: "%d %d %d", libPtr.getMode().rawValue, libPtr.prevStatus.rawValue, status.rawValue)
+            os_log("%@", log: OSLog.default, type: .error, message)
+            if (libPtr.getMode() == MappingMode.localizing &&
+              libPtr.prevStatus == MappingStatus.lost &&
+              status == MappingStatus.running) {
+              if (libPtr.localizedCount == 0) {
+                libPtr.multiDelegate.onLocalized()
+              }
+              libPtr.localizedCount += 1
+            }
             libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: status)
             libPtr.prevStatus = status
           }
@@ -579,8 +599,6 @@ public class LibPlacenote {
       let pose: matrix_float4x4 = frame.camera.transform
       currImage = image;
       setFrameNative(image, pose.position(), pose.rotation());
-      os_log("pos: %f %f %f", pose.position().x, pose.position().y, pose.position().z)
-      os_log("rot: %f %f %f", pose.rotation().x, pose.rotation().y, pose.rotation().z, pose.rotation().w)
     }
   }
   
@@ -590,6 +608,7 @@ public class LibPlacenote {
    therefore saveMap should be called before you call this function
    */
   public func stopSession() {
+    localizedCount = 0
     localizing = false
     sessionStarted = false
     PNStopSession()
@@ -791,7 +810,6 @@ public class LibPlacenote {
           libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
           libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
-          libPtr.localizing = true;
         } else if (faulted!) {
           os_log("Failed to sync thumbnail!", log: OSLog.default, type: .fault)
           libPtr.fileTransferCbDict[callbackId]!(false, true, 0)

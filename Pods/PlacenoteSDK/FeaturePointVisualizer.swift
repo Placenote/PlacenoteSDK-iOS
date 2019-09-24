@@ -87,6 +87,12 @@ public class FeaturePointVisualizer: PNDelegate {
   }
   
   /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  public func onLocalized() -> Void {
+  }
+  
+  /**
    Function to be called periodically to draw the pointcloud geometry
    */
   @objc private func drawPointcloud() {
