@@ -65,7 +65,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   private var locationManager: CLLocationManager!
   private var lastLocation: CLLocation? = nil
-
+  private var thumbnailHandler: Disposable? = nil
+  
+  func thumbnailHandler(thumbnail: UIImage?) {
+    thumbnailView.image = thumbnail
+  }
+  
   //Setup view once loaded
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -82,7 +87,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     //IMPORTANT: need to run this line to subscribe to pose and status events
     //Declare yourself to be one of the delegates of PNDelegate to receive pose and status updates
     LibPlacenote.instance.multiDelegate += self;
-    LocalizationThumbnailSelector.instance.setUIImageView(imageView: thumbnailView)
+    
+    thumbnailHandler = LocalizationThumbnailSelector.onNewThumbnail.addHandler(
+      target: self, handler: ViewController.thumbnailHandler)
 
     //Initialize tableview for the list of maps
     mapTable.delegate = self
@@ -98,9 +105,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     locationManager.requestWhenInUseAuthorization()
 
     if CLLocationManager.locationServicesEnabled() {
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
-        locationManager.startUpdatingLocation()
+      locationManager.delegate = self;
+      locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+      locationManager.startUpdatingLocation()
     }
   }
 
@@ -115,6 +122,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     // Pause the view's session
     scnView.session.pause()
+    
+    // remove thumbnail event handler
+    if (thumbnailHandler != nil) {
+      thumbnailHandler!.dispose()
+    }
   }
 
   //Function to setup the view and setup the AR Scene including options
@@ -250,7 +262,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       print("Saving Map")
       statusLabel.text = "Saving Map"
       mappingStarted = false
-      LocalizationThumbnailSelector.instance.reset()
       LibPlacenote.instance.saveMap(
         savedCb: {(mapId: String?) -> Void in
           if (mapId != nil) {
@@ -277,8 +288,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.planeDetSelection.isOn = false
             self.planeDetection = false
             self.configureSession()
-            
-            LocalizationThumbnailSelector.instance.uploadThumbnail(mapId: mapId!)
           } else {
             NSLog("Failed to save map")
           }
@@ -303,22 +312,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
   }
   
-  @IBAction func pickThumbnail(_ sender: Any) {
-    let picked: Bool = LocalizationThumbnailSelector.instance.selectCurrentThumbnail()
-    if (picked) {
-      statusLabel.text = "Selected a thumbnail"
-    } else {
-      statusLabel.text = "Fail to a thumbnail, not enough features"
-    }
-  }
-  
   @IBAction func pickMap(_ sender: Any) {
     
     if (localizationStarted) { // currently a map is loaded. StopSession and clearView
       shapeManager.clearShapes()
       ptViz?.reset()
       LibPlacenote.instance.stopSession()
-      LocalizationThumbnailSelector.instance.reset()
       localizationStarted = false
       mappingStarted = false
       pickMapButton.setTitle("Load Map", for: .normal)
@@ -501,7 +500,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             print ("Started Debug Report")
           }
           
-          LocalizationThumbnailSelector.instance.downloadThumbnail(mapId: mapId)
           self.tapRecognizer?.isEnabled = true
         } else if (faulted) {
           print ("Couldnt load map: " + mapId)

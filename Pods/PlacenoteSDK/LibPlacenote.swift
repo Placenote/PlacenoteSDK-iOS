@@ -286,7 +286,9 @@ public class LibPlacenote {
   private var sessionStarted: Bool = false
   private var intrinsicSet: Bool = false
   private var currImage: CVPixelBuffer? = nil
+  private var currThumbnail: CVPixelBuffer? = nil
   private var localizedCount: Int = 0
+  private var currMapId: String? = nil
   
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
@@ -611,11 +613,115 @@ public class LibPlacenote {
     localizedCount = 0
     localizing = false
     sessionStarted = false
+    currMapId = nil
+    currThumbnail = nil
     PNStopSession()
     
     if (prevStatus != MappingStatus.waiting) {
       multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
       prevStatus = MappingStatus.waiting
+    }
+  }
+  
+  /**
+   Function to set the current frame as the localization thumbnail
+   */
+  public func setLocalizationThumbnail() {
+    currThumbnail = getCurrentFrame()
+  }
+  
+  
+  /**
+   Function to set the current frame as the localization thumbnail
+   
+   - Parameter thumbnailCb: async callback to return the thumbnail image
+   */
+  public func getLocalizationThumbnail(thumbnailCb: @escaping (_ thumbnail: UIImage?)-> Void) {
+    if (currThumbnail != nil) {
+      guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
+        os_log("Failed to convert thumbnail pixel buffer to UIImage, aborting thumbnail upload",
+               log: OSLog.default, type: .error)
+        thumbnailCb(nil)
+        return
+      }
+      
+      let thumbnail: UIImage = image.resize(size: CGSize(width: image.size.width/3, height: image.size.height/3))!.rotate(radians: CGFloat(Float.pi/2))
+      thumbnailCb(thumbnail)
+    } else if (currMapId != nil && getMode() == MappingMode.localizing) {
+      downloadThumbnail(mapId: currMapId!, thumbnailCb: thumbnailCb);
+    } else {
+      thumbnailCb(nil);
+    }
+  }
+  
+  
+  private func downloadThumbnail(mapId: String, thumbnailCb: @escaping (_ thumbnail: UIImage?)-> Void) {
+    var thumbnailPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    thumbnailPath = (thumbnailPath as NSString).appendingPathComponent(mapId + ".png")
+    let fileManager = FileManager.default
+    if fileManager.fileExists(atPath: thumbnailPath) {
+      let thumbnail = UIImage(contentsOfFile: thumbnailPath)
+      thumbnailCb(thumbnail)
+      return
+    }
+    
+    // Save Render Texture into a jpg
+    LibPlacenote.instance.syncLocalizationThumbnail(mapId: mapId, thumbnailPath: thumbnailPath,
+      syncProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+        if (completed) {
+          os_log("Thumbnail downloaded")
+          let thumbnail = UIImage(contentsOfFile: thumbnailPath)
+          thumbnailCb(thumbnail)
+        } else if (faulted) {
+          os_log("Thumbnail download failed")
+          thumbnailCb(nil)
+        } else {
+          os_log("Thumbnail downloading %f", log: OSLog.default, type: .info, percentage)
+        }
+    });
+  }
+  
+  
+  private func uploadThumbnail(mapId: String) {
+    var thumbnailPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    thumbnailPath = (thumbnailPath as NSString).appendingPathComponent(mapId + ".png")
+    let thumbnailUrl: URL = URL(fileURLWithPath: thumbnailPath)
+    
+    // write the image to thumbnail path
+    if (currThumbnail == nil) {
+      os_log("No thumbnail captured? Aborting thumbnail upload", log: OSLog.default, type: .error)
+      return
+    }
+    
+    guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
+      os_log("Failed to convert thumbnail pixel buffer to UIImage, aborting thumbnail upload",
+             log: OSLog.default, type: .error)
+      return
+    }
+    
+    let thumbnail: UIImage = image.resize(size: CGSize(width: image.size.width/3, height: image.size.height/3))!.rotate(radians: CGFloat(Float.pi/2))
+    
+    guard let data = UIImagePNGRepresentation(thumbnail) else {
+      os_log("Failed to convert thumbnail UIImage to data buffer, aborting thumbnail upload",
+             log: OSLog.default, type: .error)
+      return
+    }
+    
+    // Save Render Texture into a jpg
+    do {
+      try data.write(to: (thumbnailUrl as URL))
+      LibPlacenote.instance.syncLocalizationThumbnail(mapId: mapId, thumbnailPath: thumbnailPath,
+        syncProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+          if (completed) {
+            os_log("Thumbnail uploaded")
+          } else if (faulted) {
+            os_log("Thumbnail upload failed")
+          } else {
+            os_log("Thumbnail uploading %f", log: OSLog.default, type: .info, percentage)
+          }
+      });
+    } catch {
+      os_log("Image write failed! Error: %s", log: OSLog.default, type: .error, error.localizedDescription)
     }
   }
   
@@ -653,6 +759,7 @@ public class LibPlacenote {
           let faulted = status?.pointee.faulted
           let bytesTransferred = status?.pointee.bytesTransferred
           let bytesTotal = status?.pointee.bytesTotal
+          let mapIdStr: String? = String(cString: (status?.pointee.mapId)!, encoding: String.Encoding.ascii)
           
           DispatchQueue.main.async(execute: {() -> Void in
             if (complete != nil && complete!) {
@@ -674,7 +781,8 @@ public class LibPlacenote {
           })
         }, swiftContext)
         
-        os_log("Saved Map")
+        os_log("Saved Map, uploading thumbnail")
+        libPtr.uploadThumbnail(mapId: mapId!)
         DispatchQueue.main.async(execute: {() -> Void in
           libPtr.saveMapCbDict[callbackId]!(mapId!)
           libPtr.saveMapCbDict.removeValue(forKey: callbackId)
@@ -744,6 +852,8 @@ public class LibPlacenote {
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     os_log("Loading Map")
+    localizing = true;
+    currMapId = mapId;
     PNLoadMap(mapId, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
       let libPtr = cbRetCtx.libPtr
@@ -759,7 +869,6 @@ public class LibPlacenote {
           libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
           libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
-          libPtr.localizing = true;
         } else if (faulted!) {
           os_log("Failed to load map!", log: OSLog.default, type: .fault)
           libPtr.fileTransferCbDict[callbackId]!(false, true, 0)

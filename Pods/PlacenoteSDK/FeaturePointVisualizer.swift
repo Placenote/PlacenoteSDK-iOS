@@ -130,7 +130,7 @@ public class FeaturePointVisualizer: PNDelegate {
     normals.reserveCapacity(landmarks.count*verticesPerCube)
     colors.reserveCapacity(landmarks.count*verticesPerCube)
     for lm in landmarks {
-      if (lm.maxViewAngle < 0.05 || lm.measCount < 4) {
+      if (lm.measCount < 3) {
         continue
       }
       
