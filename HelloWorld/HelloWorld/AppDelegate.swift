@@ -1,13 +1,12 @@
 //
 //  AppDelegate.swift
-//  Shape Dropper (Placenote SDK iOS Sample)
+//  HelloWorld
 //
-//  Created by Prasenjit Mukherjee on 2017-09-01.
-//  Copyright © 2017 Vertical AI. All rights reserved.
+//  Created by Neil Mathew on 10/10/19.
+//  Copyright © 2019 Placenote. All rights reserved.
 //
 
 import UIKit
-import PlacenoteSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,16 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-
-        LibPlacenote.instance.initialize(apiKey: "026h20d5v4lfibgzewe0s088o3ej9a4bxxzkhmdyq9aum9kkszbolo7b7kqz9c1cic9jwfums2tvvwvsl9cpgyfb0nea5ak59ne0",  onInitialized: {(initialized: Bool?) -> Void in
-          if (initialized!) {
-            print ("SDK Initialized")
-          }
-          else {
-            print ("SDK Could not be initialized")
-          }
-        })
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
         return true
     }
 
@@ -48,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-      LibPlacenote.instance.shutdown()
     }
 
 
