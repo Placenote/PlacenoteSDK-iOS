@@ -3,243 +3,353 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		251F4E125E9B2CD0A400CFBA3C93BEB6 /* PlacenoteSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C36BE6D134E668139DD5A92AE3121A7 /* PlacenoteSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2967CB21053D08AFA0D86B7D2D8DC72D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
-		2A0068BC232C37560078A68B /* LocalizationThumbnailSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */; };
-		2A207F3E2347E31900BA71AB /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A207F3D2347E31900BA71AB /* Event.swift */; };
-		2AFC5BB623313A970093A436 /* UIImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC5BB523313A960093A436 /* UIImageUtil.swift */; };
-		3BE4F4FA7843E88C41727537D6C9B070 /* PlacenoteSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65381FA37BA273C116CB47A843311F59 /* PlacenoteSDK-dummy.m */; };
-		48ED30B940111A6D64CA9D454B134E30 /* PlacenoteSDK-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = CA1FA45038049FD60AA2FB0537C15E9F /* PlacenoteSDK-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		69E7619CB850ABB489905EDD62BD9FBB /* Pods-PlacenoteSDKExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AC0C18D6AD4629F1D63C1E76D0701550 /* Pods-PlacenoteSDKExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		735ECF4AFDA381FD2921831CE4D3C5F1 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */; };
-		791B32376F059E7E104CAEF1354578FB /* LibPlacenote.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EA89BE151021D7B6237F8A89053428 /* LibPlacenote.swift */; };
-		A6199B096412DDE0121AB118A8E1D550 /* FeaturePointVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82FF6E3BC07484DFC29F4699D93CB86 /* FeaturePointVisualizer.swift */; };
-		BF8BB89C2FB40F5AE14818E81538FB03 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789729928527366ECF5038BE1D1F905F /* MulticastDelegate.swift */; };
-		D9069B1C171C17EDF08ECBB6466B2347 /* Data.bin in Resources */ = {isa = PBXBuildFile; fileRef = 223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */; };
-		DD40EA9314D11EF20908E4306DB0CD4D /* libPlacenote.h in Headers */ = {isa = PBXBuildFile; fileRef = DD38CD536561EA9464B42DCEBC1BADC2 /* libPlacenote.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F6415B4CE7867FDE84838595EF670068 /* Pods-PlacenoteSDKExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 924DB3E72B01EE375E7709222315C173 /* Pods-PlacenoteSDKExample-dummy.m */; };
-		F9E683071161B4CB20EB0F26876671B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
+		01303FADE3704CD42DE2DE11FEF59C10 /* LibPlacenote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E367B0789F7B245EB6873B5492F7341 /* LibPlacenote.swift */; };
+		0CD0B2127D3D10D56C09FD80F07B00B1 /* Pods-DecorateYourRoom-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D01D48FF05ADCE1960986A3067DF24B2 /* Pods-DecorateYourRoom-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1098F74D40DFD0DD593D151A29E95EC8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		23A222666296C17B09476C79C9E2A455 /* PlacenoteSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AFAAD1851C0C542E33F5F77B1BE897F /* PlacenoteSDK-dummy.m */; };
+		273A2C49166121E548F9FD5E5AF5284B /* FeaturePointVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE461A178AD5D8730D673E47DF1B23 /* FeaturePointVisualizer.swift */; };
+		28D8C7C4235003FE00374835 /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CEAD0B9380FCB3EE2926EE146C0596 /* Placenote.framework */; };
+		2E49AA072E463B61D44F8493E25D7B8F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		4078EB8ECEE9C9E0A4643556DE20F4B0 /* Pods-HelloWorld-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 160AFEC0D6ADEAF915744279D01E51BF /* Pods-HelloWorld-dummy.m */; };
+		456EDCD86CA52BE2AC8E3C2082D5AC76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		4D24A69EFD57FD281C7DF4E62D71D501 /* PlacenoteSDK-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = CA307B352FBC49F9B6D552E983499C79 /* PlacenoteSDK-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		52FA86AC25FAEEC2A43C3793356D879E /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DDD034A7FB50F78020D95FAC1828 /* CameraManager.swift */; };
+		63025F46EB140703814719634FBB9A65 /* Pods-DecorateYourRoom-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B706F289D2545B743D31F27C0107FA /* Pods-DecorateYourRoom-dummy.m */; };
+		67AB576DEE684733EBBC277B4711B2F4 /* Data.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5CC73711FC6780DEE491E21C3FF56698 /* Data.bin */; };
+		6DE3B8E294CE700DD08A20BDD82CD58E /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04E2F1E38FA028031E1017DA539A43 /* MulticastDelegate.swift */; };
+		9DAF43D18BDF2655ED1904370CA43067 /* Pods-HelloWorld-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A98550BAF2A1DB49D61A5E4DBD8D8E8 /* Pods-HelloWorld-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAC52B942A69A3BAD1777BA7D5596B24 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB45856A6B812EA3CB7EA222D10A4B8 /* Event.swift */; };
+		BAC113532BF1C9E9607593A1E51FA4AE /* libPlacenote.h in Headers */ = {isa = PBXBuildFile; fileRef = E7666C8992E14EE4ED2724795F551D74 /* libPlacenote.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BFA4F8D03A3274547AD4755A8BE34180 /* PlacenoteSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 78A778A0AEB19041FFAD51BE35C46187 /* PlacenoteSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C4743E4BF2E0C0C58AF3DD5AE55794B0 /* Pods-PlacenoteSDKExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FA73939390BA0DFAC4625DCD3F422F5 /* Pods-PlacenoteSDKExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D00B207C8F7A59A0B74399772A0F0A41 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		D0FAD67B46407F6F5DCAA008BBF34F10 /* LocalizationThumbnailSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBBEEF403DAAF081239A72166537BE /* LocalizationThumbnailSelector.swift */; };
+		D35AFC199C57639306FF5D4829298ED9 /* Pods-PlacenoteSDKExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F04339811FC932A0AD83F89698568218 /* Pods-PlacenoteSDKExample-dummy.m */; };
+		F3BB0236F031ABE44DA7FA2458F9D107 /* UIImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9A412A21001D9E4A2660304BAFAE7B /* UIImageUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CF15A364FD83125B080D24DCDA066CBA /* PBXContainerItemProxy */ = {
+		1B89F27765DCD2F693EE17FEDE43ACEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 20A1C32708DB3EB04A9D7B1705F990CF;
+			remoteGlobalIDString = 009FC5ED69BB7204A7DFC57233E3A5E8;
+			remoteInfo = PlacenoteSDK;
+		};
+		7DDFBB5A5F094276834900A306044DA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 009FC5ED69BB7204A7DFC57233E3A5E8;
+			remoteInfo = PlacenoteSDK;
+		};
+		D2E889F09BA122EC20BCD2108BE14EA4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 009FC5ED69BB7204A7DFC57233E3A5E8;
 			remoteInfo = PlacenoteSDK;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06C0E275C3CBED4621D75CAA4E3948BA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0C79DBED0AB5BA58A8BDB2EB7616B5FC /* PlacenoteSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlacenoteSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		12419D0885451CAA7516EBF100CFA483 /* Pods-PlacenoteSDKExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlacenoteSDKExample-frameworks.sh"; sourceTree = "<group>"; };
-		142329D1DDB5BFC5726E18837844714A /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacenoteSDKExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		192DFD6F4E4B8905FFBECAACD11B484E /* PlacenoteSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-prefix.pch"; sourceTree = "<group>"; };
-		207992C5DD06822069CF9E0040097E1A /* PlacenoteSDK.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PlacenoteSDK.xcconfig; sourceTree = "<group>"; };
-		223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.macbinary; path = Data.bin; sourceTree = "<group>"; };
-		27C91530171ECBEDBDA7B734AB710550 /* Pods-PlacenoteSDKExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.release.xcconfig"; sourceTree = "<group>"; };
-		27EAF25A6DA7EE086D33F1E4F8F23469 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationThumbnailSelector.swift; sourceTree = "<group>"; };
-		2A207F3D2347E31900BA71AB /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		2AFC5BB523313A960093A436 /* UIImageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageUtil.swift; sourceTree = "<group>"; };
-		4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
-		5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		65381FA37BA273C116CB47A843311F59 /* PlacenoteSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PlacenoteSDK-dummy.m"; sourceTree = "<group>"; };
-		6539856D8FD16A4EB1B9E9F75128FE29 /* Pods-PlacenoteSDKExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-PlacenoteSDKExample-acknowledgements.markdown"; sourceTree = "<group>"; };
-		789729928527366ECF5038BE1D1F905F /* MulticastDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
-		7AD7ABD26FC9D36EAA0373749D2A5428 /* Placenote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Placenote.framework; sourceTree = "<group>"; };
-		7C36BE6D134E668139DD5A92AE3121A7 /* PlacenoteSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-umbrella.h"; sourceTree = "<group>"; };
-		924DB3E72B01EE375E7709222315C173 /* Pods-PlacenoteSDKExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-PlacenoteSDKExample-dummy.m"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A82FF6E3BC07484DFC29F4699D93CB86 /* FeaturePointVisualizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeaturePointVisualizer.swift; sourceTree = "<group>"; };
-		AC0C18D6AD4629F1D63C1E76D0701550 /* Pods-PlacenoteSDKExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PlacenoteSDKExample-umbrella.h"; sourceTree = "<group>"; };
-		B932D944E23A7D7A8B043CBEC03B40DF /* Pods-PlacenoteSDKExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlacenoteSDKExample-acknowledgements.plist"; sourceTree = "<group>"; };
-		BEA29203300E5E57437F95BE3C60B64D /* Pods-PlacenoteSDKExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlacenoteSDKExample-resources.sh"; sourceTree = "<group>"; };
-		CA1FA45038049FD60AA2FB0537C15E9F /* PlacenoteSDK-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "PlacenoteSDK-Bridging-Header.h"; path = "include/PlacenoteSDK-Bridging-Header.h"; sourceTree = "<group>"; };
-		CE5046072C0964295D7F7F52AD90FD11 /* Pods-PlacenoteSDKExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-PlacenoteSDKExample.modulemap"; sourceTree = "<group>"; };
-		DD38CD536561EA9464B42DCEBC1BADC2 /* libPlacenote.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = libPlacenote.h; path = Placenote.framework/Headers/libPlacenote.h; sourceTree = "<group>"; };
-		F4EA89BE151021D7B6237F8A89053428 /* LibPlacenote.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibPlacenote.swift; sourceTree = "<group>"; };
-		F8391796DB43E5AADF7E6FCDA7FAB80D /* Pods-PlacenoteSDKExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.debug.xcconfig"; sourceTree = "<group>"; };
-		FFDB75D88B9DAF63FF1D06F5C541AB30 /* PlacenoteSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = PlacenoteSDK.modulemap; sourceTree = "<group>"; };
+		0DDEAA40B97EDA01A8B31A84149AE881 /* Pods-PlacenoteSDKExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlacenoteSDKExample-acknowledgements.plist"; sourceTree = "<group>"; };
+		160AFEC0D6ADEAF915744279D01E51BF /* Pods-HelloWorld-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HelloWorld-dummy.m"; sourceTree = "<group>"; };
+		19B93737515F9D2A9109D372811918C9 /* Pods-HelloWorld.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HelloWorld.modulemap"; sourceTree = "<group>"; };
+		1AFBBEEF403DAAF081239A72166537BE /* LocalizationThumbnailSelector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizationThumbnailSelector.swift; sourceTree = "<group>"; };
+		1E60DDD034A7FB50F78020D95FAC1828 /* CameraManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		23B706F289D2545B743D31F27C0107FA /* Pods-DecorateYourRoom-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DecorateYourRoom-dummy.m"; sourceTree = "<group>"; };
+		2E367B0789F7B245EB6873B5492F7341 /* LibPlacenote.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibPlacenote.swift; sourceTree = "<group>"; };
+		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		497EE7EA73CC178D57408668F00A2F4F /* Pods-DecorateYourRoom-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DecorateYourRoom-acknowledgements.markdown"; sourceTree = "<group>"; };
+		49914FB40AB7B5ADDA3BFEF6314CF249 /* Pods-HelloWorld.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HelloWorld.release.xcconfig"; sourceTree = "<group>"; };
+		50157AE9E86B74CC0EE08DF0C2251F66 /* Pods-HelloWorld.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HelloWorld.debug.xcconfig"; sourceTree = "<group>"; };
+		54CE3A3F12E769F08E5EEA9571726C5B /* Pods-HelloWorld-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-HelloWorld-frameworks.sh"; sourceTree = "<group>"; };
+		550B946EF7637C7E1AA490A8CDF4A9B1 /* Pods-HelloWorld-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HelloWorld-Info.plist"; sourceTree = "<group>"; };
+		5A56D82691BBD0BB0A7CB8EF285B4614 /* Pods-HelloWorld-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HelloWorld-acknowledgements.plist"; sourceTree = "<group>"; };
+		5AFAAD1851C0C542E33F5F77B1BE897F /* PlacenoteSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PlacenoteSDK-dummy.m"; sourceTree = "<group>"; };
+		5C6FDAE74BD09EE085F2464DAA6BDBDB /* PlacenoteSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlacenoteSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CC503B29ED863ABDBC8B696F16C034C /* PlacenoteSDK.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PlacenoteSDK.xcconfig; sourceTree = "<group>"; };
+		5CC73711FC6780DEE491E21C3FF56698 /* Data.bin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.macbinary; path = Data.bin; sourceTree = "<group>"; };
+		5FA73939390BA0DFAC4625DCD3F422F5 /* Pods-PlacenoteSDKExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PlacenoteSDKExample-umbrella.h"; sourceTree = "<group>"; };
+		6597CADB1054D5AFD446F087A677B973 /* Pods_PlacenoteSDKExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacenoteSDKExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6DB45856A6B812EA3CB7EA222D10A4B8 /* Event.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		75B89A54F289491960B88A0E51A0B33C /* Pods_DecorateYourRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DecorateYourRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		75F7F2B295B478FE7163225D3DC520D2 /* Pods-PlacenoteSDKExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-PlacenoteSDKExample.modulemap"; sourceTree = "<group>"; };
+		78971AAB7DDCA42665ADAD94A67AB88C /* Pods-DecorateYourRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DecorateYourRoom.release.xcconfig"; sourceTree = "<group>"; };
+		78A778A0AEB19041FFAD51BE35C46187 /* PlacenoteSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-umbrella.h"; sourceTree = "<group>"; };
+		7DAA13CDEC1ECD9EE3BE31E1F6AEA662 /* Pods-PlacenoteSDKExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlacenoteSDKExample-frameworks.sh"; sourceTree = "<group>"; };
+		81A49EF8657D8B1C451E637259F360F5 /* Pods-HelloWorld-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HelloWorld-acknowledgements.markdown"; sourceTree = "<group>"; };
+		8C8BF7A077AB71B69B0D24507947421D /* Pods-PlacenoteSDKExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.debug.xcconfig"; sourceTree = "<group>"; };
+		8DEEF737B90437ECA23D5DAA42BF4938 /* PlacenoteSDK-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "PlacenoteSDK-Info.plist"; sourceTree = "<group>"; };
+		9A98550BAF2A1DB49D61A5E4DBD8D8E8 /* Pods-HelloWorld-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HelloWorld-umbrella.h"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A2C5B2DBB175CBE1B4541CCED98CFD12 /* Pods-DecorateYourRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DecorateYourRoom.debug.xcconfig"; sourceTree = "<group>"; };
+		AD10BB919E5C7761203308332658B2C0 /* Pods-DecorateYourRoom-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DecorateYourRoom-frameworks.sh"; sourceTree = "<group>"; };
+		AF04E2F1E38FA028031E1017DA539A43 /* MulticastDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
+		B3CEAD0B9380FCB3EE2926EE146C0596 /* Placenote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Placenote.framework; sourceTree = "<group>"; };
+		BD5050F050531D60B8688C48F3BF6A24 /* Pods-PlacenoteSDKExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlacenoteSDKExample.release.xcconfig"; sourceTree = "<group>"; };
+		BD9A412A21001D9E4A2660304BAFAE7B /* UIImageUtil.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIImageUtil.swift; sourceTree = "<group>"; };
+		CA307B352FBC49F9B6D552E983499C79 /* PlacenoteSDK-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "PlacenoteSDK-Bridging-Header.h"; path = "include/PlacenoteSDK-Bridging-Header.h"; sourceTree = "<group>"; };
+		D01D48FF05ADCE1960986A3067DF24B2 /* Pods-DecorateYourRoom-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DecorateYourRoom-umbrella.h"; sourceTree = "<group>"; };
+		D37643B5942B5F94CEEBBB81BECB8921 /* Pods-PlacenoteSDKExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlacenoteSDKExample-Info.plist"; sourceTree = "<group>"; };
+		D6B02E53FF5C614D747D6A4C5E900425 /* Pods-DecorateYourRoom-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DecorateYourRoom-acknowledgements.plist"; sourceTree = "<group>"; };
+		DBB69D58010DFC26600B505BC2CFCB33 /* Pods-DecorateYourRoom.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DecorateYourRoom.modulemap"; sourceTree = "<group>"; };
+		E010D1D39620D7492244A03A5F2FFD0B /* PlacenoteSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = PlacenoteSDK.modulemap; sourceTree = "<group>"; };
+		E3668B989DEFCD9365A5156E5EF643E2 /* Pods-DecorateYourRoom-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DecorateYourRoom-Info.plist"; sourceTree = "<group>"; };
+		E50F67EDF6EB40E3B4C75D667AFD953B /* Pods-PlacenoteSDKExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-PlacenoteSDKExample-acknowledgements.markdown"; sourceTree = "<group>"; };
+		E7666C8992E14EE4ED2724795F551D74 /* libPlacenote.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = libPlacenote.h; path = Placenote.framework/Headers/libPlacenote.h; sourceTree = "<group>"; };
+		ECDEAA2273A464F890AC52FDA8026A21 /* Pods_HelloWorld.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HelloWorld.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F04339811FC932A0AD83F89698568218 /* Pods-PlacenoteSDKExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-PlacenoteSDKExample-dummy.m"; sourceTree = "<group>"; };
+		F31FD2B9E524F0AD3988F1753BC31716 /* PlacenoteSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PlacenoteSDK-prefix.pch"; sourceTree = "<group>"; };
+		FEEE461A178AD5D8730D673E47DF1B23 /* FeaturePointVisualizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeaturePointVisualizer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0EE8C9F94109E4200C6F4DCFF8319D68 /* Frameworks */ = {
+		06EE64B4F4212B7A3BD38D8E570BDB6C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2967CB21053D08AFA0D86B7D2D8DC72D /* Foundation.framework in Frameworks */,
+				28D8C7C4235003FE00374835 /* Placenote.framework in Frameworks */,
+				2E49AA072E463B61D44F8493E25D7B8F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7E5B26ABFA7811104B4F221FF84DFF93 /* Frameworks */ = {
+		BE16BF682C226ED0EE15C4D68CC722B9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9E683071161B4CB20EB0F26876671B3 /* Foundation.framework in Frameworks */,
+				456EDCD86CA52BE2AC8E3C2082D5AC76 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDB0382F464841473BAB13E7F97C8061 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D00B207C8F7A59A0B74399772A0F0A41 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E359DDF7CD1959657DA63D84C277CED6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1098F74D40DFD0DD593D151A29E95EC8 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		14035B80E4E3A50F6BC0E80AA5C19C44 /* Frameworks */ = {
+		34633223D629E56C21E5348696AC26B7 /* PlacenoteSDK */ = {
 			isa = PBXGroup;
 			children = (
-				7AD7ABD26FC9D36EAA0373749D2A5428 /* Placenote.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		1E1A15DC926C2F14E5432035E82E5B83 /* PlacenoteSDK */ = {
-			isa = PBXGroup;
-			children = (
-				2A207F3D2347E31900BA71AB /* Event.swift */,
-				2AFC5BB523313A960093A436 /* UIImageUtil.swift */,
-				2A0068BB232C37560078A68B /* LocalizationThumbnailSelector.swift */,
-				4A0D0E9C438C515CBFF0D91FFBFCA597 /* CameraManager.swift */,
-				A82FF6E3BC07484DFC29F4699D93CB86 /* FeaturePointVisualizer.swift */,
-				DD38CD536561EA9464B42DCEBC1BADC2 /* libPlacenote.h */,
-				F4EA89BE151021D7B6237F8A89053428 /* LibPlacenote.swift */,
-				789729928527366ECF5038BE1D1F905F /* MulticastDelegate.swift */,
-				CA1FA45038049FD60AA2FB0537C15E9F /* PlacenoteSDK-Bridging-Header.h */,
-				14035B80E4E3A50F6BC0E80AA5C19C44 /* Frameworks */,
-				C8F6A85E7DACF3CE00EA36C10D589DEB /* Resources */,
-				8390894CA9503D54CFCCEC6C3410264E /* Support Files */,
+				1E60DDD034A7FB50F78020D95FAC1828 /* CameraManager.swift */,
+				6DB45856A6B812EA3CB7EA222D10A4B8 /* Event.swift */,
+				FEEE461A178AD5D8730D673E47DF1B23 /* FeaturePointVisualizer.swift */,
+				E7666C8992E14EE4ED2724795F551D74 /* libPlacenote.h */,
+				2E367B0789F7B245EB6873B5492F7341 /* LibPlacenote.swift */,
+				1AFBBEEF403DAAF081239A72166537BE /* LocalizationThumbnailSelector.swift */,
+				AF04E2F1E38FA028031E1017DA539A43 /* MulticastDelegate.swift */,
+				CA307B352FBC49F9B6D552E983499C79 /* PlacenoteSDK-Bridging-Header.h */,
+				BD9A412A21001D9E4A2660304BAFAE7B /* UIImageUtil.swift */,
+				FCBDC45990759CB1DAF350E53B8FAA6C /* Frameworks */,
+				DEF1C67B8093E20E70C579F1D98E1404 /* Resources */,
+				89B88F9E38089D240184DEB2473986A0 /* Support Files */,
 			);
 			path = PlacenoteSDK;
 			sourceTree = "<group>";
 		};
-		25AB7A7F9EF64114E7E410F5D0C0BA2F /* Products */ = {
+		35652AEECF4FEE5718D22C9366E87B0F /* Pods-HelloWorld */ = {
 			isa = PBXGroup;
 			children = (
-				0C79DBED0AB5BA58A8BDB2EB7616B5FC /* PlacenoteSDK.framework */,
-				142329D1DDB5BFC5726E18837844714A /* Pods_PlacenoteSDKExample.framework */,
+				19B93737515F9D2A9109D372811918C9 /* Pods-HelloWorld.modulemap */,
+				81A49EF8657D8B1C451E637259F360F5 /* Pods-HelloWorld-acknowledgements.markdown */,
+				5A56D82691BBD0BB0A7CB8EF285B4614 /* Pods-HelloWorld-acknowledgements.plist */,
+				160AFEC0D6ADEAF915744279D01E51BF /* Pods-HelloWorld-dummy.m */,
+				54CE3A3F12E769F08E5EEA9571726C5B /* Pods-HelloWorld-frameworks.sh */,
+				550B946EF7637C7E1AA490A8CDF4A9B1 /* Pods-HelloWorld-Info.plist */,
+				9A98550BAF2A1DB49D61A5E4DBD8D8E8 /* Pods-HelloWorld-umbrella.h */,
+				50157AE9E86B74CC0EE08DF0C2251F66 /* Pods-HelloWorld.debug.xcconfig */,
+				49914FB40AB7B5ADDA3BFEF6314CF249 /* Pods-HelloWorld.release.xcconfig */,
 			);
-			name = Products;
+			name = "Pods-HelloWorld";
+			path = "Target Support Files/Pods-HelloWorld";
 			sourceTree = "<group>";
 		};
-		5E0D919E635D23B70123790B8308F8EF /* iOS */ = {
+		41E9F0F93296D52A733B7378123D9349 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */,
-			);
-			name = iOS;
-			sourceTree = "<group>";
-		};
-		61262F0F35B8C338A15E42DA09691ED4 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1E1A15DC926C2F14E5432035E82E5B83 /* PlacenoteSDK */,
+				34633223D629E56C21E5348696AC26B7 /* PlacenoteSDK */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		78CA0D454E64B324E351085DF6A47723 /* Targets Support Files */ = {
+		73FD20C21DEE8BFEE5BAC92226FB434E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				974D11DC352CFE542DED3BAA4FF84923 /* Pods-PlacenoteSDKExample */,
+				5C6FDAE74BD09EE085F2464DAA6BDBDB /* PlacenoteSDK.framework */,
+				75B89A54F289491960B88A0E51A0B33C /* Pods_DecorateYourRoom.framework */,
+				ECDEAA2273A464F890AC52FDA8026A21 /* Pods_HelloWorld.framework */,
+				6597CADB1054D5AFD446F087A677B973 /* Pods_PlacenoteSDKExample.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		899BAF79572B229C8DD71AD90D66ED5A /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D6A4603902F76774AA30B03C38A3C1BA /* Pods-DecorateYourRoom */,
+				35652AEECF4FEE5718D22C9366E87B0F /* Pods-HelloWorld */,
+				A251857603735AB4DEB40400D2BA7EF2 /* Pods-PlacenoteSDKExample */,
 			);
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		7DB346D0F39D3F0E887471402A8071AB = {
+		89B88F9E38089D240184DEB2473986A0 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
-				61262F0F35B8C338A15E42DA09691ED4 /* Pods */,
-				25AB7A7F9EF64114E7E410F5D0C0BA2F /* Products */,
-				78CA0D454E64B324E351085DF6A47723 /* Targets Support Files */,
-			);
-			sourceTree = "<group>";
-		};
-		8390894CA9503D54CFCCEC6C3410264E /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				27EAF25A6DA7EE086D33F1E4F8F23469 /* Info.plist */,
-				FFDB75D88B9DAF63FF1D06F5C541AB30 /* PlacenoteSDK.modulemap */,
-				207992C5DD06822069CF9E0040097E1A /* PlacenoteSDK.xcconfig */,
-				65381FA37BA273C116CB47A843311F59 /* PlacenoteSDK-dummy.m */,
-				192DFD6F4E4B8905FFBECAACD11B484E /* PlacenoteSDK-prefix.pch */,
-				7C36BE6D134E668139DD5A92AE3121A7 /* PlacenoteSDK-umbrella.h */,
+				E010D1D39620D7492244A03A5F2FFD0B /* PlacenoteSDK.modulemap */,
+				5CC503B29ED863ABDBC8B696F16C034C /* PlacenoteSDK.xcconfig */,
+				5AFAAD1851C0C542E33F5F77B1BE897F /* PlacenoteSDK-dummy.m */,
+				8DEEF737B90437ECA23D5DAA42BF4938 /* PlacenoteSDK-Info.plist */,
+				F31FD2B9E524F0AD3988F1753BC31716 /* PlacenoteSDK-prefix.pch */,
+				78A778A0AEB19041FFAD51BE35C46187 /* PlacenoteSDK-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/PlacenoteSDK";
 			sourceTree = "<group>";
 		};
-		974D11DC352CFE542DED3BAA4FF84923 /* Pods-PlacenoteSDKExample */ = {
+		A251857603735AB4DEB40400D2BA7EF2 /* Pods-PlacenoteSDKExample */ = {
 			isa = PBXGroup;
 			children = (
-				06C0E275C3CBED4621D75CAA4E3948BA /* Info.plist */,
-				CE5046072C0964295D7F7F52AD90FD11 /* Pods-PlacenoteSDKExample.modulemap */,
-				6539856D8FD16A4EB1B9E9F75128FE29 /* Pods-PlacenoteSDKExample-acknowledgements.markdown */,
-				B932D944E23A7D7A8B043CBEC03B40DF /* Pods-PlacenoteSDKExample-acknowledgements.plist */,
-				924DB3E72B01EE375E7709222315C173 /* Pods-PlacenoteSDKExample-dummy.m */,
-				12419D0885451CAA7516EBF100CFA483 /* Pods-PlacenoteSDKExample-frameworks.sh */,
-				BEA29203300E5E57437F95BE3C60B64D /* Pods-PlacenoteSDKExample-resources.sh */,
-				AC0C18D6AD4629F1D63C1E76D0701550 /* Pods-PlacenoteSDKExample-umbrella.h */,
-				F8391796DB43E5AADF7E6FCDA7FAB80D /* Pods-PlacenoteSDKExample.debug.xcconfig */,
-				27C91530171ECBEDBDA7B734AB710550 /* Pods-PlacenoteSDKExample.release.xcconfig */,
+				75F7F2B295B478FE7163225D3DC520D2 /* Pods-PlacenoteSDKExample.modulemap */,
+				E50F67EDF6EB40E3B4C75D667AFD953B /* Pods-PlacenoteSDKExample-acknowledgements.markdown */,
+				0DDEAA40B97EDA01A8B31A84149AE881 /* Pods-PlacenoteSDKExample-acknowledgements.plist */,
+				F04339811FC932A0AD83F89698568218 /* Pods-PlacenoteSDKExample-dummy.m */,
+				7DAA13CDEC1ECD9EE3BE31E1F6AEA662 /* Pods-PlacenoteSDKExample-frameworks.sh */,
+				D37643B5942B5F94CEEBBB81BECB8921 /* Pods-PlacenoteSDKExample-Info.plist */,
+				5FA73939390BA0DFAC4625DCD3F422F5 /* Pods-PlacenoteSDKExample-umbrella.h */,
+				8C8BF7A077AB71B69B0D24507947421D /* Pods-PlacenoteSDKExample.debug.xcconfig */,
+				BD5050F050531D60B8688C48F3BF6A24 /* Pods-PlacenoteSDKExample.release.xcconfig */,
 			);
 			name = "Pods-PlacenoteSDKExample";
 			path = "Target Support Files/Pods-PlacenoteSDKExample";
 			sourceTree = "<group>";
 		};
-		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
+		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				5E0D919E635D23B70123790B8308F8EF /* iOS */,
+				3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				41E9F0F93296D52A733B7378123D9349 /* Pods */,
+				73FD20C21DEE8BFEE5BAC92226FB434E /* Products */,
+				899BAF79572B229C8DD71AD90D66ED5A /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C0834CEBB1379A84116EF29F93051C60 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C8F6A85E7DACF3CE00EA36C10D589DEB /* Resources */ = {
+		D6A4603902F76774AA30B03C38A3C1BA /* Pods-DecorateYourRoom */ = {
 			isa = PBXGroup;
 			children = (
-				223E18D9CBEFDFE3C1B072658E80D3FF /* Data.bin */,
+				DBB69D58010DFC26600B505BC2CFCB33 /* Pods-DecorateYourRoom.modulemap */,
+				497EE7EA73CC178D57408668F00A2F4F /* Pods-DecorateYourRoom-acknowledgements.markdown */,
+				D6B02E53FF5C614D747D6A4C5E900425 /* Pods-DecorateYourRoom-acknowledgements.plist */,
+				23B706F289D2545B743D31F27C0107FA /* Pods-DecorateYourRoom-dummy.m */,
+				AD10BB919E5C7761203308332658B2C0 /* Pods-DecorateYourRoom-frameworks.sh */,
+				E3668B989DEFCD9365A5156E5EF643E2 /* Pods-DecorateYourRoom-Info.plist */,
+				D01D48FF05ADCE1960986A3067DF24B2 /* Pods-DecorateYourRoom-umbrella.h */,
+				A2C5B2DBB175CBE1B4541CCED98CFD12 /* Pods-DecorateYourRoom.debug.xcconfig */,
+				78971AAB7DDCA42665ADAD94A67AB88C /* Pods-DecorateYourRoom.release.xcconfig */,
+			);
+			name = "Pods-DecorateYourRoom";
+			path = "Target Support Files/Pods-DecorateYourRoom";
+			sourceTree = "<group>";
+		};
+		DEF1C67B8093E20E70C579F1D98E1404 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5CC73711FC6780DEE491E21C3FF56698 /* Data.bin */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		FCBDC45990759CB1DAF350E53B8FAA6C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B3CEAD0B9380FCB3EE2926EE146C0596 /* Placenote.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		105D0E87BE2C83C0276BFA92E6B18019 /* Headers */ = {
+		11D41DDC6E08BC010825ACB46A131326 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD40EA9314D11EF20908E4306DB0CD4D /* libPlacenote.h in Headers */,
-				48ED30B940111A6D64CA9D454B134E30 /* PlacenoteSDK-Bridging-Header.h in Headers */,
-				251F4E125E9B2CD0A400CFBA3C93BEB6 /* PlacenoteSDK-umbrella.h in Headers */,
+				0CD0B2127D3D10D56C09FD80F07B00B1 /* Pods-DecorateYourRoom-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CE0E6DCD03AFDD106F71B329190EE006 /* Headers */ = {
+		1C25E74A1151FD1112667B2F05DC60C2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69E7619CB850ABB489905EDD62BD9FBB /* Pods-PlacenoteSDKExample-umbrella.h in Headers */,
+				9DAF43D18BDF2655ED1904370CA43067 /* Pods-HelloWorld-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F05D339FC18CCEFE34163A0591B4673 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAC113532BF1C9E9607593A1E51FA4AE /* libPlacenote.h in Headers */,
+				4D24A69EFD57FD281C7DF4E62D71D501 /* PlacenoteSDK-Bridging-Header.h in Headers */,
+				BFA4F8D03A3274547AD4755A8BE34180 /* PlacenoteSDK-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E93E2DB359E2793404D6835557A44A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C4743E4BF2E0C0C58AF3DD5AE55794B0 /* Pods-PlacenoteSDKExample-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		20A1C32708DB3EB04A9D7B1705F990CF /* PlacenoteSDK */ = {
+		009FC5ED69BB7204A7DFC57233E3A5E8 /* PlacenoteSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C53DE1CD4B80040F566E6BCCA0683A9A /* Build configuration list for PBXNativeTarget "PlacenoteSDK" */;
+			buildConfigurationList = C624D2658BC7F0520D9D40B75D2D2105 /* Build configuration list for PBXNativeTarget "PlacenoteSDK" */;
 			buildPhases = (
-				8E1AC327E95E2D9A1521FB8F56B10B33 /* Sources */,
-				0EE8C9F94109E4200C6F4DCFF8319D68 /* Frameworks */,
-				105D0E87BE2C83C0276BFA92E6B18019 /* Headers */,
-				160249B11ACF3DEF4231E37F9E3ADBF5 /* Resources */,
+				8F05D339FC18CCEFE34163A0591B4673 /* Headers */,
+				DA549AEEE654D7E61268E28921803849 /* Sources */,
+				06EE64B4F4212B7A3BD38D8E570BDB6C /* Frameworks */,
+				BFD3B591E4E10A4BA537D931786AC79B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -247,103 +357,299 @@
 			);
 			name = PlacenoteSDK;
 			productName = PlacenoteSDK;
-			productReference = 0C79DBED0AB5BA58A8BDB2EB7616B5FC /* PlacenoteSDK.framework */;
+			productReference = 5C6FDAE74BD09EE085F2464DAA6BDBDB /* PlacenoteSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		7FC87A25A00D43136A145FA8CA4544B3 /* Pods-PlacenoteSDKExample */ = {
+		5B4B677FDC0AA91A5B42FF0754A16F3D /* Pods-PlacenoteSDKExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6DF8822641CDEDD41A4F20D2DEC9A87B /* Build configuration list for PBXNativeTarget "Pods-PlacenoteSDKExample" */;
+			buildConfigurationList = 4B91B022E24BE910004BCEEE18031401 /* Build configuration list for PBXNativeTarget "Pods-PlacenoteSDKExample" */;
 			buildPhases = (
-				215BADA1E5898A81809269E041C6EB3D /* Sources */,
-				7E5B26ABFA7811104B4F221FF84DFF93 /* Frameworks */,
-				CE0E6DCD03AFDD106F71B329190EE006 /* Headers */,
+				C0E93E2DB359E2793404D6835557A44A /* Headers */,
+				5E944E2917383B1A1E5AFB20921E0933 /* Sources */,
+				CDB0382F464841473BAB13E7F97C8061 /* Frameworks */,
+				F11AF5C62CF5C826DDF0EE7424CEC624 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				922052337DFD4B3D7A722CBA5ADC8DC1 /* PBXTargetDependency */,
+				86F9F35949F639A2D1F42A40DCA997CB /* PBXTargetDependency */,
 			);
 			name = "Pods-PlacenoteSDKExample";
 			productName = "Pods-PlacenoteSDKExample";
-			productReference = 142329D1DDB5BFC5726E18837844714A /* Pods_PlacenoteSDKExample.framework */;
+			productReference = 6597CADB1054D5AFD446F087A677B973 /* Pods_PlacenoteSDKExample.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5C8D8E5A137F8A82A586AEF21A02DAE7 /* Pods-HelloWorld */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0838AFBECE5F241C734AAA0804CBEE9 /* Build configuration list for PBXNativeTarget "Pods-HelloWorld" */;
+			buildPhases = (
+				1C25E74A1151FD1112667B2F05DC60C2 /* Headers */,
+				85DCBD756C4A204CA6C6686246A57C62 /* Sources */,
+				E359DDF7CD1959657DA63D84C277CED6 /* Frameworks */,
+				6B54FC31FC97571988A6618D90C8D411 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C80E2CB8BBAE3E1CEA0BCAE8FE0067A /* PBXTargetDependency */,
+			);
+			name = "Pods-HelloWorld";
+			productName = "Pods-HelloWorld";
+			productReference = ECDEAA2273A464F890AC52FDA8026A21 /* Pods_HelloWorld.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		8538162D2AF2918C307A78004BA32FEE /* Pods-DecorateYourRoom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4264B25C1354AFEDEFE6C01B033D6331 /* Build configuration list for PBXNativeTarget "Pods-DecorateYourRoom" */;
+			buildPhases = (
+				11D41DDC6E08BC010825ACB46A131326 /* Headers */,
+				DA30295085CBDCFB93D19C71B39594F1 /* Sources */,
+				BE16BF682C226ED0EE15C4D68CC722B9 /* Frameworks */,
+				B0F5BCFEFFE7968AE8791F407EF04507 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				91A4A9C39677E94978A4D1B7DE6C6E8A /* PBXTargetDependency */,
+			);
+			name = "Pods-DecorateYourRoom";
+			productName = "Pods-DecorateYourRoom";
+			productReference = 75B89A54F289491960B88A0E51A0B33C /* Pods_DecorateYourRoom.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 0930;
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
 			};
-			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 			);
-			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = 25AB7A7F9EF64114E7E410F5D0C0BA2F /* Products */;
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 73FD20C21DEE8BFEE5BAC92226FB434E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				20A1C32708DB3EB04A9D7B1705F990CF /* PlacenoteSDK */,
-				7FC87A25A00D43136A145FA8CA4544B3 /* Pods-PlacenoteSDKExample */,
+				009FC5ED69BB7204A7DFC57233E3A5E8 /* PlacenoteSDK */,
+				8538162D2AF2918C307A78004BA32FEE /* Pods-DecorateYourRoom */,
+				5C8D8E5A137F8A82A586AEF21A02DAE7 /* Pods-HelloWorld */,
+				5B4B677FDC0AA91A5B42FF0754A16F3D /* Pods-PlacenoteSDKExample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		160249B11ACF3DEF4231E37F9E3ADBF5 /* Resources */ = {
+		6B54FC31FC97571988A6618D90C8D411 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9069B1C171C17EDF08ECBB6466B2347 /* Data.bin in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0F5BCFEFFE7968AE8791F407EF04507 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFD3B591E4E10A4BA537D931786AC79B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67AB576DEE684733EBBC277B4711B2F4 /* Data.bin in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F11AF5C62CF5C826DDF0EE7424CEC624 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		215BADA1E5898A81809269E041C6EB3D /* Sources */ = {
+		5E944E2917383B1A1E5AFB20921E0933 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6415B4CE7867FDE84838595EF670068 /* Pods-PlacenoteSDKExample-dummy.m in Sources */,
+				D35AFC199C57639306FF5D4829298ED9 /* Pods-PlacenoteSDKExample-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8E1AC327E95E2D9A1521FB8F56B10B33 /* Sources */ = {
+		85DCBD756C4A204CA6C6686246A57C62 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A207F3E2347E31900BA71AB /* Event.swift in Sources */,
-				735ECF4AFDA381FD2921831CE4D3C5F1 /* CameraManager.swift in Sources */,
-				2AFC5BB623313A970093A436 /* UIImageUtil.swift in Sources */,
-				A6199B096412DDE0121AB118A8E1D550 /* FeaturePointVisualizer.swift in Sources */,
-				791B32376F059E7E104CAEF1354578FB /* LibPlacenote.swift in Sources */,
-				BF8BB89C2FB40F5AE14818E81538FB03 /* MulticastDelegate.swift in Sources */,
-				2A0068BC232C37560078A68B /* LocalizationThumbnailSelector.swift in Sources */,
-				3BE4F4FA7843E88C41727537D6C9B070 /* PlacenoteSDK-dummy.m in Sources */,
+				4078EB8ECEE9C9E0A4643556DE20F4B0 /* Pods-HelloWorld-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA30295085CBDCFB93D19C71B39594F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63025F46EB140703814719634FBB9A65 /* Pods-DecorateYourRoom-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA549AEEE654D7E61268E28921803849 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52FA86AC25FAEEC2A43C3793356D879E /* CameraManager.swift in Sources */,
+				AAC52B942A69A3BAD1777BA7D5596B24 /* Event.swift in Sources */,
+				273A2C49166121E548F9FD5E5AF5284B /* FeaturePointVisualizer.swift in Sources */,
+				01303FADE3704CD42DE2DE11FEF59C10 /* LibPlacenote.swift in Sources */,
+				D0FAD67B46407F6F5DCAA008BBF34F10 /* LocalizationThumbnailSelector.swift in Sources */,
+				6DE3B8E294CE700DD08A20BDD82CD58E /* MulticastDelegate.swift in Sources */,
+				23A222666296C17B09476C79C9E2A455 /* PlacenoteSDK-dummy.m in Sources */,
+				F3BB0236F031ABE44DA7FA2458F9D107 /* UIImageUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		922052337DFD4B3D7A722CBA5ADC8DC1 /* PBXTargetDependency */ = {
+		2C80E2CB8BBAE3E1CEA0BCAE8FE0067A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = PlacenoteSDK;
-			target = 20A1C32708DB3EB04A9D7B1705F990CF /* PlacenoteSDK */;
-			targetProxy = CF15A364FD83125B080D24DCDA066CBA /* PBXContainerItemProxy */;
+			target = 009FC5ED69BB7204A7DFC57233E3A5E8 /* PlacenoteSDK */;
+			targetProxy = D2E889F09BA122EC20BCD2108BE14EA4 /* PBXContainerItemProxy */;
+		};
+		86F9F35949F639A2D1F42A40DCA997CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PlacenoteSDK;
+			target = 009FC5ED69BB7204A7DFC57233E3A5E8 /* PlacenoteSDK */;
+			targetProxy = 7DDFBB5A5F094276834900A306044DA6 /* PBXContainerItemProxy */;
+		};
+		91A4A9C39677E94978A4D1B7DE6C6E8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PlacenoteSDK;
+			target = 009FC5ED69BB7204A7DFC57233E3A5E8 /* PlacenoteSDK */;
+			targetProxy = 1B89F27765DCD2F693EE17FEDE43ACEE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		08638A96A528B1EC32DE62F8A728389D /* Release */ = {
+		06D1567A50B842F778A41FF46CED4AB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50157AE9E86B74CC0EE08DF0C2251F66 /* Pods-HelloWorld.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-HelloWorld/Pods-HelloWorld-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-HelloWorld/Pods-HelloWorld.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		19F61AB33702A96C1EE166A0C76344B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2C5B2DBB175CBE1B4541CCED98CFD12 /* Pods-DecorateYourRoom.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-DecorateYourRoom/Pods-DecorateYourRoom-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-DecorateYourRoom/Pods-DecorateYourRoom.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		1C44FE39A00DA4DA0E2A41D2CDC75182 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD5050F050531D60B8688C48F3BF6A24 /* Pods-PlacenoteSDKExample.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		257497152829C177993B5EC99C1D227A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -375,8 +681,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -395,17 +699,20 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
 		};
-		69C61BDB72F7AE725E815A41A6398924 /* Debug */ = {
+		7F08396FB8CF37467EA13FD9A0BAEB1C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F8391796DB43E5AADF7E6FCDA7FAB80D /* Pods-PlacenoteSDKExample.debug.xcconfig */;
+			baseConfigurationReference = 5CC503B29ED863ABDBC8B696F16C034C /* PlacenoteSDK.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -417,81 +724,12 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		6BAD8B0E15F5A602FEEDDE416BCF5A63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27C91530171ECBEDBDA7B734AB710550 /* Pods-PlacenoteSDKExample.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8754E6DFF2081CC400A490ED4FD05AA5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 207992C5DD06822069CF9E0040097E1A /* PlacenoteSDK.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PlacenoteSDK",
+				);
 				GCC_PREFIX_HEADER = "Target Support Files/PlacenoteSDK/PlacenoteSDK-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/PlacenoteSDK/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/PlacenoteSDK/PlacenoteSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -501,7 +739,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -509,7 +746,154 @@
 			};
 			name = Debug;
 		};
-		9DAE5233986C01ADB6E67169C53A3FD2 /* Debug */ = {
+		8F3842C243210B2E2914F86F72605CBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8C8BF7A077AB71B69B0D24507947421D /* Pods-PlacenoteSDKExample.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-PlacenoteSDKExample/Pods-PlacenoteSDKExample.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		96CBBACCEDDE8C306F1478CEE9DF6E6D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 78971AAB7DDCA42665ADAD94A67AB88C /* Pods-DecorateYourRoom.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-DecorateYourRoom/Pods-DecorateYourRoom-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-DecorateYourRoom/Pods-DecorateYourRoom.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		97A8509373573638ABC41AFF51642C90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5CC503B29ED863ABDBC8B696F16C034C /* PlacenoteSDK.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PlacenoteSDK",
+				);
+				GCC_PREFIX_HEADER = "Target Support Files/PlacenoteSDK/PlacenoteSDK-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/PlacenoteSDK/PlacenoteSDK-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/PlacenoteSDK/PlacenoteSDK.modulemap";
+				PRODUCT_MODULE_NAME = PlacenoteSDK;
+				PRODUCT_NAME = PlacenoteSDK;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		9F054B0ABAEB5658921FA4B52F8A1E87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49914FB40AB7B5ADDA3BFEF6314CF249 /* Pods-HelloWorld.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-HelloWorld/Pods-HelloWorld-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-HelloWorld/Pods-HelloWorld.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DD8F832993327D1DD8046C3CBCBD97CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -541,8 +925,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -563,81 +945,67 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
 		};
-		C62DE87C36EBC0CDE1B27A2B336B0E1A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 207992C5DD06822069CF9E0040097E1A /* PlacenoteSDK.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				GCC_PREFIX_HEADER = "Target Support Files/PlacenoteSDK/PlacenoteSDK-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/PlacenoteSDK/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/PlacenoteSDK/PlacenoteSDK.modulemap";
-				PRODUCT_MODULE_NAME = PlacenoteSDK;
-				PRODUCT_NAME = PlacenoteSDK;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+		4264B25C1354AFEDEFE6C01B033D6331 /* Build configuration list for PBXNativeTarget "Pods-DecorateYourRoom" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9DAE5233986C01ADB6E67169C53A3FD2 /* Debug */,
-				08638A96A528B1EC32DE62F8A728389D /* Release */,
+				19F61AB33702A96C1EE166A0C76344B7 /* Debug */,
+				96CBBACCEDDE8C306F1478CEE9DF6E6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6DF8822641CDEDD41A4F20D2DEC9A87B /* Build configuration list for PBXNativeTarget "Pods-PlacenoteSDKExample" */ = {
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				69C61BDB72F7AE725E815A41A6398924 /* Debug */,
-				6BAD8B0E15F5A602FEEDDE416BCF5A63 /* Release */,
+				DD8F832993327D1DD8046C3CBCBD97CD /* Debug */,
+				257497152829C177993B5EC99C1D227A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C53DE1CD4B80040F566E6BCCA0683A9A /* Build configuration list for PBXNativeTarget "PlacenoteSDK" */ = {
+		4B91B022E24BE910004BCEEE18031401 /* Build configuration list for PBXNativeTarget "Pods-PlacenoteSDKExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8754E6DFF2081CC400A490ED4FD05AA5 /* Debug */,
-				C62DE87C36EBC0CDE1B27A2B336B0E1A /* Release */,
+				8F3842C243210B2E2914F86F72605CBA /* Debug */,
+				1C44FE39A00DA4DA0E2A41D2CDC75182 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0838AFBECE5F241C734AAA0804CBEE9 /* Build configuration list for PBXNativeTarget "Pods-HelloWorld" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06D1567A50B842F778A41FF46CED4AB5 /* Debug */,
+				9F054B0ABAEB5658921FA4B52F8A1E87 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C624D2658BC7F0520D9D40B75D2D2105 /* Build configuration list for PBXNativeTarget "PlacenoteSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F08396FB8CF37467EA13FD9A0BAEB1C /* Debug */,
+				97A8509373573638ABC41AFF51642C90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 }

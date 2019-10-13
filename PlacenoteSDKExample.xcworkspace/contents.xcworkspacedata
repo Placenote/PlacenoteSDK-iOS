@@ -5,6 +5,9 @@
       location = "group:HelloWorld/HelloWorld.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:DecorateYourRoom/DecorateYourRoom.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:PlacenoteSDKExample.xcodeproj">
    </FileRef>
    <FileRef

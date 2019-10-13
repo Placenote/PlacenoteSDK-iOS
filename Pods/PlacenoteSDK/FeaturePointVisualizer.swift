@@ -91,7 +91,7 @@ public class FeaturePointVisualizer: PNDelegate {
    */
   public func onLocalized() -> Void {
   }
-  
+    
   /**
    Function to be called periodically to draw the pointcloud geometry
    */
@@ -104,6 +104,40 @@ public class FeaturePointVisualizer: PNDelegate {
     }
   }
   
+    /**
+     Return the entire map that LibPlacenote has generated over the current session
+     
+     - Returns: the point cloud as an SCNVector3 array
+     */
+    
+    public func getPointCloud() -> Array<SCNVector3> {
+        
+        var pointArray: [SCNVector3] = []
+        
+        if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
+            
+            let landmarks = LibPlacenote.instance.getAllLandmarks();
+            if (landmarks.count > 0) {
+                
+                for lm in landmarks {
+                    if (lm.measCount > 2) {
+                        
+                        // create SCNVector3 object
+                        let point:SCNVector3 = SCNVector3(x: lm.point.x, y: lm.point.y, z: lm.point.z)
+                        
+                        // add to point cloud array
+                        pointArray.append(point)
+                    }
+                }
+            }
+        }
+
+        return pointArray
+    }
+    
+    
+    
+    
   /**
    Function to be called periodically to draw the tracked points geometry
    */
@@ -115,7 +149,7 @@ public class FeaturePointVisualizer: PNDelegate {
       }
     }
   }
-  
+    
   /**
    Function to that draws a pointcloud as a set of cubes from the input feature point array
    

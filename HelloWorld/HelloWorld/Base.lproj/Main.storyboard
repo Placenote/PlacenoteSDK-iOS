@@ -1,37 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="HelloWorld" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U0K-SW-4ec">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="s7w-1U-pja" appends="YES" id="LhG-D8-pLW"/>
+                                </connections>
                             </arscnView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8JG-BG-QY8" userLabel="Mapping View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXv-xT-nI7" userLabel="Save Map">
+                                        <rect key="frame" x="264" y="776" width="100" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="6pS-0X-xZs"/>
+                                            <constraint firstAttribute="height" constant="50" id="TOG-fs-oBw"/>
+                                        </constraints>
+                                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <state key="normal" title="Save Map"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="saveMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="KGT-OI-TfK"/>
+                                        </connections>
+                                    </button>
+                                    <view clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0MT-AW-WAP" userLabel="ProgressBarContainer">
+                                        <rect key="frame" x="50" y="779" width="190" height="42"/>
+                                        <subviews>
+                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="hzK-yU-yTf">
+                                                <rect key="frame" x="20" y="16" width="150" height="10"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="10" id="v31-J5-jZg"/>
+                                                </constraints>
+                                            </progressView>
+                                        </subviews>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="hzK-yU-yTf" secondAttribute="trailing" constant="20" id="3bc-w7-DJq"/>
+                                            <constraint firstAttribute="width" constant="190" id="myW-73-30F"/>
+                                            <constraint firstItem="hzK-yU-yTf" firstAttribute="leading" secondItem="0MT-AW-WAP" secondAttribute="leading" constant="20" id="usW-ZE-jew"/>
+                                            <constraint firstItem="hzK-yU-yTf" firstAttribute="centerY" secondItem="0MT-AW-WAP" secondAttribute="centerY" id="vqM-vW-GoZ"/>
+                                            <constraint firstAttribute="height" constant="42" id="zgc-dc-BnL"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="sXv-xT-nI7" secondAttribute="trailing" constant="50" id="C4n-Va-L8y"/>
+                                    <constraint firstItem="0MT-AW-WAP" firstAttribute="leading" secondItem="8JG-BG-QY8" secondAttribute="leading" constant="50" id="SoX-jA-3d7"/>
+                                    <constraint firstAttribute="bottom" secondItem="0MT-AW-WAP" secondAttribute="bottom" constant="75" id="eYO-xh-8bU"/>
+                                    <constraint firstAttribute="bottom" secondItem="sXv-xT-nI7" secondAttribute="bottom" constant="70" id="jhk-fX-q7g"/>
+                                </constraints>
+                            </view>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1oZ-GA-49p" userLabel="Init View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o0L-DU-Hko" userLabel="New Map">
+                                        <rect key="frame" x="264" y="776" width="100" height="50"/>
+                                        <color key="backgroundColor" red="0.0" green="0.53144651870000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="8EB-N1-rrI">
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="6"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </constraint>
+                                            <constraint firstAttribute="width" constant="100" id="aoX-Y4-0s4"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="New Map"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="StartMapping:" destination="BV1-FR-VrT" eventType="touchUpInside" id="dfk-qa-fhI"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wa4-mS-Z6B">
+                                        <rect key="frame" x="50" y="776" width="100" height="50"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="9Ch-QU-02S"/>
+                                            <constraint firstAttribute="height" constant="50" id="Uj2-BX-CUk"/>
+                                        </constraints>
+                                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <state key="normal" title="Load Map"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="loadMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="YdB-vp-0tq"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Wa4-mS-Z6B" secondAttribute="bottom" constant="70" id="FeB-Rl-bdW"/>
+                                    <constraint firstAttribute="bottom" secondItem="o0L-DU-Hko" secondAttribute="bottom" constant="70" id="Jhn-dd-OOZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="o0L-DU-Hko" secondAttribute="trailing" constant="50" id="Qpe-o2-3NT"/>
+                                    <constraint firstItem="Wa4-mS-Z6B" firstAttribute="leading" secondItem="1oZ-GA-49p" secondAttribute="leading" constant="50" id="lIc-5a-Cwc"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rTZ-Bz-H0o" userLabel="Loading View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D7h-M6-ptz" userLabel="Exit">
+                                        <rect key="frame" x="50" y="776" width="100" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="D6Q-eG-Fet"/>
+                                            <constraint firstAttribute="width" constant="100" id="X7o-lV-Ymv"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Exit"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="exitSession:" destination="BV1-FR-VrT" eventType="touchUpInside" id="qqo-I5-gMG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="D7h-M6-ptz" secondAttribute="bottom" constant="70" id="MJz-Fb-Ohh"/>
+                                    <constraint firstItem="D7h-M6-ptz" firstAttribute="leading" secondItem="rTZ-Bz-H0o" secondAttribute="leading" constant="50" id="ZDl-VT-vlt"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Placeholder Text" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xyu-e8-4UM">
+                                <rect key="frame" x="40" y="64" width="334" height="80"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="kws-Pa-8yd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="rTZ-Bz-H0o" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="2QD-K3-A15"/>
+                            <constraint firstAttribute="bottom" secondItem="8JG-BG-QY8" secondAttribute="bottom" id="363-Gd-GkR"/>
+                            <constraint firstAttribute="bottom" secondItem="1oZ-GA-49p" secondAttribute="bottom" id="A9u-wC-gCe"/>
+                            <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Fqe-4y-lc7"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="xyu-e8-4UM" secondAttribute="trailing" constant="40" id="H28-2J-A9a"/>
+                            <constraint firstItem="xyu-e8-4UM" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="40" id="IRo-Rn-OOR"/>
+                            <constraint firstItem="xyu-e8-4UM" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="Oeg-Kp-dHB"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="8JG-BG-QY8" secondAttribute="trailing" id="TtO-dQ-fNb"/>
+                            <constraint firstItem="1oZ-GA-49p" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="VKf-ZW-PmQ"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstAttribute="bottom" secondItem="rTZ-Bz-H0o" secondAttribute="bottom" id="Y6J-3C-9wE"/>
+                            <constraint firstItem="rTZ-Bz-H0o" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="YAE-39-5w0"/>
+                            <constraint firstItem="8JG-BG-QY8" firstAttribute="leading" secondItem="U0K-SW-4ec" secondAttribute="leading" id="Z9o-EE-Zsb"/>
+                            <constraint firstItem="8JG-BG-QY8" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="ZZ0-Vh-hZP"/>
+                            <constraint firstItem="xyu-e8-4UM" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dVt-0r-RSk"/>
+                            <constraint firstItem="rTZ-Bz-H0o" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="fNX-HB-IM0"/>
+                            <constraint firstItem="1oZ-GA-49p" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="m3a-va-8so"/>
+                            <constraint firstItem="1oZ-GA-49p" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="mEi-tu-yr7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
+                        <outlet property="initPanel" destination="1oZ-GA-49p" id="SaC-cP-Ela"/>
+                        <outlet property="loadingButtonPanel" destination="rTZ-Bz-H0o" id="wDw-wo-pGl"/>
+                        <outlet property="mapQualityProgress" destination="hzK-yU-yTf" id="NaC-bK-jlv"/>
+                        <outlet property="mappingButtonPanel" destination="8JG-BG-QY8" id="Hls-rC-gm5"/>
+                        <outlet property="saveButton" destination="sXv-xT-nI7" id="D0w-53-jG8"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="statusLabel" destination="xyu-e8-4UM" id="zCt-A3-NXP"/>
+                        <outlet property="tapGestureRecognizer" destination="s7w-1U-pja" id="gQo-EJ-04j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="s7w-1U-pja">
+                    <connections>
+                        <action selector="handleSceneTap:" destination="BV1-FR-VrT" id="WSX-mb-S7X"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="70.982142857142847"/>
         </scene>
     </scenes>
 </document>

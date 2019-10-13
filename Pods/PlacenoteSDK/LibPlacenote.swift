@@ -142,6 +142,17 @@ public class LibPlacenote {
     /// within the given map, and will keep trying.
     case lost
   }
+    
+    /// Enum that indicates the mapping quality of the current area in the map. Correlates with the the likelihood of localization at that point in the map.
+    public enum MappingQuality: Int {
+        
+        // indicates that the current keyframe during mapping does have enough tracked features to be well localizable.
+        case limited = 0
+        
+        // indicates that the current keyframe during mapping does enough tracked features to be well localizable.
+        case good = 1
+    }
+    
   
   /// Enums that indicates the mode of the LibPlacenote mapping module
   public enum MappingMode: Int {
@@ -471,6 +482,57 @@ public class LibPlacenote {
     
     return statusEnum;
   }
+    
+    /*
+     Get the current quality of the mapped keyframe
+     */
+    public func getMappingQuality () -> MappingQuality {
+        
+        let landmarks = getTrackedLandmarks();
+        var qualityEnum: MappingQuality = MappingQuality.limited
+        
+        if (landmarks.count > 0) {
+            var lmSize: Int = 0
+            for lm in landmarks {
+                if (lm.measCount < 3) {
+                    continue
+                }
+                lmSize += 1
+            }
+            if (lmSize > 20) {
+               qualityEnum = MappingQuality.good
+            }
+        }
+        return qualityEnum
+    }
+    
+    
+    public func getPointCloud() -> Array<SCNVector3> {
+        
+        var pointArray: [SCNVector3] = []
+        
+        if (getMappingStatus() == MappingStatus.running) {
+            
+            let landmarks = getAllLandmarks();
+            if (landmarks.count > 0) {
+                
+                for lm in landmarks {
+                    if (lm.measCount > 2) {
+                        
+                        // create SCNVector3 object
+                        let point:SCNVector3 = SCNVector3(x: lm.point.x, y: lm.point.y, z: lm.point.z)
+                        
+                        // add to point cloud array
+                        pointArray.append(point)
+                    }
+                }
+            }
+        }
+        
+        return pointArray
+    }
+    
+    
   
   /**
    Return the current 6DoF inertial pose of the LibPlacenote pose tracker against its map
