@@ -21,9 +21,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // UI Elements
     @IBOutlet weak var mapQualityProgress: UIProgressView!
-    @IBOutlet weak var statusLabel: UILabel!
+
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var saveButton: UIButton!
+    
+    @IBOutlet weak var statusLabel: UILabel!
+    
     
     // Placenote variables
     private var camManager: CameraManager? = nil;     // Camera Manager
@@ -286,23 +289,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
         
         // placenote sends 1 localized callback when it localizes.
         // Use this to load content
-        
-        print("Localized!")
-        
+        statusLabel.text = "Localized Scene!"
         let objPos = UserDefaults.standard.object(forKey: "objPosition") as? [Float] ?? [Float]()
-        
-        print("localized 2 " + objPos.count.description)
-        
         let objPosition: SCNVector3 = SCNVector3(x: objPos[0], y: objPos[1], z: objPos[2])
-        print("localized 3")
         
         placeObject(pos: objPosition)
         
-        print("localized 4")
         // go to the loading panel from where you can exit
         loadingButtonPanel.isHidden = false
-    
-        
     }
     
     @IBAction func exitSession(_ sender: Any) {

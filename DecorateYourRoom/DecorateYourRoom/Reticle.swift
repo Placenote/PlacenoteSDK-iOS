@@ -11,13 +11,9 @@ import ARKit
 
 class Reticle {
     
-    private var anchors: [ARAnchor] = []
-    private var anchorNodes: [SCNNode] = []
-    private var anchorIDs: [UUID] = []
-    
-    private var arkitf: matrix_float4x4 = matrix_identity_float4x4
+
     private var reticleNode: SCNNode = SCNNode()
-    private var reticlePreviewNode: SCNNode = SCNNode()
+
     private var reticleActive: Bool = false
     private var reticleHit: Bool = false
     private var reticleHitIdx: Int = -1
@@ -34,81 +30,58 @@ class Reticle {
         reticleGeo.materials.first?.diffuse.contents = UIColor.red
         reticleNode = SCNNode(geometry: reticleGeo)
         reticleNode.opacity = 0.4
-        reticleActive = true
+        reticleNode.isHidden = true
+        reticleActive = false
         sceneView = arview
+        sceneView.scene.rootNode.addChildNode(reticleNode)
     }
     
     init (arview: ARSCNView, reticle: SCNNode) {
         reticleNode = reticle
         sceneView = arview
     }
-    
-    /*
-     func addPreviewModelToReticle (node: SCNNode)  { //attach model to reticle
-     reticlePreviewNode = node
-     reticleNode.addChildNode(reticlePreviewNode)
-     }
-     
-     func removePreviewModel() {
-     reticlePreviewNode.removeFromParentNode()
-     }
-     */
-    
-    //add model to plane/mesh where reticle currently is, return the reticles global position
-    func addModelAtReticle (node: SCNNode) -> SCNMatrix4 {
-        node.transform = SCNMatrix4Mult(reticleHitTf, node.transform)
-        sceneView.scene.rootNode.addChildNode(node)
-        return node.transform
+
+    public func activateReticle()
+    {
+        print ("Reticle activated")
+        reticleActive = true
+        reticleNode.isHidden = false
+        
     }
     
-    /*
-    func addPlaneNode(planeNode: SCNNode, anchor: ARAnchor) {
-        anchors.append(anchor)
-        anchorNodes.append(planeNode)
-        anchorIDs.append(anchor.identifier)
+    public func deactivateReticle()
+    {
+        print ("Reticle deactivated")
+        reticleActive = false
+        reticleNode.isHidden = true
     }
     
-    func updatePlaneNode(planeNode: SCNNode, anchor: ARAnchor) {
-        let idx = getAnchorIndex(id: anchor.identifier)
-        if (idx > -1) {
-            anchorNodes[idx] = planeNode
-        }
+    func getReticlePosition () -> SCNVector3 {
+        return reticleNode.position
     }
- */
     
+    func getReticleRotation () -> SCNVector4 {
+        return reticleNode.rotation
+    }
+    
+    // this moves the reticle based on the hittest
     func updateReticle() {
+        
         if (reticleActive) {
-            let hitTestResults = sceneView.hitTest(sceneView.center, types: .featurePoint)
+            
+            let hitTestResults = sceneView.hitTest(sceneView.center, types: .existingPlaneUsingExtent)
             if (hitTestResults.count > 0) {
                 let hitResult: ARHitTestResult = hitTestResults.first!
                 reticleNode.transform = SCNMatrix4(hitResult.worldTransform)
-                let idx = getAnchorIndex(id: (hitResult.anchor?.identifier)!)
-                if (idx < anchorNodes.count && idx > -1) {
-                    sceneView.scene.rootNode.addChildNode(reticleNode)
-                    reticleHit = true
-                    reticleHitIdx = idx
-                    reticleHitTf = reticleNode.transform
-                }
-                else {
-                    reticleHit = false
-                }
+                reticleNode.isHidden = false
+                reticleHit = true
             }
             else {
-                reticleNode.removeFromParentNode()
+
                 reticleHit = false
+                reticleNode.isHidden = true
             }
         }
-    }
-    
-    private func getAnchorIndex(id: UUID) -> Int {
-        var c_index: Int = 0
-        for c_id in anchorIDs {
-            if (c_id == id) {
-                return c_index
-            }
-            c_index = c_index + 1
-        }
-        return -1
     }
     
     
