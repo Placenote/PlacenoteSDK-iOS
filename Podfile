@@ -2,7 +2,7 @@
 platform :ios, '11.0'
 
 workspace 'PlacenoteSDKExample'
-xcodeproj 'PlacenoteSDKExample.xcodeproj'
+xcodeproj 'RandomShapes.xcodeproj'
 xcodeproj 'HelloWorld/HelloWorld.xcodeproj'
 xcodeproj 'DecorateYourRoom/DecorateYourRoom.xcodeproj'
 
@@ -18,9 +18,9 @@ target 'DecorateYourRoom' do
   pod 'PlacenoteSDK'
 end
 
-target 'PlacenoteSDKExample' do
+target 'RandomShapes' do
   use_frameworks!
-  xcodeproj 'PlacenoteSDKExample.xcodeproj'
+  xcodeproj 'RandomShapes.xcodeproj'
   pod 'PlacenoteSDK'
 end
 

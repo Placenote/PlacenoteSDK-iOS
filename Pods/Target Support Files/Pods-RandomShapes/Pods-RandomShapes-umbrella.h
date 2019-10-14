@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_PlacenoteSDKExampleVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_PlacenoteSDKExampleVersionString[];
+FOUNDATION_EXPORT double Pods_RandomShapesVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_RandomShapesVersionString[];
 
