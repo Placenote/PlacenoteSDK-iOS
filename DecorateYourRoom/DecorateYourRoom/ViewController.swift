@@ -82,7 +82,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
         sceneView.session.run(configuration)
         
         // Temporarily here because it is not running in the app delegate
-        LibPlacenote.instance.initialize(apiKey: Enter API Key here,  onInitialized: {(initialized: Bool?) -> Void in
+        LibPlacenote.instance.initialize(apiKey: Enter API Key Here,  onInitialized: {(initialized: Bool?) -> Void in
             if (initialized!) {
                 print ("SDK Initialized")
             }

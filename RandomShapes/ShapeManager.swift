@@ -2,8 +2,8 @@
 //  ShapeManager.swift
 //  Shape Dropper (Placenote SDK iOS Sample)
 //
-//  Created by Prasenjit Mukherjee on 2017-10-20.
-//  Copyright © 2017 Vertical AI. All rights reserved.
+//  Created by Neil Mathew on 10/10/19.
+//  Copyright © 2019 Placenote. All rights reserved.
 //
 
 import Foundation
@@ -58,8 +58,8 @@ class ShapeManager {
   public var shapesDrawn: Bool! = false
 
   
-  init(scene: SCNScene, view: SCNView) {
-    scnScene = scene
+  init(view: SCNView) {
+    scnScene = view.scene
     scnView = view
   }
   
@@ -148,7 +148,7 @@ class ShapeManager {
   func createShape (position: SCNVector3, type: ShapeType) -> SCNNode {
     
     let geometry:SCNGeometry = ShapeType.generateGeometry(s_type: type)
-    let color = generateRandomColor()
+    let color = UIColor.cyan
     geometry.materials.first?.diffuse.contents = color
     
     let geometryNode = SCNNode(geometry: geometry)

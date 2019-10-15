@@ -2,8 +2,8 @@
 //  ShapeType.swift
 //  Shape Dropper (Placenote SDK iOS Sample)
 //
-//  Created by Prasenjit Mukherjee on 2017-08-27.
-//  Copyright © 2017 Vertical AI. All rights reserved.
+//  Created by Neil Mathew on 10/10/19.
+//  Copyright © 2019 Placenote. All rights reserved.
 //
 
 import Foundation

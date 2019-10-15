@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Shape Dropper (Placenote SDK iOS Sample)
 //
-//  Created by Prasenjit Mukherjee on 2017-09-01.
-//  Copyright © 2017 Vertical AI. All rights reserved.
+//  Created by Neil Mathew on 10/10/19.
+//  Copyright © 2019 Placenote. All rights reserved.
 //
 
 import UIKit
@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        LibPlacenote.instance.initialize(apiKey: "026h20d5v4lfibgzewe0s088o3ej9a4bxxzkhmdyq9aum9kkszbolo7b7kqz9c1cic9jwfums2tvvwvsl9cpgyfb0nea5ak59ne0",  onInitialized: {(initialized: Bool?) -> Void in
+        LibPlacenote.instance.initialize(apiKey: Enter API Key Here,  onInitialized: {(initialized: Bool?) -> Void in
           if (initialized!) {
             print ("SDK Initialized")
           }
