@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-RandomShapes/Pods-RandomShapes-frameworks.sh
+${PODS_ROOT}/PlacenoteSDK/Placenote.framework
+${BUILT_PRODUCTS_DIR}/PlacenoteSDK/PlacenoteSDK.framework

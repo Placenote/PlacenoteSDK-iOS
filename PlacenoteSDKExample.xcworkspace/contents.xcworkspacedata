@@ -8,7 +8,8 @@
       location = "group:DecorateYourRoom/DecorateYourRoom.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/neil/Projects/vertical/sdk_1_8/sdk_1_8/iosprojects/release/release_candidate/PlacenoteSDK-iOS/RandomShapes.xcodeproj">
+      location = "group:RandomShapes/RandomShapes.xcodeproj"
+      assignedFileDataType = "com.apple.xcode.project">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
