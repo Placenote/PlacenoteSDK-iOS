@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28D8C781234FE66400374835"
-               BuildableName = "HelloWorld.app"
-               BlueprintName = "HelloWorld"
-               ReferencedContainer = "container:HelloWorld.xcodeproj">
+               BlueprintIdentifier = "A28C795E202A46F40052F3FB"
+               BuildableName = "RandomShapes.app"
+               BlueprintName = "RandomShapes"
+               ReferencedContainer = "container:RandomShapes.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28D8C781234FE66400374835"
-            BuildableName = "HelloWorld.app"
-            BlueprintName = "HelloWorld"
-            ReferencedContainer = "container:HelloWorld.xcodeproj">
+            BlueprintIdentifier = "A28C795E202A46F40052F3FB"
+            BuildableName = "RandomShapes.app"
+            BlueprintName = "RandomShapes"
+            ReferencedContainer = "container:RandomShapes.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -55,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28D8C781234FE66400374835"
-            BuildableName = "HelloWorld.app"
-            BlueprintName = "HelloWorld"
-            ReferencedContainer = "container:HelloWorld.xcodeproj">
+            BlueprintIdentifier = "A28C795E202A46F40052F3FB"
+            BuildableName = "RandomShapes.app"
+            BlueprintName = "RandomShapes"
+            ReferencedContainer = "container:RandomShapes.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -74,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28D8C781234FE66400374835"
-            BuildableName = "HelloWorld.app"
-            BlueprintName = "HelloWorld"
-            ReferencedContainer = "container:HelloWorld.xcodeproj">
+            BlueprintIdentifier = "A28C795E202A46F40052F3FB"
+            BuildableName = "RandomShapes.app"
+            BlueprintName = "RandomShapes"
+            ReferencedContainer = "container:RandomShapes.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
