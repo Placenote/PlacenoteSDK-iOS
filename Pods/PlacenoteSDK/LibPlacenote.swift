@@ -1196,8 +1196,8 @@ public class LibPlacenote {
    Get the metadata for the given map, which will be returned as Libplacenote.metadata with metadata
   
    - Parameter mapId: ID of the map
-               getMetadataCb: async callback that returns meta in the form of Libplacenote.metadata. Metadata is empty if the mapid is incorrect
-                or does not exist
+   - Parameter getMetadataCb: async callback that returns meta in the form of Libplacenote.metadata.
+                              Metadata is empty if the mapid is incorrect or does not exist
    */
   
   public func getMapMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
