@@ -96,54 +96,20 @@ public class FeaturePointVisualizer: PNDelegate {
    Function to be called periodically to draw the pointcloud geometry
    */
   @objc private func drawPointcloud() {
-    if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
-      let landmarks = LibPlacenote.instance.getAllLandmarks();
+    if (LibPlacenote.instance.getStatus() == LibPlacenote.MappingStatus.running) {
+      let landmarks = LibPlacenote.instance.getMap();
       if (landmarks.count > 0) {
         addPointcloud(landmarks: landmarks, node: mapNode)
       }
     }
   }
-  
-    /**
-     Return the entire map that LibPlacenote has generated over the current session
-     
-     - Returns: the point cloud as an SCNVector3 array
-     */
-    
-    public func getPointCloud() -> Array<SCNVector3> {
-        
-        var pointArray: [SCNVector3] = []
-        
-        if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
-            
-            let landmarks = LibPlacenote.instance.getAllLandmarks();
-            if (landmarks.count > 0) {
-                
-                for lm in landmarks {
-                    if (lm.measCount > 2) {
-                        
-                        // create SCNVector3 object
-                        let point:SCNVector3 = SCNVector3(x: lm.point.x, y: lm.point.y, z: lm.point.z)
-                        
-                        // add to point cloud array
-                        pointArray.append(point)
-                    }
-                }
-            }
-        }
-
-        return pointArray
-    }
-    
-    
-    
     
   /**
    Function to be called periodically to draw the tracked points geometry
    */
   @objc private func drawTrackedPoints() {
-    if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
-      let trackedLandmarks = LibPlacenote.instance.getTrackedLandmarks();
+    if (LibPlacenote.instance.getStatus() == LibPlacenote.MappingStatus.running) {
+      let trackedLandmarks = LibPlacenote.instance.getTrackedFeatures();
       if (trackedLandmarks.count > 0) {
         addPointcloud(landmarks: trackedLandmarks, node: trackedPtsNode)
       }
@@ -164,10 +130,6 @@ public class FeaturePointVisualizer: PNDelegate {
     normals.reserveCapacity(landmarks.count*verticesPerCube)
     colors.reserveCapacity(landmarks.count*verticesPerCube)
     for lm in landmarks {
-      if (lm.measCount < 3) {
-        continue
-      }
-      
       let pos:SCNVector3 = SCNVector3(x: lm.point.x, y: lm.point.y, z: lm.point.z)
       getCube(position: pos, size: 0.01, resultCb: {(cubeVerts: [SCNVector3], cubeNorms: [SCNVector3]) -> Void in
         vertices += cubeVerts

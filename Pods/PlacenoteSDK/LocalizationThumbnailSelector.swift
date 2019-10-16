@@ -15,18 +15,10 @@ public class LocalizationThumbnailSelector: PNDelegate {
   private var maxLmSize: Int = -1
   private var newThumbnailEvent: Event<UIImage?> = Event<UIImage?>()
   
-  /// Static instance of the LibPlacenote singleton
-  private static var _instance = LocalizationThumbnailSelector()
-  public static var instance: LocalizationThumbnailSelector {
-    get {
-      return _instance
-    }
-  }
-  
   /// accessor to new thumbnail event
-  public static var onNewThumbnail: Event<UIImage?> {
+  public var onNewThumbnail: Event<UIImage?> {
     get {
-      return _instance.newThumbnailEvent
+      return newThumbnailEvent
     }
   }
   
@@ -61,21 +53,11 @@ public class LocalizationThumbnailSelector: PNDelegate {
       return
     }
     
-    let landmarks = LibPlacenote.instance.getTrackedLandmarks();
-    if (landmarks.count > 0) {
-      var lmSize: Int = 0
-      for lm in landmarks {
-        if (lm.measCount < 3) {
-          continue
-        }
-        lmSize += 1
-      }
-      
-      if (lmSize > maxLmSize) {
-        maxLmSize = lmSize
-        os_log("Updated thumbnail with %d", log: OSLog.default, type: .error, maxLmSize)
-        setCurrentImageAsThumbnail()
-      }
+    let landmarks = LibPlacenote.instance.getTrackedFeatures();
+    if (landmarks.count > maxLmSize) {
+      maxLmSize = landmarks.count
+      os_log("Updated thumbnail with %d", log: OSLog.default, type: .error, maxLmSize)
+      setCurrentImageAsThumbnail()
     }
   }
   

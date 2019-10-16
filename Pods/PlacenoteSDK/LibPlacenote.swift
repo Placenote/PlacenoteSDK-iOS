@@ -407,7 +407,7 @@ public class LibPlacenote {
         }
         
         DispatchQueue.main.async(execute: {() -> Void in
-          let status = libPtr.getMappingStatus()
+          let status = libPtr.getStatus()
           if (status == LibPlacenote.MappingStatus.running) {
             libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
             libPtr.currTransform = outputMat*arkitMat.inverse
@@ -433,22 +433,15 @@ public class LibPlacenote {
     }, extend, ctxPtr)
   }
   
-  /**
-   Function to start a mapping/localization session in LibPlacenote.
-   If a map is loaded before startSession is called, libPlacenote will
-   localize against the loaded map without mapping. If not, it will start
-   mapping the environment.
-   
-   - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
-   */
   func setIntrinsics (width: Int, height: Int, intrinsics: matrix_float3x3) -> Void {
     setIntrinsicsNative(Int32(width), Int32(height), intrinsics)
   }
-  
-  /// <summary>
-  /// Gets the mode of the running session
-  /// </summary>
-  /// <returns>The mode of the mapping session.</returns>
+
+  /**
+   Gets the mode of the running session which indicates (mapping versus localizing mode)
+   
+   - Returns: A MappingStatus that indicates the current status of LibPlacenote mapping engine
+   */
   public func getMode () -> MappingMode {
     if (localizing)
     {
@@ -465,7 +458,7 @@ public class LibPlacenote {
    
    - Returns: A MappingStatus that indicates the current status of LibPlacenote mapping engine
    */
-  public func getMappingStatus () -> MappingStatus {
+  public func getStatus () -> MappingStatus {
     let status: Int32 = PNGetStatus()
     var statusEnum: MappingStatus = MappingStatus.waiting
     switch status {
@@ -483,56 +476,19 @@ public class LibPlacenote {
     return statusEnum;
   }
     
-    /*
-     Get the current quality of the mapped keyframe
-     */
-    public func getMappingQuality () -> MappingQuality {
-        
-        let landmarks = getTrackedLandmarks();
-        var qualityEnum: MappingQuality = MappingQuality.limited
-        
-        if (landmarks.count > 0) {
-            var lmSize: Int = 0
-            for lm in landmarks {
-                if (lm.measCount < 3) {
-                    continue
-                }
-                lmSize += 1
-            }
-            if (lmSize > 20) {
-               qualityEnum = MappingQuality.good
-            }
-        }
-        return qualityEnum
+  /*
+   Get the current quality of the mapped keyframe
+   */
+  public func getMappingQuality () -> MappingQuality {
+    let landmarks = getTrackedFeatures();
+    var qualityEnum: MappingQuality = MappingQuality.limited
+    
+    if (landmarks.count > 20) {
+      qualityEnum = MappingQuality.good
     }
     
-    
-    public func getPointCloud() -> Array<SCNVector3> {
-        
-        var pointArray: [SCNVector3] = []
-        
-        if (getMappingStatus() == MappingStatus.running) {
-            
-            let landmarks = getAllLandmarks();
-            if (landmarks.count > 0) {
-                
-                for lm in landmarks {
-                    if (lm.measCount > 2) {
-                        
-                        // create SCNVector3 object
-                        let point:SCNVector3 = SCNVector3(x: lm.point.x, y: lm.point.y, z: lm.point.z)
-                        
-                        // add to point cloud array
-                        pointArray.append(point)
-                    }
-                }
-            }
-        }
-        
-        return pointArray
-    }
-    
-    
+    return qualityEnum
+  }
   
   /**
    Return the current 6DoF inertial pose of the LibPlacenote pose tracker against its map
@@ -558,13 +514,14 @@ public class LibPlacenote {
   /**
    Return a position vector3 in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A SCNVector3 that describes the position of an object in the inertial pose.
+   - Parameter position: ARKit position to be converted to Placenote inertial map frame
+   - Returns: A SCNVector3 that describes the position of an object in the inertial map frame.
    */
-  public func processPosition(pose : SCNVector3) -> SCNVector3 {
+  public func processPosition(position : SCNVector3) -> SCNVector3 {
     var tfInARKit :  matrix_float4x4 = matrix_identity_float4x4
-    tfInARKit.columns.3.x = pose.x
-    tfInARKit.columns.3.y = pose.y
-    tfInARKit.columns.3.z = pose.z
+    tfInARKit.columns.3.x = position.x
+    tfInARKit.columns.3.y = position.y
+    tfInARKit.columns.3.z = position.z
     let tfInPN : matrix_float4x4 = currTransform*tfInARKit
     
     if(currStatus != MappingStatus.running) {
@@ -578,7 +535,8 @@ public class LibPlacenote {
   /**
    Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A SCNMatrix4 that describes the position and orientation of an object in the inertial pose.
+   - Parameter pose: ARKit pose to be converted to Placenote inertial map frame
+   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial map frame.
    */
   public func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
     let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
@@ -595,7 +553,8 @@ public class LibPlacenote {
   /**
    Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial pose.
+   - Parameter pose: ARKit pose to be converted to Placenote inertial map frame
+   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial map frame.
    */
   public func processPose(pose: matrix_float4x4) -> matrix_float4x4 {
     if(currStatus != MappingStatus.running) {
@@ -611,7 +570,7 @@ public class LibPlacenote {
    - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
               inertial map frame that LibPlacenote is currently tracking
    */
-  public func getTrackedLandmarks() -> Array<PNFeaturePoint> {
+  public func getTrackedFeatures(measCountThreshold: Int = 2) -> Array<PNFeaturePoint> {
     var pointArray: [PNFeaturePoint] = []
     let feature: PNFeaturePoint = PNFeaturePoint()
     
@@ -619,17 +578,29 @@ public class LibPlacenote {
     pointArray = Array(repeating: feature, count: Int(featureCount))
     PNGetTrackedLandmarks(UnsafeMutablePointer(mutating: pointArray), featureCount)
     
-    return pointArray
+    if (measCountThreshold == 0) {
+      return pointArray
+    }
+    
+    var pointArrayFiltered: [PNFeaturePoint] = []
+    for lm in pointArray {
+      if (lm.measCount > measCountThreshold) {
+        // add to point cloud array
+        pointArrayFiltered.append(lm)
+      }
+    }
+    return pointArrayFiltered;
   }
-  
   
   /**
    Return the entire map that LibPlacenote has generated over the current session
    
+   - Parameter measCountThreshold: minimum measurement count threshold to filter the return list of map points,
+                                   default 0 means returning all points
    - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
               inertial map frame that LibPlacenote generated within this mapping session
    */
-  public func getAllLandmarks() -> Array<PNFeaturePoint> {
+  public func getMap(measCountThreshold: Int = 2) -> Array<PNFeaturePoint> {
     var pointArray: [PNFeaturePoint] = []
     let feature: PNFeaturePoint = PNFeaturePoint()
     
@@ -637,7 +608,18 @@ public class LibPlacenote {
     pointArray = Array(repeating: feature, count: Int(featureCount))
     PNGetAllLandmarks(UnsafeMutablePointer(mutating: pointArray), featureCount)
     
-    return pointArray
+    if (measCountThreshold == 0) {
+      return pointArray
+    }
+    
+    var pointArrayFiltered: [PNFeaturePoint] = []
+    for lm in pointArray {
+      if (lm.measCount > measCountThreshold) {
+        // add to point cloud array
+        pointArrayFiltered.append(lm)
+      }
+    }
+    return pointArrayFiltered;
   }
   
   
@@ -646,7 +628,7 @@ public class LibPlacenote {
    
    - Parameter frame: latest frame from ARSession to be sent to Placenote Mapping SDK
    */
-  public func setFrame(frame: ARFrame) -> Void {
+  public func setARFrame(frame: ARFrame) -> Void {
     if (!LibPlacenote.instance.initialized()) {
       os_log("Placenote SDK not initialized")
       return
@@ -701,7 +683,7 @@ public class LibPlacenote {
   public func getLocalizationThumbnail(thumbnailCb: @escaping (_ thumbnail: UIImage?)-> Void) {
     if (currThumbnail != nil) {
       guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
-        os_log("Failed to convert thumbnail pixel buffer to UIImage, aborting thumbnail upload",
+        os_log("Failed to convert thumbnail pixel buffer to UIImage, skipping thumbnail upload",
                log: OSLog.default, type: .error)
         thumbnailCb(nil)
         return
@@ -751,12 +733,12 @@ public class LibPlacenote {
     
     // write the image to thumbnail path
     if (currThumbnail == nil) {
-      os_log("No thumbnail captured? Aborting thumbnail upload", log: OSLog.default, type: .error)
+      os_log("No thumbnail captured? Skipping thumbnail upload", log: OSLog.default, type: .error)
       return
     }
     
     guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
-      os_log("Failed to convert thumbnail pixel buffer to UIImage, aborting thumbnail upload",
+      os_log("Failed to convert thumbnail pixel buffer to UIImage, skipping thumbnail upload",
              log: OSLog.default, type: .error)
       return
     }
@@ -956,7 +938,7 @@ public class LibPlacenote {
    - Parameter thumbnailPath: path of the thumbnail image file.
    - Parameter syncProgressCb: async callback to indicate whether the thumbnail image is successfully synced
    */
-  public func syncLocalizationThumbnail(mapId: String, thumbnailPath: String,
+  private func syncLocalizationThumbnail(mapId: String, thumbnailPath: String,
                                         syncProgressCb : @escaping FileTransferCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
@@ -1140,7 +1122,7 @@ public class LibPlacenote {
    
    - Parameter listCb: async callback that returns the map list for a API Key
    */
-  public func fetchMapList(listCb: @escaping ListMapCallback) {
+  public func listMaps(listCb: @escaping ListMapCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     listMapCbDict[cbCtx.callbackId] = listCb
@@ -1244,14 +1226,24 @@ public class LibPlacenote {
             let dataJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any?]
             let metadataJson = dataJson!["metadata"] as! [String: Any?]
             metadata.created = metadataJson["created"] as? UInt64
-            metadata.name = metadataJson["name"] as? String
-            metadata.location = LibPlacenote.MapLocation()
             
-            metadata.location?.latitude = (metadataJson["location"]! as! [String: Double])["latitude"]!
-            metadata.location?.longitude = (metadataJson["location"] as! [String: Double])["longitude"]!
-            metadata.location?.altitude = (metadataJson["location"] as! [String: Double])["altitude"]!
-            metadata.userdata = metadataJson["userdata"] as? [String: Any?]
+            if (metadataJson["name"] != nil) {
+              metadata.name = metadataJson["name"] as? String
+            }
             
+            if (metadataJson["location"] != nil) {
+              metadata.location = LibPlacenote.MapLocation()
+              metadata.location?.latitude = (metadataJson["location"]! as!
+                [String: Double])["latitude"]!
+              metadata.location?.longitude = (metadataJson["location"] as!
+                [String: Double])["longitude"]!
+              metadata.location?.altitude = (metadataJson["location"] as!
+                [String: Double])["altitude"]!
+            }
+            
+            if (metadataJson["userdata"] != nil) {
+              metadata.userdata = metadataJson["userdata"] as? [String: Any?]
+            }
           }
           else {
             os_log("Failed to convert received map metadata to string", log: OSLog.default, type: .error)

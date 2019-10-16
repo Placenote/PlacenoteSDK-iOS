@@ -12,7 +12,7 @@
 		1098F74D40DFD0DD593D151A29E95EC8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		23A222666296C17B09476C79C9E2A455 /* PlacenoteSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AFAAD1851C0C542E33F5F77B1BE897F /* PlacenoteSDK-dummy.m */; };
 		273A2C49166121E548F9FD5E5AF5284B /* FeaturePointVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE461A178AD5D8730D673E47DF1B23 /* FeaturePointVisualizer.swift */; };
-		282A159B2356067C00D759CC /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CEAD0B9380FCB3EE2926EE146C0596 /* Placenote.framework */; };
+		2AD6BC2F2356586C00DA2A02 /* Placenote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CEAD0B9380FCB3EE2926EE146C0596 /* Placenote.framework */; };
 		2E49AA072E463B61D44F8493E25D7B8F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		3D78A16142A607761AC2E85305EFFB1C /* Pods-RandomShapes-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = ED798056B40AB974330E7B33FD4CF2CE /* Pods-RandomShapes-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4078EB8ECEE9C9E0A4643556DE20F4B0 /* Pods-HelloWorld-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4284C822E38E7BD2CFA110BDCD1AD5 /* Pods-HelloWorld-dummy.m */; };
@@ -114,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				282A159B2356067C00D759CC /* Placenote.framework in Frameworks */,
+				2AD6BC2F2356586C00DA2A02 /* Placenote.framework in Frameworks */,
 				2E49AA072E463B61D44F8493E25D7B8F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

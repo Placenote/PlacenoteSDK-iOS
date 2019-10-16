@@ -37,6 +37,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   //Variables to manage PlacenoteSDK features and helpers
   private var camManager: CameraManager? = nil;
   private var ptViz: FeaturePointVisualizer? = nil;
+  private var thumbnailSelector: LocalizationThumbnailSelector? = nil;
   
   private var maps: [(String, LibPlacenote.MapMetadata)] = [("Sample Map", LibPlacenote.MapMetadata())]
 
@@ -69,13 +70,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     ptViz = FeaturePointVisualizer(inputScene: sceneView.scene)
     ptViz?.enableFeaturePoints()
     
-  
+    // A class that select an localization thumbnail for a map
+    thumbnailSelector = LocalizationThumbnailSelector()
+    thumbnailHandler = thumbnailSelector.onNewThumbnail.addHandler(target: self,
+        handler: ViewController.thumbnailHandler)
+    thumbnailView.layer.borderColor = UIColor.white.cgColor
+
     //App Related initializations
     shapeManager = ShapeManager(view: sceneView)
     
-    thumbnailHandler = LocalizationThumbnailSelector.onNewThumbnail.addHandler(target: self, handler: ViewController.thumbnailHandler)
-    thumbnailView.layer.borderColor = UIColor.white.cgColor
-
     //Initialize tableview for the list of maps
     mapTable.delegate = self
     mapTable.dataSource = self
@@ -213,50 +216,50 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var savedMapName: String = ""
     
     LibPlacenote.instance.saveMap(
-      savedCb: {(mapId: String?) -> Void in
-        if (mapId != nil) {
-          self.statusLabel.text = "Saved Id: " + mapId! //update UI
-          LibPlacenote.instance.stopSession()
-          
-          let metadata = LibPlacenote.MapMetadataSettable()
-          
-          savedMapName = RandomName.Get()
-          metadata.name = savedMapName
-          
-          self.statusLabel.text = "Saved Map: " + metadata.name! //update UI
-          
-          if (self.lastLocation != nil) {
-            metadata.location = LibPlacenote.MapLocation()
-            metadata.location!.latitude = self.lastLocation!.coordinate.latitude
-            metadata.location!.longitude = self.lastLocation!.coordinate.longitude
-            metadata.location!.altitude = self.lastLocation!.altitude
+        savedCb: {(mapId: String?) -> Void in
+          if (mapId != nil) {
+            self.statusLabel.text = "Saved Id: " + mapId! //update UI
+            LibPlacenote.instance.stopSession()
+            
+            let metadata = LibPlacenote.MapMetadataSettable()
+            
+            savedMapName = RandomName.Get()
+            metadata.name = savedMapName
+            
+            self.statusLabel.text = "Saved Map: " + metadata.name! //update UI
+            
+            if (self.lastLocation != nil) {
+              metadata.location = LibPlacenote.MapLocation()
+              metadata.location!.latitude = self.lastLocation!.coordinate.latitude
+              metadata.location!.longitude = self.lastLocation!.coordinate.longitude
+              metadata.location!.altitude = self.lastLocation!.altitude
+            }
+            var userdata: [String:Any] = [:]
+            userdata["shapeArray"] = self.shapeManager.getShapeArray()
+            metadata.userdata = userdata
+            
+            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
+              print ("Failed to set map metadata")
+            }
+          } else {
+            NSLog("Failed to save map")
           }
-          var userdata: [String:Any] = [:]
-          userdata["shapeArray"] = self.shapeManager.getShapeArray()
-          metadata.userdata = userdata
-          
-          if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
-            print ("Failed to set map metadata")
+        },
+        uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+          if (completed) {
+            self.statusLabel.text = "Uploaded Map: " + savedMapName
+            self.initView.isHidden = false
+            self.shapeManager.clearShapes()
+            
+          } else if (faulted) {
+            print ("Couldnt upload map")
+          } else {
+            print ("Progress: " + percentage.description)
+            self.statusLabel.text = "Map Upload: " + String(format: "%.3f", percentage) + "/1.0"
+            
           }
-        } else {
-          NSLog("Failed to save map")
         }
-    },
-      uploadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
-        
-        if (completed) {
-          self.statusLabel.text = "Uploaded Map: " + savedMapName
-          self.initView.isHidden = false
-          self.shapeManager.clearShapes()
-          
-        } else if (faulted) {
-          print ("Couldnt upload map")
-        } else {
-          print ("Progress: " + percentage.description)
-          self.statusLabel.text = "Map Upload: " + String(format: "%.3f", percentage) + "/1.0"
-          
-        }
-    })
+    )
   }
   
   
@@ -266,16 +269,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     initView.isHidden = true
     mapListView.isHidden = false
-    
   }
 
   
   @IBAction func cancelMapList(_ sender: Any) {
-    
     mapListView.isHidden = true
     initView.isHidden = false
     statusLabel.text = "Map List Cancelled"
-    
   }
     
   @IBAction func exitLoadingSession(_ sender: Any) {
@@ -286,7 +286,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     initView.isHidden = false
     loadingView.isHidden = true
-    
   }
   
   // MARK: - UITableViewDelegate and UITableviewDataSource to manage retrieving, viewing, deleting and selecting maps on a TableView
@@ -396,7 +395,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   
   // get list of all maps
   func updateMapTable() {
-    LibPlacenote.instance.fetchMapList(listCb: onMapList)
+    LibPlacenote.instance.listMaps(listCb: onMapList)
   }
   
   // search via gps location and radius
@@ -424,7 +423,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   //Provides a newly captured camera image and accompanying AR information to the delegate.
   func session(_ session: ARSession, didUpdate: ARFrame) {
-    LibPlacenote.instance.setFrame(frame: didUpdate)
+    LibPlacenote.instance.setARFrame(frame: didUpdate)
   }
 
 
