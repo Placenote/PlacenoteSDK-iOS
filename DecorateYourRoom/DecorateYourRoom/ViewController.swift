@@ -61,7 +61,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // Placenote feature visualization
     ptViz = FeaturePointVisualizer(inputScene: sceneView.scene);
-    ptViz?.enableFeaturePoints()
     
     // A class that select an localization thumbnail for a map
     thumbnailSelector = LocalizationThumbnailSelector()
@@ -110,6 +109,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // start placenote mapping
     LibPlacenote.instance.startSession()
+    ptViz?.enablePointcloud()  // enable visualization of point cloud
+    
+    saveButton.isHidden = true
     
     reticle.activateReticle()
   }
@@ -156,6 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
             self.statusLabel.text = "Saved Id: " + mapId! //update UI
             
             LibPlacenote.instance.stopSession()
+            self.ptViz?.clearPointCloud()
             
             // save the map id user defaults
             UserDefaults.standard.set(mapId, forKey: "mapId")
@@ -167,7 +170,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
             userdata["modelArray"] = self.modelManager.getModelInfoJSON()
             metadata.userdata = userdata
             
-            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
+            if (!LibPlacenote.instance.setMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
               print ("Failed to set map metadata")
             }
           } else {
@@ -202,8 +205,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
       return
     }
     
+    initPanelView.isHidden = true
+    
     statusLabel.text = "Loading your saved map with ID: " + mapId
-    ptViz?.disableFeaturePoints()
+    
+    // when we load the map, we're going to be hiding the feature points
+    ptViz?.disablePointcloud()
     
     LibPlacenote.instance.loadMap(mapId: mapId,
         downloadProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
@@ -211,7 +218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
             
             // start the Placenote session (this will start searching for localization)
             LibPlacenote.instance.startSession()
-            LibPlacenote.instance.getMapMetadata(mapId: mapId, getMetadataCb: { (success: Bool, metadata: LibPlacenote.MapMetadata) -> Void in
+            LibPlacenote.instance.getMetadata(mapId: mapId, getMetadataCb: { (success: Bool, metadata: LibPlacenote.MapMetadata) -> Void in
               if (success)
               {
                 print(" Meta data was downloaded : " + metadata.name!)
@@ -237,21 +244,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
   
   func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) {
     
+    if (LibPlacenote.instance.getMappingQuality() == LibPlacenote.MappingQuality.good) {
+        saveButton.isHidden = false
+    }
+    
   }
   
   func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
   }
   
   func onLocalized() {
-    statusLabel.text = "Localized."
+    statusLabel.text = "Map Relocalized!"
     
     // load the metadata objects into the scene
     let userdata = loadedMetaData.userdata as? [String:Any]
     
     if (self.modelManager.loadModelArray(modelArray: userdata?["modelArray"] as? [[String: [String: String]]])) {
-      self.statusLabel.text = "Map Loaded. Look Around"
+      self.statusLabel.text = "Map relocalized! Look around to find your saved models."
+      loadingPanelView.isHidden = false
+        
     } else {
-      self.statusLabel.text = "Map Loaded. Shape file not found"
+      self.statusLabel.text = "Map relocalized, but there was an error loading models"
     }
   }
   
@@ -266,6 +279,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
   }
   
   
+    // exit the loading session and go back to the init screen
+    @IBAction func exitLoadingSession(_ sender: Any) {
+        
+        // stop placenote session
+        LibPlacenote.instance.stopSession()
+        
+        // clear models
+        modelManager.clearModels()
+        
+        // go back to init screen
+        loadingPanelView.isHidden = true
+        initPanelView.isHidden = false
+        
+        // prompt user
+        statusLabel.text = "Session was reset. Click New Map or Load Map"
+    }
+    
+    
   // MARK: - ARSCNViewDelegate
   func session(_ session: ARSession, didFailWithError error: Error) {
     // Present an error message to the user

@@ -85,6 +85,9 @@
                                                 <integer key="value" value="10"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="exitLoadingSession:" destination="BV1-FR-VrT" eventType="touchUpInside" id="U5t-Td-YcL"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>

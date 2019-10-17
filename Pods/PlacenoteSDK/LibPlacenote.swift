@@ -1200,7 +1200,7 @@ public class LibPlacenote {
                               Metadata is empty if the mapid is incorrect or does not exist
    */
   
-  public func getMapMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
+  public func getMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
     
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     getMetadataCbDict[cbCtx.callbackId] = getMetadataCb
@@ -1280,8 +1280,8 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
    True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
-    return setMapMetadata(mapId: mapId, metadata: metadata, metadataSavedCb: {(success:Bool) -> Void in
+  public func setMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
+    return setMetadata(mapId: mapId, metadata: metadata, metadataSavedCb: {(success:Bool) -> Void in
     })
   }
 
@@ -1297,7 +1297,7 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
      True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable, metadataSavedCb: @escaping MetadataSavedCallback) -> Bool {
+  public func setMetadata(mapId: String, metadata: MapMetadataSettable, metadataSavedCb: @escaping MetadataSavedCallback) -> Bool {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     setMetadataCbDict[cbCtx.callbackId] = metadataSavedCb
@@ -1366,7 +1366,7 @@ public class LibPlacenote {
 
    - Parameter uploadProgressCb: callback to monitor upload progress of the dataset
    */
-  public func startReportRecord(uploadProgressCb: @escaping FileTransferCallback) -> Void {
+  public func startRecordDataset(uploadProgressCb: @escaping FileTransferCallback) -> Void {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     fileTransferCbDict[cbCtx.callbackId] = uploadProgressCb

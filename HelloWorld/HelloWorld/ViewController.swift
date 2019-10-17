@@ -33,10 +33,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
   private var ptViz: FeaturePointVisualizer? = nil;
   private var thumbnailSelector: LocalizationThumbnailSelector? = nil;
   
-  private var minMapSize: Int = 250; // minimum map size we want to build
+  private var minMapSize: Int = 200; // minimum map size we want to build
   
   private var objPosition: SCNVector3 = SCNVector3(0, 0, 0)
   
+  private var mapQualityThresholdReached = false
+    
   // View controller functions
   
   override func viewDidLoad() {
@@ -63,9 +65,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // Placenote feature visualization
     ptViz = FeaturePointVisualizer(inputScene: sceneView.scene);
-    ptViz?.enableFeaturePoints()
+    ptViz?.enablePointcloud()
     
-    // A class that select an localization thumbnail for a map
+    // A class that selects a localization thumbnail for a map
     thumbnailSelector = LocalizationThumbnailSelector();
     
     tapGestureRecognizer.isEnabled = false
@@ -122,12 +124,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
       print("hit test success")
       statusLabel.text = "Object added. Now scan the area around you and hit Save when you reach the minimum map size."
       
+      // when using Placenote, any hit test with ARKit should be converted to Placenote frame
       let pose = LibPlacenote.instance.processPose(pose: result.worldTransform)
       objPosition = pose.position()
       placeObject(pos: objPosition)
       
       tapGestureRecognizer.isEnabled = false
       
+        // Start the placenote mapping session
       LibPlacenote.instance.startSession()
       mappingButtonPanel.isHidden = false
       saveButton.isHidden = true
@@ -138,7 +142,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
   
   
   
-  // Place a 3D model at 0,0,0
+  // Place a 3D model at hit position
+    
   func placeObject(pos: SCNVector3) {
     let geometry:SCNGeometry = SCNSphere(radius: 0.05) //units, meters
     let geometryNode = SCNNode(geometry: geometry)
@@ -157,10 +162,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     LibPlacenote.instance.saveMap(
       savedCb: { (mapID: String?) -> Void in
         print ("MapId: " + mapID!)
-        LibPlacenote.instance.stopSession()
-        self.ptViz?.reset()
         
-        // save data in user defaults so we can load it with load map
+        // the best place to stop session is as soon as a mapID is received
+        LibPlacenote.instance.stopSession()
+        self.ptViz?.clearPointCloud() // clear the point cloud created so far
+        
+        // save mapid and object position in user defaults so we can load it with load map
         UserDefaults.standard.set(mapID, forKey: "mapId")
         let vectorArray = [self.objPosition.x, self.objPosition.y, self.objPosition.z]
         UserDefaults.standard.set(vectorArray, forKey: "objPosition")
@@ -225,13 +232,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     LibPlacenote.instance.setARFrame(frame: didUpdate)
   }
   
-  
+  // We use this call back to keep tracking map quality as you scan the area
   func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) {
     
     if(LibPlacenote.instance.getMode() != LibPlacenote.MappingMode.mapping) {
       return
     }
     
+    // get the size of the map that has been built so far
     let pointCloud: Array<PNFeaturePoint> = LibPlacenote.instance.getMap()
     if (pointCloud.count == 0) {
       return
@@ -239,28 +247,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // increment the progress bar
     let percentageMapped: Float = Float(pointCloud.count) / Float(minMapSize)
-    
-    print("Point cloud mapped = " + pointCloud.count.description)
-    
     mapQualityProgress.setProgress(percentageMapped, animated: true)
     
-    // measure map quality
-    
+    // If the minimum map size is reached. Check whether the map quality threshold was hit
     if (percentageMapped >= 1.0)
     {
-      if (LibPlacenote.instance.getMappingQuality() == LibPlacenote.MappingQuality.good) {
-        
+      if (mapQualityThresholdReached) {
         saveButton.isHidden = false
         statusLabel.text = "Minimum map size reached. You can save anytime now"
       }
+      else {
+        statusLabel.text = "Minimum map size reached, but you cannot save yet. Point at an area wth many feature points and scan it until the save button appears."
+        }
     }
     
     
     if (LibPlacenote.instance.getMappingQuality() == LibPlacenote.MappingQuality.good) {
-      
-      saveButton.isHidden = false
-      
+      mapQualityThresholdReached = true
     }
+ 
     
   }
   
@@ -272,7 +277,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     
     // placenote sends 1 localized callback when it localizes.
     // Use this to load content
-    statusLabel.text = "Localized Scene!"
+    statusLabel.text = "Relocalized Scene!"
     let objPos = UserDefaults.standard.object(forKey: "objPosition") as? [Float] ?? [Float]()
     let objPosition: SCNVector3 = SCNVector3(x: objPos[0], y: objPos[1], z: objPos[2])
     
@@ -288,9 +293,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
     initPanel.isHidden = false
     
     LibPlacenote.instance.stopSession()
-    ptViz?.reset()
+    ptViz?.clearPointCloud()
     
-    // delete the sphere
+    // find the sphere in the scene and delete it
     self.sceneView.scene.rootNode.childNode(withName: "placedSphere", recursively: true)?.removeFromParentNode()
     
     statusLabel.text = "Session was reset. Start a new map or load a map"

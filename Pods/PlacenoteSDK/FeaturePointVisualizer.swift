@@ -34,7 +34,7 @@ public class FeaturePointVisualizer: PNDelegate {
   /**
    A function to enable visualization of the map pointcloud
    */
-  public func enableFeaturePoints() {
+  public func enablePointcloud() {
     mapTimer = Timer.scheduledTimer(
         timeInterval: 0.5, target: self,
         selector: #selector(FeaturePointVisualizer.drawPointcloud),
@@ -51,16 +51,16 @@ public class FeaturePointVisualizer: PNDelegate {
   /**
    A function to disable visualization of the map pointcloud
    */
-  public func disableFeaturePoints() {
+  public func disablePointcloud() {
     mapTimer.invalidate()
     trackedPtsTimer.invalidate()
-    reset();
+    clearPointCloud();
   }
   
   /**
    A function to reset the pointcloud visualization
    */
-  public func reset() {
+  public func clearPointCloud() {
     mapNode.removeFromParentNode()
     trackedPtsNode.removeFromParentNode()
   }
@@ -82,7 +82,7 @@ public class FeaturePointVisualizer: PNDelegate {
    */
   public func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
     if (currStatus == LibPlacenote.MappingStatus.waiting) {
-      reset();
+      clearPointCloud();
     }
   }
   

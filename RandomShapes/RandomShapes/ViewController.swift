@@ -68,11 +68,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     // Placenote feature visualization
     ptViz = FeaturePointVisualizer(inputScene: sceneView.scene)
-    ptViz?.enableFeaturePoints()
+    ptViz?.enablePointcloud()
     
     // A class that select an localization thumbnail for a map
     thumbnailSelector = LocalizationThumbnailSelector()
-    thumbnailHandler = thumbnailSelector.onNewThumbnail.addHandler(target: self,
+    thumbnailHandler = thumbnailSelector?.onNewThumbnail.addHandler(target: self,
         handler: ViewController.thumbnailHandler)
     thumbnailView.layer.borderColor = UIColor.white.cgColor
 
@@ -174,7 +174,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
   // MARK: - UI functions
   
-  
+  // Start creating a new map
   @IBAction func newMap(_ sender: Any) {
     
     if (!trackingStarted)
@@ -238,7 +238,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             userdata["shapeArray"] = self.shapeManager.getShapeArray()
             metadata.userdata = userdata
             
-            if (!LibPlacenote.instance.setMapMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
+            if (!LibPlacenote.instance.setMetadata(mapId: mapId!, metadata: metadata, metadataSavedCb: {(success: Bool) -> Void in})) {
               print ("Failed to set map metadata")
             }
           } else {
@@ -262,7 +262,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     )
   }
   
-  
+  // click load map to choose from a list of maps
   @IBAction func pickMap(_ sender: Any) {
     updateMapTable()
     statusLabel.text = "Fetching Map List"
@@ -280,7 +280,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
   @IBAction func exitLoadingSession(_ sender: Any) {
     shapeManager.clearShapes()
-    ptViz?.reset()
+    ptViz?.clearPointCloud()
     LibPlacenote.instance.stopSession()
     statusLabel.text = "Ended Session. To start again, click New Map or Load Map"
     
@@ -330,7 +330,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     return cell!
   }
 
-  // Map selected
+  // Map selected. This directly starts loading the selected map
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     print(String(format: "Retrieving row: %d", indexPath.row))
     let mapId: String = maps[indexPath.row].0
