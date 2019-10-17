@@ -9,13 +9,13 @@ import Foundation
 import VideoToolbox
 import os.log
 
-/// A helper class that takes the pose output from the LibPlacenote mapping/localization module
-/// and transform the ARKit camera to align the inertial map frame while maintaining high frame rate.
+/// A helper class that selects a localization thumbnail for the current map by picking the frame that tracks
+/// the most good features
 public class LocalizationThumbnailSelector: PNDelegate {
   private var maxLmSize: Int = -1
   private var newThumbnailEvent: Event<UIImage?> = Event<UIImage?>()
   
-  /// accessor to new thumbnail event
+  /// accessor to new thumbnail event to return the latest thumbnail texture for visualization purposes
   public var onNewThumbnail: Event<UIImage?> {
     get {
       return newThumbnailEvent
@@ -23,12 +23,7 @@ public class LocalizationThumbnailSelector: PNDelegate {
   }
   
   /**
-   Constructor of the camera manager. Removes the camera node from its parent, and insert an intermediate
-   SCNNode between the scene's rootnode and the camera node, so that we can rotate the ARKit frame to the
-   LibPlacenote map frame
-   
-   - Parameter scene: The scene we wish the LibPlacenote camera to exist
-   - Parameter cam: camera node that is controlled by ARKit
+   Constructor.
    */
   public init() {
     // IMPORTANT: need to run this line to subscribe to pose and status events

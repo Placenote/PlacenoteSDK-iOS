@@ -9,8 +9,13 @@ import Foundation
 import VideoToolbox
 import Accelerate
 
-
+/// Extensions to UIImage to provide extra utilities to UIImage
 extension UIImage {
+  /**
+   Constructor that converts a CVPixelBuffer to a UIImage
+  
+   - Parameter pixelBuffer: a pixel buffer to be converted into a UIImage
+   */
   public convenience init?(pixelBuffer: CVPixelBuffer) {
     var cgImage: CGImage?
     VTCreateCGImageFromCVPixelBuffer(pixelBuffer, nil, &cgImage)
@@ -22,6 +27,11 @@ extension UIImage {
     }
   }
   
+  /**
+   Resize a UIImage to the size given by the parameter
+  
+   - Parameter size: target size for the resize operation
+   */
   func resize(size:CGSize) -> UIImage? {
     let cgImage = self.cgImage!
     var format = vImage_CGImageFormat(bitsPerComponent: 8, bitsPerPixel: 32, colorSpace: nil, bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.first.rawValue), version: 0, decode: nil, renderingIntent: CGColorRenderingIntent.defaultIntent)
@@ -54,6 +64,11 @@ extension UIImage {
     return resizedImage
   }
   
+  /**
+   Rotate a UIImage by the angle given by the radians parameter
+  
+   - Parameter radians: amount of radians to rotate the image
+   */
   func rotate(radians: CGFloat) -> UIImage {
     let rotatedSize = CGRect(origin: .zero, size: size)
       .applying(CGAffineTransform(rotationAngle: CGFloat(radians)))
