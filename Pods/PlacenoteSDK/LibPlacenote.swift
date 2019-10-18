@@ -17,11 +17,7 @@ extension matrix_float4x4 {
   /**
    Calculate position vector of a pose matrix
    
-   - Returns: A SCNVector3 from the translation component
-   public func onLocalized() {
-   <#code#>
-   }
-   s of the matrix
+   - Returns: A SCNVector3 from the translation components of the matrix
    */
   public func position() -> SCNVector3 {
     return SCNVector3(columns.3.x, columns.3.y, columns.3.z)
