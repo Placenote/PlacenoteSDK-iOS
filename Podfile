@@ -1,13 +1,27 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '11.0'
 
-target 'PlacenoteSDKExample' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+workspace 'PlacenoteSDKExample'
+xcodeproj 'RandomShapes/RandomShapes.xcodeproj'
+xcodeproj 'HelloWorld/HelloWorld.xcodeproj'
+xcodeproj 'DecorateYourRoom/DecorateYourRoom.xcodeproj'
+
+target 'HelloWorld' do
+    use_frameworks!
+    xcodeproj 'HelloWorld/HelloWorld.xcodeproj'
+    pod 'PlacenoteSDK'
+end
+
+target 'DecorateYourRoom' do
   use_frameworks!
-
-  # Pods for PlacenoteTest
+  xcodeproj 'DecorateYourRoom/DecorateYourRoom.xcodeproj'
   pod 'PlacenoteSDK'
+end
 
+target 'RandomShapes' do
+  use_frameworks!
+  xcodeproj 'RandomShapes/RandomShapes.xcodeproj'
+  pod 'PlacenoteSDK'
 end
 
 post_install do |installer|

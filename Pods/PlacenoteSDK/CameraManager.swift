@@ -14,8 +14,6 @@ public class CameraManager: PNDelegate {
   private let verticesPerCube: Int = 36
   private var camera: SCNNode
   private var rootNode: SCNNode
-  private var ptcloudNode: SCNNode = SCNNode()
-  private var ptcloudTimer: Timer = Timer()
   private var cameraParent: SCNNode = SCNNode()
   
   /**
@@ -45,7 +43,7 @@ public class CameraManager: PNDelegate {
    - Parameter arkitPose: Odometry pose with respect to the ARKit coordinate frame that corresponds with 'outputPose' in time.
    */
   public func onPose(_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4) -> Void {
-    if (LibPlacenote.instance.getMappingStatus() == LibPlacenote.MappingStatus.running) {
+    if (LibPlacenote.instance.getStatus() == LibPlacenote.MappingStatus.running) {
       cameraParent.simdTransform = outputPose*arkitPose.inverse
     }
   }
@@ -58,5 +56,11 @@ public class CameraManager: PNDelegate {
    */
   public func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) {
     
+  }
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  public func onLocalized() -> Void {
   }
 }

@@ -1,0 +1,6 @@
+framework module Pods_DecorateYourRoom {
+  umbrella header "Pods-DecorateYourRoom-umbrella.h"
+
+  export *
+  module * { export * }
+}

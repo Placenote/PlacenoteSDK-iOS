@@ -1,6 +1,0 @@
-framework module Pods_PlacenoteSDKExample {
-  umbrella header "Pods-PlacenoteSDKExample-umbrella.h"
-
-  export *
-  module * { export * }
-}

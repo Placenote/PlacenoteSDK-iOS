@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="RandomShapes" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="j89-Gv-ip5"/>
+                        <viewControllerLayoutGuide type="bottom" id="Oxp-Pf-bN1"/>
+                    </layoutGuides>
+                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BrB-h1-WRS" userLabel="scnView" customClass="ARSCNView">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KGk-D0-2XN" userLabel="InitView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hwi-h6-3TD" userLabel="PickMap">
+                                        <rect key="frame" x="40" y="666" width="100" height="50"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="o9Q-5w-xZM"/>
+                                            <constraint firstAttribute="height" constant="50" id="uaG-3G-Gzp"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <state key="normal" title="Load Map">
+                                            <color key="titleColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="pickMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Zcl-py-XNP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Mu-1V-Uq4" userLabel="NewMap">
+                                        <rect key="frame" x="274" y="666" width="100" height="50"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="T2u-aR-SJX"/>
+                                            <constraint firstAttribute="width" constant="100" id="eAV-c4-gBV"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="New map">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="newMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="vyJ-MK-Tja"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="hwi-h6-3TD" firstAttribute="leading" secondItem="KGk-D0-2XN" secondAttribute="leading" constant="40" id="29f-Gd-dal"/>
+                                    <constraint firstAttribute="bottom" secondItem="5Mu-1V-Uq4" secondAttribute="bottom" constant="20" id="9no-Lb-1Pd"/>
+                                    <constraint firstAttribute="bottom" secondItem="hwi-h6-3TD" secondAttribute="bottom" constant="20" id="Gbb-ep-2wn"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Mu-1V-Uq4" secondAttribute="trailing" constant="40" id="sZx-hb-8PS"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIw-fs-dU1" userLabel="MappingView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qlk-hR-FS1" userLabel="SaveMap">
+                                        <rect key="frame" x="274" y="646" width="100" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="1XY-zR-L9d"/>
+                                            <constraint firstAttribute="height" constant="50" id="3os-qg-Enf"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Save Map"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="saveMap:" destination="BV1-FR-VrT" eventType="touchUpInside" id="YH3-fT-cU0"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Qlk-hR-FS1" secondAttribute="trailing" constant="40" id="9kP-Jn-asp"/>
+                                    <constraint firstAttribute="bottom" secondItem="Qlk-hR-FS1" secondAttribute="bottom" constant="40" id="N1p-bJ-qNS"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nN2-GL-VZA" userLabel="LoadingView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Llu-in-DB6" userLabel="ExitButton">
+                                        <rect key="frame" x="40" y="646" width="100" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="EUG-MA-Yzo"/>
+                                            <constraint firstAttribute="width" constant="100" id="ggf-tb-1ip"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Exit"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="exitLoadingSession:" destination="BV1-FR-VrT" eventType="touchUpInside" id="aYl-C0-ajp"/>
+                                        </connections>
+                                    </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9ae-YN-p0L" userLabel="ThumbnailView">
+                                        <rect key="frame" x="40" y="476" width="100" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="140" id="YxE-Rb-Hpr"/>
+                                            <constraint firstAttribute="width" constant="100" id="f1k-NF-PvU"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Llu-in-DB6" firstAttribute="leading" secondItem="nN2-GL-VZA" secondAttribute="leading" constant="40" id="0FO-mM-dfx"/>
+                                    <constraint firstAttribute="bottom" secondItem="Llu-in-DB6" secondAttribute="bottom" constant="40" id="4fU-9S-Ck3"/>
+                                    <constraint firstAttribute="bottom" secondItem="9ae-YN-p0L" secondAttribute="bottom" constant="120" id="NLd-cU-WIh"/>
+                                    <constraint firstItem="9ae-YN-p0L" firstAttribute="leading" secondItem="nN2-GL-VZA" secondAttribute="leading" constant="40" id="R8A-uJ-UfS"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-79-zYZ" userLabel="MaplistView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u9I-Cj-Erf" userLabel="CancelMapList">
+                                        <rect key="frame" x="40" y="666" width="100" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="6fG-6D-WJu"/>
+                                            <constraint firstAttribute="width" constant="100" id="LVS-eL-xKh"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="cancelMapList:" destination="BV1-FR-VrT" eventType="touchUpInside" id="eDi-Dr-8Ms"/>
+                                        </connections>
+                                    </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0ka-cC-Twy" userLabel="MapList">
+                                        <rect key="frame" x="40" y="115" width="334" height="500"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="500" id="1Lf-3V-6bv"/>
+                                        </constraints>
+                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </tableView>
+                                </subviews>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="u9I-Cj-Erf" secondAttribute="bottom" constant="20" id="0qc-Xv-wnf"/>
+                                    <constraint firstItem="0ka-cC-Twy" firstAttribute="leading" secondItem="oZb-79-zYZ" secondAttribute="leading" constant="40" id="33d-54-w2p"/>
+                                    <constraint firstItem="u9I-Cj-Erf" firstAttribute="leading" secondItem="oZb-79-zYZ" secondAttribute="leading" constant="40" id="Nhb-oN-zDJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="0ka-cC-Twy" secondAttribute="trailing" constant="40" id="hzj-xC-RIT"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Placenote Shape Dropper" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="3Xz-vt-npx" userLabel="StatusLabel">
+                                <rect key="frame" x="40" y="35" width="334" height="72"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="crg-vt-ghT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="oZb-79-zYZ" secondAttribute="bottom" id="CXP-Wj-Qlu"/>
+                            <constraint firstAttribute="trailing" secondItem="KGk-D0-2XN" secondAttribute="trailing" id="JmF-Ms-xEM"/>
+                            <constraint firstItem="vIw-fs-dU1" firstAttribute="top" secondItem="BrB-h1-WRS" secondAttribute="top" id="LBz-Ng-c3D"/>
+                            <constraint firstItem="KGk-D0-2XN" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leading" id="NXz-18-EPS"/>
+                            <constraint firstItem="0ka-cC-Twy" firstAttribute="top" secondItem="3Xz-vt-npx" secondAttribute="top" constant="80" id="OaH-Ak-vL7"/>
+                            <constraint firstAttribute="trailing" secondItem="3Xz-vt-npx" secondAttribute="trailing" constant="40" id="Qjd-v3-awJ"/>
+                            <constraint firstItem="oZb-79-zYZ" firstAttribute="top" secondItem="j89-Gv-ip5" secondAttribute="bottom" constant="-20" id="R4e-dK-X5B"/>
+                            <constraint firstItem="3Xz-vt-npx" firstAttribute="top" secondItem="j89-Gv-ip5" secondAttribute="bottom" constant="15" id="UEg-H0-Fpe"/>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="nN2-GL-VZA" secondAttribute="bottom" id="Ujp-Td-nzE"/>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="vIw-fs-dU1" secondAttribute="bottom" id="WWr-kR-tVB"/>
+                            <constraint firstItem="oZb-79-zYZ" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leading" id="Z7p-IF-e57"/>
+                            <constraint firstAttribute="trailing" secondItem="nN2-GL-VZA" secondAttribute="trailing" id="jt6-xE-q0q"/>
+                            <constraint firstItem="nN2-GL-VZA" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leading" id="mBF-JF-qNY"/>
+                            <constraint firstItem="nN2-GL-VZA" firstAttribute="top" secondItem="BrB-h1-WRS" secondAttribute="top" id="nA3-k7-ixp"/>
+                            <constraint firstItem="KGk-D0-2XN" firstAttribute="top" secondItem="BrB-h1-WRS" secondAttribute="top" id="rOL-ve-gTL"/>
+                            <constraint firstAttribute="trailing" secondItem="oZb-79-zYZ" secondAttribute="trailing" id="rns-aX-7U5"/>
+                            <constraint firstItem="vIw-fs-dU1" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leading" id="uXQ-SM-OFo"/>
+                            <constraint firstItem="Oxp-Pf-bN1" firstAttribute="top" secondItem="KGk-D0-2XN" secondAttribute="bottom" id="ubg-uy-Pnn"/>
+                            <constraint firstItem="3Xz-vt-npx" firstAttribute="leading" secondItem="BrB-h1-WRS" secondAttribute="leading" constant="40" id="v2H-zY-Gfy"/>
+                            <constraint firstAttribute="trailing" secondItem="vIw-fs-dU1" secondAttribute="trailing" id="zmR-Ko-Wjv"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="lqD-zu-1hm" appends="YES" id="Jix-SY-Bk9"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="exitSessionButton" destination="Llu-in-DB6" id="Evb-4v-5Yw"/>
+                        <outlet property="initView" destination="KGk-D0-2XN" id="rTq-Cy-TP6"/>
+                        <outlet property="loadingView" destination="nN2-GL-VZA" id="ICJ-do-QF3"/>
+                        <outlet property="mapListView" destination="oZb-79-zYZ" id="MpF-uM-kJP"/>
+                        <outlet property="mapTable" destination="0ka-cC-Twy" id="Wi9-h9-oaJ"/>
+                        <outlet property="mappingView" destination="vIw-fs-dU1" id="BxZ-XR-vZ0"/>
+                        <outlet property="sceneView" destination="BrB-h1-WRS" id="0Jc-xR-jJ3"/>
+                        <outlet property="statusLabel" destination="3Xz-vt-npx" id="wui-wQ-DQj"/>
+                        <outlet property="tapGestureRecognizer" destination="lqD-zu-1hm" id="yGG-MV-zAj"/>
+                        <outlet property="thumbnailView" destination="9ae-YN-p0L" id="hOy-u5-PmQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="lqD-zu-1hm">
+                    <connections>
+                        <action selector="handleTap:" destination="BV1-FR-VrT" id="moD-eV-FgA"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="23.188405797101453" y="36.684782608695656"/>
+        </scene>
+    </scenes>
+</document>

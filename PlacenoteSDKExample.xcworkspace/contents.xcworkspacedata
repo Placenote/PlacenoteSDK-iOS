@@ -2,7 +2,14 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:PlacenoteSDKExample.xcodeproj">
+      location = "group:HelloWorld/HelloWorld.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DecorateYourRoom/DecorateYourRoom.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:RandomShapes/RandomShapes.xcodeproj"
+      assignedFileDataType = "com.apple.xcode.project">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

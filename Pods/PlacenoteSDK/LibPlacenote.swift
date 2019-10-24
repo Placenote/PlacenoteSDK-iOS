@@ -9,6 +9,7 @@
 import Foundation
 import SceneKit
 import GLKit
+import ARKit
 import os.log
 
 /// Untility functions to matrix_float4x4
@@ -88,7 +89,6 @@ extension Date {
 }
 
 
-
 /// Interface to be implemented by listener classes that subscribes to pose and mapping status from LibPlacenote
 public protocol PNDelegate {
   /**
@@ -106,31 +106,62 @@ public protocol PNDelegate {
    - Parameter currStatus: Current status of the mapping engine
    */
   func onStatusChange(_ prevStatus: LibPlacenote.MappingStatus, _ currStatus: LibPlacenote.MappingStatus) -> Void
+  
+  /**
+   Callback to subscribe to the first localization event for loading assets
+   */
+  func onLocalized() -> Void
 }
 
 
 /// Swift wrapper of LibPlacenote C API
 public class LibPlacenote {
+  /// Alias for the callback closure protocol that subscribes to the Placenote pose and its corresponding ARKit pose.
   public typealias PoseCallback = (_ outputPose: matrix_float4x4, _ arkitPose: matrix_float4x4)-> Void
+  /// Alias for the callback closure protocol that subscribes to the map ID of the saveMap operation, could return nil in the case of failure.
   public typealias SaveMapCallback = (_ mapId: String?) -> Void
+  /// Alias for the callback closure protocol that subscribes to the progress of a file transfer operation to/from the placenote cloud.
   public typealias FileTransferCallback = (_ completed: Bool, _ faulted: Bool, _ percentage: Float) -> Void
+  /// Alias for the callback closure protocol that subscribes to the success/failure of a deleteMap operation.
   public typealias DeleteMapCallback = (_ deleted: Bool) -> Void
+  /// Alias for the callback closure protocol that subscribes to the success/failure of a saveMetaData operation.
   public typealias MetadataSavedCallback = (_ success: Bool) -> Void
+  /// Alias for the callback closure protocol that subscribes to the success/failure of a gaveMetaData operation and the metadata it returns.
   public typealias GetMetadataCallback = (_ success: Bool, _ metadata: MapMetadata) -> Void
+  /// Alias for the callback closure protocol that subscribes to the success/failure of a listMaps operation and the map list it returns.
   public typealias ListMapCallback = (_ success: Bool, _ mapList: [String: MapMetadata]) -> Void
+  /// Alias for the callback closure protocol that subscribe to the success/failure status of the initialization process.
   public typealias OnInitializedCallback = (_ success: Bool) -> Void
 
   
   /// Enums that indicates the status of the LibPlacenote mapping module
-  public enum MappingStatus {
+  public enum MappingStatus: Int {
     /// Indicates that the mapping module is waiting for request to start a mapping session.
     /// When 'stopSession' is called, the status will be reset to 'waiting'
-    case waiting
+    case waiting = 0
     /// Indicates that a mapping/localization session is currently running and returning poses
     case running
     /// Indicates that the localization module module currently fails to find a valid pose
     /// within the given map, and will keep trying.
     case lost
+  }
+    
+  /// Enum that indicates the mapping quality of the current area in the map. Correlates with the the likelihood of localization at that point in the map.
+  public enum MappingQuality: Int {
+    /// Indicates that the current keyframe during mapping does have enough tracked features to be well localizable.
+    case limited = 0
+    
+    /// Indicates that the current keyframe during mapping does enough tracked features to be well localizable.
+    case good = 1
+  }
+    
+  
+  /// Enums that indicates the mode of the LibPlacenote mapping module
+  public enum MappingMode: Int {
+    /// Indicates that a Placenote SDK is in mapping mode
+    case mapping = 0
+    /// Indicates that a Placenote SDK is in localization mode against a map you loaded
+    case localizing
   }
   
   /// A helper class that contains the context information about a callback that gets passed between the C and Swift runtimes
@@ -147,6 +178,7 @@ public class LibPlacenote {
   /// Struct that contains location data for the map. All fields are required.
   public class MapLocation: Codable
   {
+    /// Constructor
     public init() {}
 
     /// The GPS latitude
@@ -182,16 +214,12 @@ public class LibPlacenote {
     /// For other help, contact us on Slack.
     public var userdataQuery: String? = nil
     
-    /// <summary>
     /// Helper function for setting newerThan via a DateTime
-    /// </summary>
     public func setNewerThan(dt: Date) -> Void {
       newerThan = Double(dt.millisecondsSince1970);
     }
     
-    /// <summary>
     /// Helper function for setting olderThan via a DateTime
-    /// </summary>
     public func setOlderThan(dt: Date)  -> Void {
       olderThan = Double(dt.millisecondsSince1970);
     }
@@ -200,6 +228,7 @@ public class LibPlacenote {
   /// Struct for searching maps by location. All fields are required.
   public class MapLocationSearch: Codable
   {
+    /// Constructor
     public init() {}
 
     /// The GPS latitude for the center of the search circle.
@@ -213,6 +242,7 @@ public class LibPlacenote {
   /// Struct for setting map metadata. All fields are optional.
   public class MapMetadataSettable
   {
+    /// Constructor.
     public init() {}
 
     /// The map name.
@@ -234,8 +264,9 @@ public class LibPlacenote {
     public var created: UInt64? = nil
   }
   
-  /// Static instance of the LibPlacenote singleton
   private static var _instance = LibPlacenote()
+  
+  /// Accessor to static instance of the LibPlacenote singleton
   public static var instance: LibPlacenote {
     get {
         return _instance
@@ -254,7 +285,7 @@ public class LibPlacenote {
   private let mapStoragePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
   
   private var mapList: [String: Any] = [:]
-  private var mapTransferCbDict: Dictionary<Int, FileTransferCallback> = Dictionary()
+  private var fileTransferCbDict: Dictionary<Int, FileTransferCallback> = Dictionary()
   private var saveMapCbDict: Dictionary<Int, SaveMapCallback> = Dictionary()
   private var deleteMapCbDict: Dictionary<Int, DeleteMapCallback> = Dictionary()
   private var listMapCbDict: Dictionary<Int, ListMapCallback> = Dictionary()
@@ -264,6 +295,13 @@ public class LibPlacenote {
   private var ctxDict: Dictionary<Int, CallbackContext> = Dictionary()
   private var prevStatus: MappingStatus = MappingStatus.waiting
   private var currStatus: MappingStatus = MappingStatus.waiting
+  private var localizing: Bool = false
+  private var sessionStarted: Bool = false
+  private var intrinsicSet: Bool = false
+  private var currImage: CVPixelBuffer? = nil
+  private var currThumbnail: CVPixelBuffer? = nil
+  private var localizedCount: Int = 0
+  private var currMapId: String? = nil
   
   /**
    Function to initialize the LibPlacenote SDK, must be called before any other function is invoked
@@ -342,6 +380,7 @@ public class LibPlacenote {
    - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
    */
   public func startSession(extend: Bool = false) -> Void {
+    sessionStarted = true
     let anUnmanaged = Unmanaged<LibPlacenote>.passUnretained(self)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     PNStartSession({(outputPose: NativePosePtr?, arkitPose: NativePosePtr?, swiftContext: UnsafeMutableRawPointer?) -> Void in
@@ -360,14 +399,33 @@ public class LibPlacenote {
         let outputMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (outputPose?.pointee)!)
         let arkitMat:matrix_float4x4 = matrix_float4x4.fromPNTransform(pose: (arkitPose?.pointee)!)
         
+        
+        if (!libPtr.sessionStarted) {
+          if (libPtr.prevStatus != MappingStatus.waiting) {
+            libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: MappingStatus.waiting)
+            libPtr.prevStatus = MappingStatus.waiting
+          }
+          return;
+        }
+        
         DispatchQueue.main.async(execute: {() -> Void in
-          let status = libPtr.getMappingStatus()
+          let status = libPtr.getStatus()
           if (status == LibPlacenote.MappingStatus.running) {
             libPtr.multiDelegate.onPose(outputPose: outputMat, arkitPose: arkitMat)
             libPtr.currTransform = outputMat*arkitMat.inverse
           }
           
           if (status != libPtr.prevStatus) {
+            let message = String(format: "%d %d %d", libPtr.getMode().rawValue, libPtr.prevStatus.rawValue, status.rawValue)
+            os_log("%@", log: OSLog.default, type: .error, message)
+            if (libPtr.getMode() == MappingMode.localizing &&
+              libPtr.prevStatus == MappingStatus.lost &&
+              status == MappingStatus.running) {
+              if (libPtr.localizedCount == 0) {
+                libPtr.multiDelegate.onLocalized()
+              }
+              libPtr.localizedCount += 1
+            }
             libPtr.multiDelegate.onStatusChange(prevStatus: libPtr.prevStatus, currStatus: status)
             libPtr.prevStatus = status
           }
@@ -377,16 +435,24 @@ public class LibPlacenote {
     }, extend, ctxPtr)
   }
   
+  func setIntrinsics (width: Int, height: Int, intrinsics: matrix_float3x3) -> Void {
+    setIntrinsicsNative(Int32(width), Int32(height), intrinsics)
+  }
+
   /**
-   Function to start a mapping/localization session in LibPlacenote.
-   If a map is loaded before startSession is called, libPlacenote will
-   localize against the loaded map without mapping. If not, it will start
-   mapping the environment.
+   Gets the mode of the running session which indicates (mapping versus localizing mode)
    
-   - Returns: A Bool that indicates whether LibPlacenote SDK is initialized
+   - Returns: A MappingStatus that indicates the current status of LibPlacenote mapping engine
    */
-  func setIntrinsics (intrinsics: matrix_float3x3) -> Void {
-    setIntrinsicsNative(intrinsics)
+  public func getMode () -> MappingMode {
+    if (localizing)
+    {
+      return MappingMode.localizing;
+    }
+    else
+    {
+      return MappingMode.mapping;
+    }
   }
   
   /**
@@ -394,7 +460,7 @@ public class LibPlacenote {
    
    - Returns: A MappingStatus that indicates the current status of LibPlacenote mapping engine
    */
-  public func getMappingStatus () -> MappingStatus {
+  public func getStatus () -> MappingStatus {
     let status: Int32 = PNGetStatus()
     var statusEnum: MappingStatus = MappingStatus.waiting
     switch status {
@@ -411,6 +477,22 @@ public class LibPlacenote {
     
     return statusEnum;
   }
+    
+  /**
+   Return the current mapping quality of a mapping session
+   
+   - Returns: A MappingQuality that indicates the mapping quality of current frames
+   */
+  public func getMappingQuality () -> MappingQuality {
+    let landmarks = getTrackedFeatures();
+    var qualityEnum: MappingQuality = MappingQuality.limited
+    
+    if (landmarks.count > 20) {
+      qualityEnum = MappingQuality.good
+    }
+    
+    return qualityEnum
+  }
   
   /**
    Return the current 6DoF inertial pose of the LibPlacenote pose tracker against its map
@@ -425,15 +507,25 @@ public class LibPlacenote {
   }
   
   /**
+   Return the current 6DoF inertial pose of the LibPlacenote pose tracker against its map
+   
+   - Returns: A matrix_float4x4 that describes the inertial pose
+   */
+  public func getCurrentFrame() -> CVImageBuffer? {
+    return currImage;
+  }
+  
+  /**
    Return a position vector3 in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A SCNVector3 that describes the position of an object in the inertial pose.
+   - Parameter position: ARKit position to be converted to Placenote inertial map frame
+   - Returns: A SCNVector3 that describes the position of an object in the inertial map frame.
    */
-  public func processPosition(pose : SCNVector3) -> SCNVector3 {
+  public func processPosition(position : SCNVector3) -> SCNVector3 {
     var tfInARKit :  matrix_float4x4 = matrix_identity_float4x4
-    tfInARKit.columns.3.x = pose.x
-    tfInARKit.columns.3.y = pose.y
-    tfInARKit.columns.3.z = pose.z
+    tfInARKit.columns.3.x = position.x
+    tfInARKit.columns.3.y = position.y
+    tfInARKit.columns.3.z = position.z
     let tfInPN : matrix_float4x4 = currTransform*tfInARKit
     
     if(currStatus != MappingStatus.running) {
@@ -447,7 +539,8 @@ public class LibPlacenote {
   /**
    Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A SCNMatrix4 that describes the position and orientation of an object in the inertial pose.
+   - Parameter pose: ARKit pose to be converted to Placenote inertial map frame
+   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial map frame.
    */
   public func processPose(pose: SCNMatrix4) -> SCNMatrix4 {
     let tfInARKit :  matrix_float4x4 = matrix_float4x4(pose)
@@ -464,7 +557,8 @@ public class LibPlacenote {
   /**
    Return a transform in the current ARKit frame transformed into the inertial frame w.r.t the current Placenote Map
    
-   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial pose.
+   - Parameter pose: ARKit pose to be converted to Placenote inertial map frame
+   - Returns: A matrix_float4x4 that describes the position and orientation of an object in the inertial map frame.
    */
   public func processPose(pose: matrix_float4x4) -> matrix_float4x4 {
     if(currStatus != MappingStatus.running) {
@@ -480,7 +574,7 @@ public class LibPlacenote {
    - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
               inertial map frame that LibPlacenote is currently tracking
    */
-  public func getTrackedLandmarks() -> Array<PNFeaturePoint> {
+  public func getTrackedFeatures(measCountThreshold: Int = 2) -> Array<PNFeaturePoint> {
     var pointArray: [PNFeaturePoint] = []
     let feature: PNFeaturePoint = PNFeaturePoint()
     
@@ -488,17 +582,29 @@ public class LibPlacenote {
     pointArray = Array(repeating: feature, count: Int(featureCount))
     PNGetTrackedLandmarks(UnsafeMutablePointer(mutating: pointArray), featureCount)
     
-    return pointArray
+    if (measCountThreshold == 0) {
+      return pointArray
+    }
+    
+    var pointArrayFiltered: [PNFeaturePoint] = []
+    for lm in pointArray {
+      if (lm.measCount > measCountThreshold) {
+        // add to point cloud array
+        pointArrayFiltered.append(lm)
+      }
+    }
+    return pointArrayFiltered;
   }
-  
   
   /**
    Return the entire map that LibPlacenote has generated over the current session
    
+   - Parameter measCountThreshold: minimum measurement count threshold to filter the return list of map points,
+                                   default 0 means returning all points
    - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
               inertial map frame that LibPlacenote generated within this mapping session
    */
-  public func getAllLandmarks() -> Array<PNFeaturePoint> {
+  public func getMap(measCountThreshold: Int = 2) -> Array<PNFeaturePoint> {
     var pointArray: [PNFeaturePoint] = []
     let feature: PNFeaturePoint = PNFeaturePoint()
     
@@ -506,18 +612,44 @@ public class LibPlacenote {
     pointArray = Array(repeating: feature, count: Int(featureCount))
     PNGetAllLandmarks(UnsafeMutablePointer(mutating: pointArray), featureCount)
     
-    return pointArray
+    if (measCountThreshold == 0) {
+      return pointArray
+    }
+    
+    var pointArrayFiltered: [PNFeaturePoint] = []
+    for lm in pointArray {
+      if (lm.measCount > measCountThreshold) {
+        // add to point cloud array
+        pointArrayFiltered.append(lm)
+      }
+    }
+    return pointArrayFiltered;
   }
   
   
   /**
-   Return the entire map that LibPlacenote has generated over the current session
+   Function that sent the latest ARFrame to the Placenote Mapping SDK
    
-   - Returns: A Array<PNFeaturePoint> that contains a set of feature points in the
-   inertial map frame that LibPlacenote generated within this mapping session
+   - Parameter frame: latest frame from ARSession to be sent to Placenote Mapping SDK
    */
-  public func setFrame(image: CVImageBuffer, pose: matrix_float4x4) -> Void {
-    setFrameNative(image, pose.position(), pose.rotation());
+  public func setARFrame(frame: ARFrame) -> Void {
+    if (!LibPlacenote.instance.initialized()) {
+      os_log("Placenote SDK not initialized")
+      return
+    }
+    
+    if (sessionStarted) {
+      let image: CVPixelBuffer = frame.capturedImage
+      let width: Int = CVPixelBufferGetWidthOfPlane (image, 0);
+      let height: Int = CVPixelBufferGetHeightOfPlane (image, 0);
+      if (!intrinsicSet) {
+        setIntrinsics(width: width, height: height, intrinsics: frame.camera.intrinsics)
+        intrinsicSet = true
+      }
+      let pose: matrix_float4x4 = frame.camera.transform
+      currImage = image;
+      setFrameNative(image, pose.position(), pose.rotation());
+    }
   }
   
   /**
@@ -526,9 +658,119 @@ public class LibPlacenote {
    therefore saveMap should be called before you call this function
    */
   public func stopSession() {
+    localizedCount = 0
+    localizing = false
+    sessionStarted = false
+    currMapId = nil
+    currThumbnail = nil
     PNStopSession()
-    multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
-    prevStatus = MappingStatus.waiting
+    
+    if (prevStatus != MappingStatus.waiting) {
+      multiDelegate.onStatusChange(prevStatus: prevStatus, currStatus: MappingStatus.waiting)
+      prevStatus = MappingStatus.waiting
+    }
+  }
+  
+  /**
+   Function to set the current frame as the localization thumbnail
+   */
+  public func setLocalizationThumbnail() {
+    currThumbnail = getCurrentFrame()
+  }
+  
+  
+  /**
+   Function to set the current frame as the localization thumbnail
+   
+   - Parameter thumbnailCb: async callback to return the thumbnail image
+   */
+  public func getLocalizationThumbnail(thumbnailCb: @escaping (_ thumbnail: UIImage?)-> Void) {
+    if (currThumbnail != nil) {
+      guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
+        os_log("Failed to convert thumbnail pixel buffer to UIImage, skipping thumbnail upload",
+               log: OSLog.default, type: .error)
+        thumbnailCb(nil)
+        return
+      }
+      
+      let thumbnail: UIImage = image.resize(size: CGSize(width: image.size.width/3, height: image.size.height/3))!.rotate(radians: CGFloat(Float.pi/2))
+      thumbnailCb(thumbnail)
+    } else if (currMapId != nil && getMode() == MappingMode.localizing) {
+      downloadThumbnail(mapId: currMapId!, thumbnailCb: thumbnailCb);
+    } else {
+      thumbnailCb(nil);
+    }
+  }
+  
+  
+  private func downloadThumbnail(mapId: String, thumbnailCb: @escaping (_ thumbnail: UIImage?)-> Void) {
+    var thumbnailPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    thumbnailPath = (thumbnailPath as NSString).appendingPathComponent(mapId + ".png")
+    let fileManager = FileManager.default
+    if fileManager.fileExists(atPath: thumbnailPath) {
+      let thumbnail = UIImage(contentsOfFile: thumbnailPath)
+      thumbnailCb(thumbnail)
+      return
+    }
+    
+    // Save Render Texture into a jpg
+    LibPlacenote.instance.syncLocalizationThumbnail(mapId: mapId, thumbnailPath: thumbnailPath,
+      syncProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+        if (completed) {
+          os_log("Thumbnail downloaded")
+          let thumbnail = UIImage(contentsOfFile: thumbnailPath)
+          thumbnailCb(thumbnail)
+        } else if (faulted) {
+          os_log("Thumbnail download failed")
+          thumbnailCb(nil)
+        } else {
+          os_log("Thumbnail downloading %f", log: OSLog.default, type: .info, percentage)
+        }
+    });
+  }
+  
+  
+  private func uploadThumbnail(mapId: String) {
+    var thumbnailPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    thumbnailPath = (thumbnailPath as NSString).appendingPathComponent(mapId + ".png")
+    let thumbnailUrl: URL = URL(fileURLWithPath: thumbnailPath)
+    
+    // write the image to thumbnail path
+    if (currThumbnail == nil) {
+      os_log("No thumbnail captured? Skipping thumbnail upload", log: OSLog.default, type: .error)
+      return
+    }
+    
+    guard let image = UIImage.init(pixelBuffer: currThumbnail!) else {
+      os_log("Failed to convert thumbnail pixel buffer to UIImage, skipping thumbnail upload",
+             log: OSLog.default, type: .error)
+      return
+    }
+    
+    let thumbnail: UIImage = image.resize(size: CGSize(width: image.size.width/3, height: image.size.height/3))!.rotate(radians: CGFloat(Float.pi/2))
+    
+    guard let data = UIImagePNGRepresentation(thumbnail) else {
+      os_log("Failed to convert thumbnail UIImage to data buffer, aborting thumbnail upload",
+             log: OSLog.default, type: .error)
+      return
+    }
+    
+    // Save Render Texture into a jpg
+    do {
+      try data.write(to: (thumbnailUrl as URL))
+      LibPlacenote.instance.syncLocalizationThumbnail(mapId: mapId, thumbnailPath: thumbnailPath,
+        syncProgressCb: {(completed: Bool, faulted: Bool, percentage: Float) -> Void in
+          if (completed) {
+            os_log("Thumbnail uploaded")
+          } else if (faulted) {
+            os_log("Thumbnail upload failed")
+          } else {
+            os_log("Thumbnail uploading %f", log: OSLog.default, type: .info, percentage)
+          }
+      });
+    } catch {
+      os_log("Image write failed! Error: %s", log: OSLog.default, type: .error, error.localizedDescription)
+    }
   }
   
   
@@ -542,7 +784,7 @@ public class LibPlacenote {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     saveMapCbDict[cbCtx.callbackId] = savedCb
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = uploadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
@@ -565,28 +807,30 @@ public class LibPlacenote {
           let faulted = status?.pointee.faulted
           let bytesTransferred = status?.pointee.bytesTransferred
           let bytesTotal = status?.pointee.bytesTotal
+          let mapIdStr: String? = String(cString: (status?.pointee.mapId)!, encoding: String.Encoding.ascii)
           
           DispatchQueue.main.async(execute: {() -> Void in
             if (complete != nil && complete!) {
               os_log("Uploaded map!")
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
-              cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(true, false, 1)
+              cbCtx3.libPtr.fileTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else if (faulted != nil && faulted!) {
               os_log("Failed to upload map!", log: OSLog.default, type: .fault )
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
-              cbCtx3.libPtr.mapTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(false, true, 0)
+              cbCtx3.libPtr.fileTransferCbDict.removeValue(forKey: cbCtx3.callbackId)
               cbCtx3.libPtr.ctxDict.removeValue(forKey: cbCtx3.callbackId)
             } else {
               os_log("Uploading map!")
-              cbCtx3.libPtr.mapTransferCbDict[cbCtx3.callbackId]!(
+              cbCtx3.libPtr.fileTransferCbDict[cbCtx3.callbackId]!(
                 false, false, Float(bytesTransferred!)/Float(bytesTotal!)
               )
             }
           })
         }, swiftContext)
         
-        os_log("Saved Map")
+        os_log("Saved Map, uploading thumbnail")
+        libPtr.uploadThumbnail(mapId: mapId!)
         DispatchQueue.main.async(execute: {() -> Void in
           libPtr.saveMapCbDict[callbackId]!(mapId!)
           libPtr.saveMapCbDict.removeValue(forKey: callbackId)
@@ -650,12 +894,14 @@ public class LibPlacenote {
   public func loadMap(mapId: String, downloadProgressCb : @escaping FileTransferCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
-    mapTransferCbDict[cbCtx.callbackId] = downloadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = downloadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
     let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
     
     os_log("Loading Map")
+    localizing = true;
+    currMapId = mapId;
     PNLoadMap(mapId, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
       let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
       let libPtr = cbRetCtx.libPtr
@@ -668,20 +914,70 @@ public class LibPlacenote {
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed!) {
           os_log("Map loaded!")
-          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else if (faulted!) {
           os_log("Failed to load map!", log: OSLog.default, type: .fault)
-          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else {
           var progress:Float = 0
           if (bytesTotal! > 0) {
             progress = Float(bytesTransferred!)/Float(bytesTotal!)
           }
-          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
+        }
+      })
+    }, ctxPtr)
+  }
+  
+  
+  /**
+   Synchronize a thumbnail given its mapId and file path. If the thumbnail does not exist in the filesystem, tries to download
+   from the Placenote Map Cloud; if it does, make sure the Placenote Cloud contains a copy of the thumbnail.
+   
+   - Parameter mapId: ID of the map to be deleted from the filesystem and the Map Cloud
+   - Parameter thumbnailPath: path of the thumbnail image file.
+   - Parameter syncProgressCb: async callback to indicate whether the thumbnail image is successfully synced
+   */
+  private func syncLocalizationThumbnail(mapId: String, thumbnailPath: String,
+                                        syncProgressCb : @escaping FileTransferCallback) {
+    let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
+    
+    fileTransferCbDict[cbCtx.callbackId] = syncProgressCb
+    ctxDict[cbCtx.callbackId] = cbCtx
+    let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
+    let ctxPtr = UnsafeMutableRawPointer(anUnmanaged.toOpaque())
+    
+    os_log("Syncing thumbnail file")
+    PNSyncThumbnail(mapId, thumbnailPath, {(status: UnsafeMutablePointer<PNTransferStatus>?, swiftContext: UnsafeMutableRawPointer?) -> Void in
+      let cbRetCtx = Unmanaged<CallbackContext>.fromOpaque(swiftContext!).takeUnretainedValue()
+      let libPtr = cbRetCtx.libPtr
+      let callbackId = cbRetCtx.callbackId
+      let completed = status?.pointee.completed
+      let faulted = status?.pointee.faulted
+      let bytesTransferred = status?.pointee.bytesTransferred
+      let bytesTotal = status?.pointee.bytesTotal
+      
+      DispatchQueue.main.async(execute: {() -> Void in
+        if (completed!) {
+          os_log("Thumbnail synced!")
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+        } else if (faulted!) {
+          os_log("Failed to sync thumbnail!", log: OSLog.default, type: .fault)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.ctxDict.removeValue(forKey: callbackId)
+        } else {
+          var progress:Float = 0
+          if (bytesTotal! > 0) {
+            progress = Float(bytesTransferred!)/Float(bytesTotal!)
+          }
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
         }
       })
     }, ctxPtr)
@@ -830,7 +1126,7 @@ public class LibPlacenote {
    
    - Parameter listCb: async callback that returns the map list for a API Key
    */
-  public func fetchMapList(listCb: @escaping ListMapCallback) {
+  public func listMaps(listCb: @escaping ListMapCallback) {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     listMapCbDict[cbCtx.callbackId] = listCb
@@ -904,11 +1200,10 @@ public class LibPlacenote {
    Get the metadata for the given map, which will be returned as Libplacenote.metadata with metadata
   
    - Parameter mapId: ID of the map
-               getMetadataCb: async callback that returns meta in the form of Libplacenote.metadata. Metadata is empty if the mapid is incorrect
-                or does not exist
+   - Parameter getMetadataCb: async callback that returns meta in the form of Libplacenote.metadata.
+                              Metadata is empty if the mapid is incorrect or does not exist
    */
-  
-  public func getMapMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
+  public func getMetadata (mapId: String, getMetadataCb: @escaping GetMetadataCallback) -> Void {
     
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     getMetadataCbDict[cbCtx.callbackId] = getMetadataCb
@@ -934,14 +1229,24 @@ public class LibPlacenote {
             let dataJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any?]
             let metadataJson = dataJson!["metadata"] as! [String: Any?]
             metadata.created = metadataJson["created"] as? UInt64
-            metadata.name = metadataJson["name"] as? String
-            metadata.location = LibPlacenote.MapLocation()
             
-            metadata.location?.latitude = (metadataJson["location"]! as! [String: Double])["latitude"]!
-            metadata.location?.longitude = (metadataJson["location"] as! [String: Double])["longitude"]!
-            metadata.location?.altitude = (metadataJson["location"] as! [String: Double])["altitude"]!
-            metadata.userdata = metadataJson["userdata"] as? [String: Any?]
+            if (metadataJson["name"] != nil) {
+              metadata.name = metadataJson["name"] as? String
+            }
             
+            if (metadataJson["location"] != nil) {
+              metadata.location = LibPlacenote.MapLocation()
+              metadata.location?.latitude = (metadataJson["location"]! as!
+                [String: Double])["latitude"]!
+              metadata.location?.longitude = (metadataJson["location"] as!
+                [String: Double])["longitude"]!
+              metadata.location?.altitude = (metadataJson["location"] as!
+                [String: Double])["altitude"]!
+            }
+            
+            if (metadataJson["userdata"] != nil) {
+              metadata.userdata = metadataJson["userdata"] as? [String: Any?]
+            }
           }
           else {
             os_log("Failed to convert received map metadata to string", log: OSLog.default, type: .error)
@@ -978,8 +1283,8 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
    True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
-    return setMapMetadata(mapId: mapId, metadata: metadata, metadataSavedCb: {(success:Bool) -> Void in
+  public func setMetadata(mapId: String, metadata: MapMetadataSettable) -> Bool {
+    return setMetadata(mapId: mapId, metadata: metadata, metadataSavedCb: {(success:Bool) -> Void in
     })
   }
 
@@ -995,7 +1300,7 @@ public class LibPlacenote {
    - Returns: False if the SDK was not initialized, or metadataJson was invalid.
      True otherwise.
    */
-  public func setMapMetadata(mapId: String, metadata: MapMetadataSettable, metadataSavedCb: @escaping MetadataSavedCallback) -> Bool {
+  public func setMetadata(mapId: String, metadata: MapMetadataSettable, metadataSavedCb: @escaping MetadataSavedCallback) -> Bool {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
     setMetadataCbDict[cbCtx.callbackId] = metadataSavedCb
@@ -1064,10 +1369,10 @@ public class LibPlacenote {
 
    - Parameter uploadProgressCb: callback to monitor upload progress of the dataset
    */
-  public func startReportRecord(uploadProgressCb: @escaping FileTransferCallback) -> Void {
+  public func startRecordDataset(uploadProgressCb: @escaping FileTransferCallback) -> Void {
     let cbCtx: CallbackContext = CallbackContext(id: UUID().uuidString, ptr: self)
     
-    mapTransferCbDict[cbCtx.callbackId] = uploadProgressCb
+    fileTransferCbDict[cbCtx.callbackId] = uploadProgressCb
     ctxDict[cbCtx.callbackId] = cbCtx
     
     let anUnmanaged = Unmanaged<CallbackContext>.passUnretained(ctxDict[cbCtx.callbackId]!)
@@ -1085,20 +1390,20 @@ public class LibPlacenote {
       DispatchQueue.main.async(execute: {() -> Void in
         if (completed!) {
           os_log("Dataset uploaded!")
-          libPtr.mapTransferCbDict[callbackId]!(true, false, 1)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(true, false, 1)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else if (faulted!) {
           os_log("Failed to upload dataset!", log: OSLog.default, type: .fault)
-          libPtr.mapTransferCbDict[callbackId]!(false, true, 0)
-          libPtr.mapTransferCbDict.removeValue(forKey: callbackId)
+          libPtr.fileTransferCbDict[callbackId]!(false, true, 0)
+          libPtr.fileTransferCbDict.removeValue(forKey: callbackId)
           libPtr.ctxDict.removeValue(forKey: callbackId)
         } else {
           var progress:Float = 0
           if (bytesTotal! > 0) {
             progress = Float(bytesTransferred!)/Float(bytesTotal!)
           }
-          libPtr.mapTransferCbDict[callbackId]!(false, false, progress)
+          libPtr.fileTransferCbDict[callbackId]!(false, false, progress)
         }
       })
     }, ctxPtr)
