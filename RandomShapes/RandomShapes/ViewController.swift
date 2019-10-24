@@ -165,6 +165,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
       maps.append((place.key, place.value))
     }
 
+    // show the map list panel
+    mapListView.isHidden = false
+    
     statusLabel.text = "Click on a map on load it. Swipe left to delete it."
     self.mapTable.reloadData() //reads from maps array (see: tableView functions)
     self.mapTable.isHidden = false
@@ -223,7 +226,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             
             let metadata = LibPlacenote.MapMetadataSettable()
             
-            savedMapName = RandomName.Get()
+            savedMapName = "RandomShapes: " + RandomName.Get()
             metadata.name = savedMapName
             
             self.statusLabel.text = "Saved Map: " + metadata.name! //update UI
@@ -264,11 +267,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
   
   // click load map to choose from a list of maps
   @IBAction func pickMap(_ sender: Any) {
-    updateMapTable()
+    updateMapTable(nameStr: "RandomShapes")
     statusLabel.text = "Fetching Map List"
     
     initView.isHidden = true
-    mapListView.isHidden = false
+    
   }
 
   

@@ -217,7 +217,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
           if (completed) {
             
             // start the Placenote session (this will start searching for localization)
-            LibPlacenote.instance.startSession()
+            
             LibPlacenote.instance.getMetadata(mapId: mapId, getMetadataCb: { (success: Bool, metadata: LibPlacenote.MapMetadata) -> Void in
               if (success)
               {
@@ -226,6 +226,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, PN
                 
                 // storing meta data here so we can load it in the OnLocalized callback
                 self.loadedMetaData = metadata
+                LibPlacenote.instance.startSession()
               }
             })
           } else if (faulted) {
